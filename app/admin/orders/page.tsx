@@ -439,7 +439,7 @@ export default function AdminOrdersPage() {
             <div className="pt-4 border-t border-ivory-300 flex flex-col sm:flex-row gap-3 justify-between sm:items-center text-[10px] text-ink-muted print:text-black">
               <div>
                 <p className="font-bold uppercase text-ink print:text-black">Kaavu Styles Control Center</p>
-                <p>Contact: support@kaavustyles.com | +91 98765 43210</p>
+                <p>Contact: kaavustyles@gmail.com</p>
               </div>
               <div className="text-right">
                 <p className="font-mono font-bold text-gold print:text-black uppercase">Official Computer Generated Invoice</p>

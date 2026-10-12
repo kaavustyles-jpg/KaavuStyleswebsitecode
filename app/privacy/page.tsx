@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Lock, EyeOff, Server, FileText, PhoneCall, Mail, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock, EyeOff, CheckCircle2 } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -92,7 +92,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-ink-muted pl-2">
               <li>
-                <strong className="text-ink">Contact & Shipping Details:</strong> Full name, delivery shipping address, billing address, phone/WhatsApp number, and email address.
+                <strong className="text-ink">Contact & Shipping Details:</strong> Full name, delivery shipping address, billing address, contact phone number, and email address.
               </li>
               <li>
                 <strong className="text-ink">Payment & Transaction Records:</strong> Razorpay payment ID, order amount, and transaction timestamp. <em className="text-ink">Note: Kaavu Styles never stores or accesses your complete debit/credit card numbers, CVV codes, net banking passwords, or UPI PINs. All payment credential handling is performed directly by the certified payment gateway.</em>
@@ -119,7 +119,7 @@ export default function PrivacyPolicyPage() {
             <ul className="list-disc list-inside space-y-1.5 text-ink-muted pl-2">
               <li>Fulfilling, cutting, packaging, and dispatching your handcrafted garment orders.</li>
               <li>Generating official computer-generated GST tax invoices.</li>
-              <li>Transmitting order confirmation SMS, WhatsApp notifications, and express courier tracking codes.</li>
+              <li>Transmitting order confirmation, email dispatch alerts, and express courier tracking codes.</li>
               <li>Providing dedicated boutique concierge assistance regarding size charts, styling consultations, and delivery coordination.</li>
               <li>Complying with statutory taxation, accounting, and anti-fraud verification requirements.</li>
             </ul>
@@ -227,8 +227,7 @@ export default function PrivacyPolicyPage() {
                 Official Grievance Officer Contact:
               </p>
               <p>Kaavu Styles Legal & Privacy Officer</p>
-              <p>Email: <strong className="text-crimson font-medium">Kaavustyles@gmail.com</strong></p>
-              <p>Phone: <strong className="text-ink font-medium">+91 98765 43210</strong></p>
+              <p>Email: <a href="mailto:kaavustyles@gmail.com" className="text-crimson font-medium hover:underline">kaavustyles@gmail.com</a></p>
               <p>Flagship Atelier: Bengaluru, Karnataka & Jubilee Hills, Hyderabad, India</p>
             </div>
           </section>

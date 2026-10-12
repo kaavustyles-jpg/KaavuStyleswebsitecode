@@ -55,7 +55,27 @@ export async function prepareOrder(input: any) {
   }
   const totalAmount = Math.round(Math.max(0, subtotal - discount) * 100) / 100;
   if (!Number.isFinite(totalAmount) || totalAmount <= 0) throw new Error("Online payments require a positive order total.");
-  return { customerName: input.customerName.trim(), customerEmail: input.customerEmail.trim(), customerPhone: input.customerPhone.trim(), shippingAddress: input.shippingAddress.trim(), city: input.city.trim(), postalCode: input.postalCode.trim(), items, totalAmount, status: "Pending", ipAddress: "" };
+
+  // Calculate next sequential KAAVU order number
+  let nextOrderNumber = "KAAVU00001";
+  try {
+    const { data: kaavuOrders } = await db.from("orders").select("order_number");
+    let maxNum = 0;
+    for (const o of (kaavuOrders || [])) {
+      if (o.order_number) {
+        const m = o.order_number.match(/^KAAVU(\d+)$/i);
+        if (m) {
+          const n = parseInt(m[1], 10);
+          if (!isNaN(n) && n > maxNum) maxNum = n;
+        }
+      }
+    }
+    nextOrderNumber = `KAAVU${String(maxNum + 1).padStart(5, "0")}`;
+  } catch (e) {
+    console.error("Could not determine next KAAVU order number:", e);
+  }
+
+  return { customerName: input.customerName.trim(), customerEmail: input.customerEmail.trim(), customerPhone: input.customerPhone.trim(), shippingAddress: input.shippingAddress.trim(), city: input.city.trim(), postalCode: input.postalCode.trim(), items, totalAmount, status: "Pending", ipAddress: "", orderNumber: nextOrderNumber, order_number: nextOrderNumber };
 }
 export async function finalizePayment(orderId: string, paymentId: string) {
   const db = paymentDb();
@@ -70,5 +90,28 @@ export async function finalizePayment(orderId: string, paymentId: string) {
     console.error("Payment order confirmation failed", { paymentId, orderId, code: saveError?.code, message: saveError?.message });
     throw new Error(`Payment received (${paymentId}), but order confirmation is pending. Please contact support with this payment ID.`);
   }
+
+  // Ensure order_number conforms to KAAVU00001 sequence
+  if (order && (!order.order_number || !order.order_number.startsWith("KAAVU"))) {
+    try {
+      const { data: existingOrders } = await db.from("orders").select("order_number");
+      let maxNum = 0;
+      for (const o of (existingOrders || [])) {
+        if (o.order_number) {
+          const m = o.order_number.match(/^KAAVU(\d+)$/i);
+          if (m) {
+            const n = parseInt(m[1], 10);
+            if (!isNaN(n) && n > maxNum) maxNum = n;
+          }
+        }
+      }
+      const newOrderNum = `KAAVU${String(maxNum + 1).padStart(5, "0")}`;
+      await db.from("orders").update({ order_number: newOrderNum }).eq("id", order.id);
+      order.order_number = newOrderNum;
+    } catch (err) {
+      console.error("Error setting KAAVU order number in finalizePayment:", err);
+    }
+  }
+
   return order;
 }

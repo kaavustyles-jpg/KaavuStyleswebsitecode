@@ -757,23 +757,59 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Order Actions
+  const getNextKaavuOrderNumber = (orderList: Order[]) => {
+    let maxNum = 0;
+    for (const o of orderList) {
+      if (o.orderNumber) {
+        const m = o.orderNumber.match(/^KAAVU(\d+)$/i);
+        if (m) {
+          const n = parseInt(m[1], 10);
+          if (!isNaN(n) && n > maxNum) maxNum = n;
+        }
+      }
+    }
+    return `KAAVU${String(maxNum + 1).padStart(5, "0")}`;
+  };
+
   const addOrder = async (orderData: Omit<Order, "id" | "orderNumber" | "createdAt">): Promise<Order> => {
     let newOrder: Order;
+    const nextOrderNumber = getNextKaavuOrderNumber(orders);
+
     if (isSupabaseConfigured) {
-      const { data, error } = await supabase.rpc("place_order_with_stock", { order_data: orderData });
+      const payload = {
+        ...orderData,
+        orderNumber: nextOrderNumber,
+        order_number: nextOrderNumber,
+      };
+      const { data, error } = await supabase.rpc("place_order_with_stock", { order_data: payload });
       if (error) throw new Error(error.message);
       if (!data) throw new Error("Order was not saved. Please try again.");
+
+      if (data && (!data.order_number || !data.order_number.startsWith("KAAVU"))) {
+        try {
+          await supabase.from("orders").update({ order_number: nextOrderNumber }).eq("id", data.id);
+          data.order_number = nextOrderNumber;
+        } catch (e) {
+          console.error("Error updating order_number to KAAVU format:", e);
+        }
+      }
+
       newOrder = mapDbOrderToOrder(data);
       const { data: refreshed } = await supabase.from("products").select("*").order("created_at", { ascending: false });
       if (refreshed) setProducts(refreshed.map(mapDbProductToProduct));
     } else {
       const updated = reduceInventory(products, orderData.items);
-      newOrder = { ...orderData, id: "ord-" + Date.now(), orderNumber: "KS-" + Date.now(), createdAt: new Date().toISOString() };
+      newOrder = {
+        ...orderData,
+        id: "ord-" + Date.now(),
+        orderNumber: nextOrderNumber,
+        createdAt: new Date().toISOString(),
+      };
       localStorage.setItem("ks_products", JSON.stringify(updated));
       localStorage.setItem("ks_orders", JSON.stringify([newOrder, ...orders]));
       setProducts(updated);
     }
-    setOrders(prev => [newOrder, ...prev]);
+    setOrders((prev) => [newOrder, ...prev]);
     clearCart();
     return newOrder;
   };

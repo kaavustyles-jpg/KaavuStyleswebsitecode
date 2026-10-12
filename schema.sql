@@ -202,7 +202,18 @@ BEGIN
       WHERE id = product_row.id;
   END LOOP;
   INSERT INTO public.orders (order_number, customer_name, customer_email, customer_phone, shipping_address, city, postal_code, total_amount, status, items, ip_address)
-  VALUES ('KS-' || gen_random_uuid()::TEXT, order_data->>'customerName', order_data->>'customerEmail', order_data->>'customerPhone', order_data->>'shippingAddress', order_data->>'city', order_data->>'postalCode', (order_data->>'totalAmount')::NUMERIC, 'Pending', order_data->'items', order_data->>'ipAddress')
+  VALUES (
+    COALESCE(
+      NULLIF(order_data->>'orderNumber', ''),
+      NULLIF(order_data->>'order_number', ''),
+      (
+        SELECT 'KAAVU' || LPAD((COALESCE(MAX(SUBSTRING(order_number FROM '[0-9]+')::BIGINT), 0) + 1)::TEXT, 5, '0')
+        FROM public.orders
+        WHERE order_number ~ '^KAAVU[0-9]+$'
+      )
+    ),
+    order_data->>'customerName', order_data->>'customerEmail', order_data->>'customerPhone', order_data->>'shippingAddress', order_data->>'city', order_data->>'postalCode', (order_data->>'totalAmount')::NUMERIC, 'Pending', order_data->'items', order_data->>'ipAddress'
+  )
   RETURNING * INTO order_row;
   RETURN to_jsonb(order_row);
 END;

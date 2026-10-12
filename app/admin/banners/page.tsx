@@ -7,6 +7,7 @@ import ImageUploader from "@/components/ImageUploader";
 import { useStore } from "@/context/StoreContext";
 import { Banner } from "@/lib/mockData";
 import { compressAndOptimizeImage } from "@/lib/utils";
+import { uploadSingleImage } from "@/lib/storageUpload";
 import Image from "next/image";
 import { Plus, Trash2, X, AlignLeft, AlignCenter, AlignRight, Pencil } from "lucide-react";
 
@@ -74,28 +75,10 @@ export default function AdminBannersPage() {
     setSaving(true);
     setSaveError("");
     try {
-    // Upload any inline data images to the Supabase Storage bucket
-    const ensureStorageUrl = async (image: string, maxDimension: number) => {
-      if (!image) return "";
-      if (!image.startsWith("data:image/")) return image;
-      try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image, folder: "banners", name: "banner" }),
-        });
-        const data = await res.json();
-        if (res.ok && data.url) return data.url;
-      } catch (e) {
-        console.warn("Storage upload fallback for banner:", e);
-      }
-      const blob = await (await fetch(image)).blob();
-      return compressAndOptimizeImage(new File([blob], "banner", { type: blob.type }), maxDimension, 0.78, true);
-    };
-    const [landscapeImage, mobileImage] = await Promise.all([
-      ensureStorageUrl(bannerImages[0], 1600),
-      ensureStorageUrl(mobileImages[0] || "", 1000),
-    ]);
+      const [landscapeImage, mobileImage] = await Promise.all([
+        uploadSingleImage(bannerImages[0], "banners"),
+        mobileImages[0] ? uploadSingleImage(mobileImages[0], "banners") : Promise.resolve(""),
+      ]);
     if (editingBannerId) {
       await updateBanner(editingBannerId, {
         title,

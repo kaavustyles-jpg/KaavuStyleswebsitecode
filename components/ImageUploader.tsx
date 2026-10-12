@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Upload, X, Link as LinkIcon, Plus, Loader2 } from "lucide-react";
 import { compressAndOptimizeImage } from "@/lib/utils";
 
+import { uploadMultipleImages, uploadSingleImage, isBase64Image } from "@/lib/storageUpload";
+
 interface ImageUploaderProps {
   images: string[];
   onChange: (images: string[]) => void;
@@ -82,32 +84,17 @@ export default function ImageUploader({
         preparedImages = await Promise.all(promises);
       }
 
-      // Upload to Supabase Storage bucket via server API route
-      let finalImages: string[] = preparedImages;
-      try {
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ images: preparedImages, folder, name: folder }),
-        });
-        const uploadData = await uploadRes.json();
-        if (uploadRes.ok && Array.isArray(uploadData.urls) && uploadData.urls.length > 0) {
-          finalImages = uploadData.urls;
-        } else {
-          console.warn("Storage upload API error, fallback to prepared:", uploadData);
-        }
-      } catch (uploadErr) {
-        console.warn("Storage bucket upload network error, fallback to prepared:", uploadErr);
-      }
+      // Upload directly to Supabase Storage bucket via server API route
+      const finalUrls = await uploadMultipleImages(preparedImages, folder);
 
       if (single) {
-        onChange([finalImages[0]]);
+        onChange([finalUrls[0]]);
       } else {
-        onChange([...images, ...finalImages]);
+        onChange([...images, ...finalUrls]);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Image upload error:", err);
-      alert("Error reading image file. Please try another image.");
+      alert("Failed to upload image to Supabase Storage bucket: " + (err?.message || "Upload error. Please try again."));
     } finally {
       setIsCompressing(false);
       if (fileInputRef.current) {
@@ -116,14 +103,28 @@ export default function ImageUploader({
     }
   };
 
-  const handleAddUrl = () => {
-    if (!urlInput.trim()) return;
-    if (single) {
-      onChange([urlInput.trim()]);
-    } else {
-      onChange([...images, urlInput.trim()]);
+  const handleAddUrl = async () => {
+    const trimmed = urlInput.trim();
+    if (!trimmed) return;
+
+    try {
+      let finalUrl = trimmed;
+      if (isBase64Image(trimmed)) {
+        setIsCompressing(true);
+        finalUrl = await uploadSingleImage(trimmed, folder);
+      }
+
+      if (single) {
+        onChange([finalUrl]);
+      } else {
+        onChange([...images, finalUrl]);
+      }
+      setUrlInput("");
+    } catch (err: any) {
+      alert("Failed to upload image to Storage bucket: " + (err?.message || "Upload error"));
+    } finally {
+      setIsCompressing(false);
     }
-    setUrlInput("");
   };
 
   const handleRemove = (indexToRemove: number) => {

@@ -5,6 +5,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import ImageUploader from "@/components/ImageUploader";
 import { useStore } from "@/context/StoreContext";
+import { uploadSingleImage } from "@/lib/storageUpload";
 import Image from "next/image";
 import { Plus, Trash2, Instagram, ExternalLink, X } from "lucide-react";
 
@@ -20,26 +21,16 @@ export default function AdminInstagramPage() {
     e.preventDefault();
     if (igImages.length === 0) return;
 
-    let finalImageUrl = igImages[0] || "";
-    if (finalImageUrl.startsWith("data:image/")) {
-      try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: finalImageUrl, folder: "instagram", name: "instagram" }),
-        });
-        const data = await res.json();
-        if (res.ok && data.url) finalImageUrl = data.url;
-      } catch (err) {
-        console.warn("Storage upload fallback for instagram:", err);
-      }
+    try {
+      const finalImageUrl = await uploadSingleImage(igImages[0], "instagram");
+      await addInstagramPost(postUrl, finalImageUrl, caption);
+      setPostUrl("https://instagram.com");
+      setIgImages([]);
+      setCaption("");
+      setIsModalOpen(false);
+    } catch (err: any) {
+      alert("Failed to upload Instagram image: " + (err?.message || err));
     }
-
-    await addInstagramPost(postUrl, finalImageUrl, caption);
-    setPostUrl("https://instagram.com");
-    setIgImages([]);
-    setCaption("");
-    setIsModalOpen(false);
   };
 
   return (

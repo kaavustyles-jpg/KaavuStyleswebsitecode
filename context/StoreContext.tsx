@@ -38,6 +38,7 @@ import {
   mapDbColorToColor,
   mapDbIgToIg,
 } from "@/lib/supabase";
+import { uploadSingleImage, uploadMultipleImages } from "@/lib/storageUpload";
 
 export interface CartItem {
   product: Product;
@@ -588,9 +589,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Admin Product Actions
   const addProduct = async (productData: Omit<Product, "id" | "createdAt">) => {
+    // Ensure all images are uploaded to Supabase Storage bucket
+    const cleanImages = await uploadMultipleImages(productData.images || [], "products");
+    const cleanColorImages: Record<string, string[]> = {};
+    if (productData.colorImages) {
+      for (const [col, cImgs] of Object.entries(productData.colorImages)) {
+        cleanColorImages[col] = await uploadMultipleImages(cImgs || [], "products");
+      }
+    }
+    const cleanProductData = {
+      ...productData,
+      images: cleanImages,
+      colorImages: cleanColorImages,
+    };
+
     const tempId = "prod-" + Date.now();
     const tempProduct: Product = {
-      ...productData,
+      ...cleanProductData,
       id: tempId,
       createdAt: new Date().toISOString(),
     };
@@ -601,7 +616,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     // Persist to Supabase Database
     if (isSupabaseConfigured) {
       try {
-        const dbRow = mapProductToDbRow(productData);
+        const dbRow = mapProductToDbRow(cleanProductData);
         const { data, error } = await supabase.from("products").insert([dbRow]).select();
         if (error) {
           throw new Error(error.message);
@@ -625,25 +640,39 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const updateProduct = async (id: string, updatedFields: Partial<Product>) => {
     const previous = products.find(product => product.id === id);
-    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
+
+    // Sanitize any updated images to Supabase Storage
+    const fieldsToSave = { ...updatedFields };
+    if (updatedFields.images) {
+      fieldsToSave.images = await uploadMultipleImages(updatedFields.images, "products");
+    }
+    if (updatedFields.colorImages) {
+      const cleanColorImages: Record<string, string[]> = {};
+      for (const [col, cImgs] of Object.entries(updatedFields.colorImages)) {
+        cleanColorImages[col] = await uploadMultipleImages(cImgs || [], "products");
+      }
+      fieldsToSave.colorImages = cleanColorImages;
+    }
+
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...fieldsToSave } : p)));
 
     if (isSupabaseConfigured) {
       try {
         const updateRow: any = {};
-        if (updatedFields.name) updateRow.name = updatedFields.name;
-        if (updatedFields.description) updateRow.description = updatedFields.description;
-        if (updatedFields.price !== undefined) updateRow.price = updatedFields.price;
-        if (updatedFields.originalPrice !== undefined) updateRow.original_price = updatedFields.originalPrice;
-        if (updatedFields.category) updateRow.category_name = updatedFields.category;
-        if (updatedFields.stock !== undefined) updateRow.stock = updatedFields.stock;
-        if (updatedFields.sizeStock) updateRow.size_stock = updatedFields.sizeStock;
-        if (updatedFields.colorImages) updateRow.color_images = updatedFields.colorImages;
-        if (updatedFields.sizes) updateRow.sizes = updatedFields.sizes;
-        if (updatedFields.colors) updateRow.colors = updatedFields.colors;
-        if (updatedFields.lifestyleTags) updateRow.lifestyle_tags = updatedFields.lifestyleTags;
-        if (updatedFields.images) updateRow.images = updatedFields.images;
-        if (updatedFields.isLatest !== undefined) updateRow.is_latest = updatedFields.isLatest;
-        if (updatedFields.isFeatured !== undefined) updateRow.is_featured = updatedFields.isFeatured;
+        if (fieldsToSave.name) updateRow.name = fieldsToSave.name;
+        if (fieldsToSave.description) updateRow.description = fieldsToSave.description;
+        if (fieldsToSave.price !== undefined) updateRow.price = fieldsToSave.price;
+        if (fieldsToSave.originalPrice !== undefined) updateRow.original_price = fieldsToSave.originalPrice;
+        if (fieldsToSave.category) updateRow.category_name = fieldsToSave.category;
+        if (fieldsToSave.stock !== undefined) updateRow.stock = fieldsToSave.stock;
+        if (fieldsToSave.sizeStock) updateRow.size_stock = fieldsToSave.sizeStock;
+        if (fieldsToSave.colorImages) updateRow.color_images = fieldsToSave.colorImages;
+        if (fieldsToSave.sizes) updateRow.sizes = fieldsToSave.sizes;
+        if (fieldsToSave.colors) updateRow.colors = fieldsToSave.colors;
+        if (fieldsToSave.lifestyleTags) updateRow.lifestyle_tags = fieldsToSave.lifestyleTags;
+        if (fieldsToSave.images) updateRow.images = fieldsToSave.images;
+        if (fieldsToSave.isLatest !== undefined) updateRow.is_latest = fieldsToSave.isLatest;
+        if (fieldsToSave.isFeatured !== undefined) updateRow.is_featured = fieldsToSave.isFeatured;
 
         const { error } = await supabase.from("products").update(updateRow).eq("id", id);
         if (error) throw new Error(error.message);
@@ -653,7 +682,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         throw err;
       }
     } else {
-      localStorage.setItem("ks_products", JSON.stringify(products.map(product => product.id === id ? { ...product, ...updatedFields } : product)));
+      localStorage.setItem("ks_products", JSON.stringify(products.map(product => product.id === id ? { ...product, ...fieldsToSave } : product)));
     }
   };
 
@@ -670,14 +699,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Admin Category Actions
   const addCategory = async (categoryData: Omit<Category, "id">) => {
-    const tempCategory: Category = { ...categoryData, id: "cat-" + Date.now() };
+    const cleanImageUrl = categoryData.imageUrl
+      ? await uploadSingleImage(categoryData.imageUrl, "categories")
+      : "";
+    const cleanData = { ...categoryData, imageUrl: cleanImageUrl };
+    const tempCategory: Category = { ...cleanData, id: "cat-" + Date.now() };
     setCategories((prev) => [...prev, tempCategory]);
 
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
           .from("categories")
-          .insert([{ name: categoryData.name, slug: categoryData.slug, image_url: categoryData.imageUrl }])
+          .insert([{ name: cleanData.name, slug: cleanData.slug, image_url: cleanData.imageUrl }])
           .select();
         if (!error && data && data[0]) {
           setCategories((prev) => prev.map((c) => (c.id === tempCategory.id ? mapDbCategoryToCategory(data[0]) : c)));
@@ -700,19 +733,34 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateCategory = async (id: string, fields: Partial<Category>) => {
+    const cleanFields = { ...fields };
+    if (fields.imageUrl) {
+      cleanFields.imageUrl = await uploadSingleImage(fields.imageUrl, "categories");
+    }
     if (isSupabaseConfigured) {
-      const row = { name: fields.name, image_url: fields.imageUrl };
+      const row = { name: cleanFields.name, image_url: cleanFields.imageUrl };
       const { error } = await supabase.from("categories").update(row).eq("id", id);
       if (error) throw new Error(error.message);
     }
-    const updated = categories.map(category => category.id === id ? { ...category, ...fields } : category);
+    const updated = categories.map(category => category.id === id ? { ...category, ...cleanFields } : category);
     if (!isSupabaseConfigured) localStorage.setItem("ks_categories", JSON.stringify(updated));
     setCategories(updated);
   };
 
   // Admin Banner Actions
   const addBanner = async (bannerData: Omit<Banner, "id">) => {
-    const tempBanner: Banner = { ...bannerData, id: "banner-" + Date.now() };
+    const cleanImageUrl = bannerData.imageUrl
+      ? await uploadSingleImage(bannerData.imageUrl, "banners")
+      : "";
+    const cleanMobileImageUrl = bannerData.mobileImageUrl
+      ? await uploadSingleImage(bannerData.mobileImageUrl, "banners")
+      : undefined;
+    const cleanData = {
+      ...bannerData,
+      imageUrl: cleanImageUrl,
+      ...(cleanMobileImageUrl ? { mobileImageUrl: cleanMobileImageUrl } : {}),
+    };
+    const tempBanner: Banner = { ...cleanData, id: "banner-" + Date.now() };
     setBanners((prev) => [...prev, tempBanner]);
 
     if (isSupabaseConfigured) {
@@ -721,16 +769,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           .from("banners")
           .insert([
             {
-              title: bannerData.title,
-              subtitle: bannerData.subtitle,
-              image_url: bannerData.imageUrl,
-              ...(bannerData.mobileImageUrl ? { mobile_image_url: bannerData.mobileImageUrl } : {}),
-              cta_text: bannerData.ctaText,
-              cta_link: bannerData.ctaLink,
-              is_active: bannerData.isActive,
-              order_num: bannerData.orderNum,
-              text_align: bannerData.textAlign || "left",
-              text_color: bannerData.textColor || "#F8F3EC",
+              title: cleanData.title,
+              subtitle: cleanData.subtitle,
+              image_url: cleanData.imageUrl,
+              ...(cleanData.mobileImageUrl ? { mobile_image_url: cleanData.mobileImageUrl } : {}),
+              cta_text: cleanData.ctaText,
+              cta_link: cleanData.ctaLink,
+              is_active: cleanData.isActive,
+              order_num: cleanData.orderNum,
+              text_align: cleanData.textAlign || "left",
+              text_color: cleanData.textColor || "#F8F3EC",
             },
           ])
           .select();
@@ -748,19 +796,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const updateBanner = async (id: string, fields: Partial<Banner>) => {
     const previous = banners.find(b => b.id === id);
-    setBanners((prev) => prev.map((b) => (b.id === id ? { ...b, ...fields } : b)));
+    const cleanFields = { ...fields };
+    if (fields.imageUrl) {
+      cleanFields.imageUrl = await uploadSingleImage(fields.imageUrl, "banners");
+    }
+    if (fields.mobileImageUrl !== undefined) {
+      cleanFields.mobileImageUrl = fields.mobileImageUrl
+        ? await uploadSingleImage(fields.mobileImageUrl, "banners")
+        : "";
+    }
+    setBanners((prev) => prev.map((b) => (b.id === id ? { ...b, ...cleanFields } : b)));
     if (isSupabaseConfigured) {
       try {
         const updateObj: any = {};
-        if (fields.isActive !== undefined) updateObj.is_active = fields.isActive;
-        if (fields.title) updateObj.title = fields.title;
-        if (fields.imageUrl) updateObj.image_url = fields.imageUrl;
-        if (fields.mobileImageUrl !== undefined) updateObj.mobile_image_url = fields.mobileImageUrl || null;
-        if (fields.subtitle !== undefined) updateObj.subtitle = fields.subtitle;
-        if (fields.ctaText !== undefined) updateObj.cta_text = fields.ctaText;
-        if (fields.ctaLink !== undefined) updateObj.cta_link = fields.ctaLink;
-        if (fields.textAlign) updateObj.text_align = fields.textAlign;
-        if (fields.textColor) updateObj.text_color = fields.textColor;
+        if (cleanFields.isActive !== undefined) updateObj.is_active = cleanFields.isActive;
+        if (cleanFields.title) updateObj.title = cleanFields.title;
+        if (cleanFields.imageUrl) updateObj.image_url = cleanFields.imageUrl;
+        if (cleanFields.mobileImageUrl !== undefined) updateObj.mobile_image_url = cleanFields.mobileImageUrl || null;
+        if (cleanFields.subtitle !== undefined) updateObj.subtitle = cleanFields.subtitle;
+        if (cleanFields.ctaText !== undefined) updateObj.cta_text = cleanFields.ctaText;
+        if (cleanFields.ctaLink !== undefined) updateObj.cta_link = cleanFields.ctaLink;
+        if (cleanFields.textAlign) updateObj.text_align = cleanFields.textAlign;
+        if (cleanFields.textColor) updateObj.text_color = cleanFields.textColor;
         const { error } = await supabase.from("banners").update(updateObj).eq("id", id);
         if (error) throw new Error(error.message);
       } catch (err) {
@@ -975,10 +1032,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Instagram Actions
   const addInstagramPost = async (postUrl: string, imageUrl: string, caption: string) => {
+    const cleanImageUrl = imageUrl ? await uploadSingleImage(imageUrl, "instagram") : "";
     const newPost: InstagramPost = {
       id: "ig-" + Date.now(),
       postUrl,
-      imageUrl,
+      imageUrl: cleanImageUrl,
       caption,
       orderNum: instagramPosts.length + 1,
     };
@@ -986,7 +1044,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (isSupabaseConfigured) {
       try {
         await supabase.from("instagram_posts").insert([
-          { post_url: postUrl, image_url: imageUrl, caption, order_num: newPost.orderNum },
+          { post_url: postUrl, image_url: cleanImageUrl, caption, order_num: newPost.orderNum },
         ]);
       } catch (err) {
         console.error("Error adding instagram post to Supabase:", err);

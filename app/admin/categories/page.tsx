@@ -5,6 +5,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import ImageUploader from "@/components/ImageUploader";
 import { useStore } from "@/context/StoreContext";
+import { uploadSingleImage } from "@/lib/storageUpload";
 import Image from "next/image";
 import { Plus, Trash2, X } from "lucide-react";
 
@@ -21,20 +22,9 @@ export default function AdminCategoriesPage() {
     if (!name) return;
     setError("");
     try {
-      let finalImageUrl = categoryImages[0] || "";
-      if (finalImageUrl.startsWith("data:image/")) {
-        try {
-          const res = await fetch("/api/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ image: finalImageUrl, folder: "categories", name: "category" }),
-          });
-          const data = await res.json();
-          if (res.ok && data.url) finalImageUrl = data.url;
-        } catch (err) {
-          console.warn("Storage upload fallback for category:", err);
-        }
-      }
+      const finalImageUrl = categoryImages[0]
+        ? await uploadSingleImage(categoryImages[0], "categories")
+        : "";
 
       if (editingId) await updateCategory(editingId, { name, imageUrl: finalImageUrl });
       else await addCategory({

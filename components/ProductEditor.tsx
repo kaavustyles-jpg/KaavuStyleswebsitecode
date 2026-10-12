@@ -6,6 +6,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import ImageUploader from "@/components/ImageUploader";
 import { useStore } from "@/context/StoreContext";
+import { uploadMultipleImages } from "@/lib/storageUpload";
 import type { Product } from "@/lib/mockData";
 export default function ProductEditor({ productId }: { productId?: string }) {
  const { products, categories, addProduct, updateProduct, lifestyleTags, sizes, colors, isLoading } = useStore();
@@ -52,23 +53,7 @@ export default function ProductEditor({ productId }: { productId?: string }) {
   };
 
   const ensureStorageUrls = async (urls: string[]): Promise<string[]> => {
-    const hasDataUrl = urls.some((u) => typeof u === "string" && u.startsWith("data:image/"));
-    if (!hasDataUrl) return urls;
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ images: urls, folder: "products", name: "product" }),
-      });
-      const data = await res.json();
-      if (res.ok && Array.isArray(data.urls)) {
-        return data.urls;
-      }
-    } catch (e) {
-      console.warn("Storage upload fallback in ProductEditor:", e);
-    }
-    return urls;
+    return uploadMultipleImages(urls, "products");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

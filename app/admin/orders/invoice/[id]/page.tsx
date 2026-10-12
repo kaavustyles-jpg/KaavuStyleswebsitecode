@@ -311,9 +311,9 @@ export default function AdminOrderInvoicePage() {
           <div className="space-y-1">
             <p className="font-extrabold uppercase text-ink print:text-black">Terms & Return Policy:</p>
             <ol className="list-decimal list-inside space-y-0.5 text-[10px]">
-              <li>Goods once sold can be exchanged within 7 days with original tag attached.</li>
-              <li>Handcrafted silk and embellished couture require specialized dry cleaning.</li>
-              <li>Subject to Chennai Jurisdiction only.</li>
+              <li>Strict No Return & No Replacement Policy: All sales are final. Handcrafted luxury couture garments cannot be returned, exchanged, or replaced.</li>
+              <li>Handcrafted silk and embellished couture require specialized dry cleaning only.</li>
+              <li>Subject to Bengaluru / Hyderabad Jurisdiction only.</li>
             </ol>
           </div>
 

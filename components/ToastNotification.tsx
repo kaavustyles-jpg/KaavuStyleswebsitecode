@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { useStore } from "@/context/StoreContext";
-import { ShoppingBag, Heart, X, ChevronRight } from "lucide-react";
+import { ShoppingBag, Heart, X, ChevronRight, Check, Sparkles } from "lucide-react";
 
 export default function ToastNotification() {
   const { toastMessage, hideToast } = useStore();
@@ -43,6 +43,7 @@ export default function ToastNotification() {
           <div className="w-7 h-7 rounded-full border border-gold bg-crimson flex items-center justify-center text-gold flex-shrink-0 shadow-sm">
             {isCart && <ShoppingBag className="w-3.5 h-3.5 text-gold" />}
             {isWishlist && <Heart className="w-3.5 h-3.5 text-gold fill-current" />}
+            {!isCart && !isWishlist && <Check className="w-3.5 h-3.5 text-gold" />}
           </div>
         )}
 

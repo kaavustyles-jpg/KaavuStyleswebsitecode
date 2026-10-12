@@ -48,7 +48,7 @@ export interface CartItem {
 
 export interface ToastMessage {
   id: string;
-  type: "cart" | "wishlist" | "info";
+  type: "cart" | "wishlist" | "info" | "success";
   title: string;
   message: string;
   actionText?: string;
@@ -119,12 +119,15 @@ interface StoreContextType {
   updateOrderStatus: (id: string, status: Order["status"]) => Promise<void>;
 
   addTag: (name: string) => Promise<void>;
+  updateTag: (id: string, name: string) => Promise<void>;
   deleteTag: (id: string) => Promise<void>;
 
   addSize: (name: string, code: string) => Promise<void>;
+  updateSize: (id: string, name: string, code: string) => Promise<void>;
   deleteSize: (id: string) => Promise<void>;
 
   addColor: (name: string, hex: string) => Promise<void>;
+  updateColor: (id: string, name: string, hex: string) => Promise<void>;
   deleteColor: (id: string) => Promise<void>;
 
   addInstagramPost: (postUrl: string, imageUrl: string, caption: string) => Promise<void>;
@@ -788,17 +791,33 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Attribute Actions
   const addTag = async (name: string) => {
-    const newTag: LifestyleTag = {
+    const tempTag: LifestyleTag = {
       id: "tag-" + Date.now(),
       name,
       slug: name.toLowerCase().replace(/\s+/g, "-"),
     };
-    setLifestyleTags((prev) => [...prev, newTag]);
+    setLifestyleTags((prev) => [...prev, tempTag]);
     if (isSupabaseConfigured) {
       try {
-        await supabase.from("lifestyle_tags").insert([{ name: newTag.name, slug: newTag.slug }]);
+        const { data, error } = await supabase.from("lifestyle_tags").insert([{ name: tempTag.name, slug: tempTag.slug }]).select();
+        if (!error && data && data[0]) {
+          setLifestyleTags((prev) => prev.map((t) => (t.id === tempTag.id ? mapDbTagToTag(data[0]) : t)));
+        }
       } catch (err) {
         console.error("Error adding tag to Supabase:", err);
+      }
+    }
+  };
+
+  const updateTag = async (id: string, name: string) => {
+    const slug = name.toLowerCase().replace(/\s+/g, "-");
+    setLifestyleTags((prev) => prev.map((t) => (t.id === id ? { ...t, name, slug } : t)));
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from("lifestyle_tags").update({ name, slug }).eq("id", id);
+        if (error) console.error("Error updating tag in Supabase:", error);
+      } catch (err) {
+        console.error("Error updating tag in Supabase:", err);
       }
     }
   };
@@ -815,13 +834,29 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addSize = async (name: string, code: string) => {
-    const newSize: SizeOption = { id: "size-" + Date.now(), name, code };
+    const tempId = "size-" + Date.now();
+    const newSize: SizeOption = { id: tempId, name, code };
     setSizes((prev) => [...prev, newSize]);
     if (isSupabaseConfigured) {
       try {
-        await supabase.from("sizes").insert([{ name, code }]);
+        const { data, error } = await supabase.from("sizes").insert([{ name, code }]).select();
+        if (!error && data && data[0]) {
+          setSizes((prev) => prev.map((s) => (s.id === tempId ? mapDbSizeToSize(data[0]) : s)));
+        }
       } catch (err) {
         console.error("Error adding size to Supabase:", err);
+      }
+    }
+  };
+
+  const updateSize = async (id: string, name: string, code: string) => {
+    setSizes((prev) => prev.map((s) => (s.id === id ? { ...s, name, code } : s)));
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from("sizes").update({ name, code }).eq("id", id);
+        if (error) console.error("Error updating size in Supabase:", error);
+      } catch (err) {
+        console.error("Error updating size in Supabase:", err);
       }
     }
   };
@@ -838,13 +873,29 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addColor = async (name: string, hex: string) => {
-    const newColor: ColorOption = { id: "col-" + Date.now(), name, hex };
+    const tempId = "col-" + Date.now();
+    const newColor: ColorOption = { id: tempId, name, hex };
     setColors((prev) => [...prev, newColor]);
     if (isSupabaseConfigured) {
       try {
-        await supabase.from("colors").insert([{ name, hex }]);
+        const { data, error } = await supabase.from("colors").insert([{ name, hex }]).select();
+        if (!error && data && data[0]) {
+          setColors((prev) => prev.map((c) => (c.id === tempId ? mapDbColorToColor(data[0]) : c)));
+        }
       } catch (err) {
         console.error("Error adding color to Supabase:", err);
+      }
+    }
+  };
+
+  const updateColor = async (id: string, name: string, hex: string) => {
+    setColors((prev) => prev.map((c) => (c.id === id ? { ...c, name, hex } : c)));
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.from("colors").update({ name, hex }).eq("id", id);
+        if (error) console.error("Error updating color in Supabase:", error);
+      } catch (err) {
+        console.error("Error updating color in Supabase:", err);
       }
     }
   };
@@ -1079,12 +1130,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         updateOrderStatus,
 
         addTag,
+        updateTag,
         deleteTag,
 
         addSize,
+        updateSize,
         deleteSize,
 
         addColor,
+        updateColor,
         deleteColor,
 
         addInstagramPost,

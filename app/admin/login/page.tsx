@@ -4,36 +4,49 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
-import { Shield, Lock, Mail, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Shield, Lock, Mail, ArrowLeft, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login, currentUser } = useStore();
+  const { login } = useStore();
 
-  const [email, setEmail] = useState("admin@kavvustyle.com");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Authorized Admin Credentials
+  const authorizedEmails = ["kaavustyles@gmail.com", "admin@kavvustyle.com"];
+  const authorizedPassword = "admin123";
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, "admin");
-    router.push("/admin/dashboard");
-  };
+    setErrorMessage("");
+    setIsSubmitting(true);
 
-  const handleOneClickDemo = () => {
-    login("admin@kavvustyle.com", "admin");
-    router.push("/admin/dashboard");
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
+    if (authorizedEmails.includes(cleanEmail) && cleanPassword === authorizedPassword) {
+      login(cleanEmail, "admin", "Admin User");
+      router.push("/admin/dashboard");
+    } else {
+      setErrorMessage("Invalid admin email or password. Please check your credentials.");
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-ink flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-md bg-ivory rounded-none border border-gold shadow-2xl overflow-hidden p-8 space-y-6">
+      <div className="w-full max-w-md bg-ivory rounded-none border-2 border-gold shadow-2xl overflow-hidden p-8 space-y-6 animate-fadeIn">
+        
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="relative w-14 h-14 mx-auto rounded-full overflow-hidden border border-gold shadow-sm">
-            <Image src="/icon.jpeg" alt="Icon" fill className="object-cover" />
+          <div className="relative w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-gold shadow-md bg-white">
+            <Image src="/icon.jpeg" alt="Kaavu Styles" fill className="object-cover" priority />
           </div>
-          <h1 className="font-serif text-3xl text-ink uppercase tracking-wider">
+          <h1 className="font-serif text-3xl text-ink uppercase tracking-wider font-normal">
             Kaavu Admin
           </h1>
           <p className="text-[10px] uppercase tracking-[0.24em] text-gold font-sans font-semibold">
@@ -41,35 +54,52 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
+        {/* Error Alert */}
+        {errorMessage && (
+          <div className="p-3 bg-crimson/10 border border-crimson/40 rounded text-xs text-crimson flex items-center space-x-2 animate-fadeIn">
+            <AlertCircle className="w-4 h-4 flex-shrink-0 text-crimson" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleAdminLogin} className="space-y-4">
           <div>
-            <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1">
-              Admin Email
+            <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1.5">
+              Admin Email Address
             </label>
-            <div className="flex items-center border border-ivory-300 rounded bg-ivory-50 p-2.5 focus-within:border-gold">
-              <Mail className="w-4 h-4 text-gold mr-2" />
+            <div className="flex items-center border border-ivory-300 rounded bg-white p-2.5 focus-within:border-gold transition-colors">
+              <Mail className="w-4 h-4 text-gold mr-2.5 flex-shrink-0" />
               <input
                 type="email"
                 required
+                autoFocus
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errorMessage) setErrorMessage("");
+                }}
+                placeholder="kaavustyles@gmail.com"
                 className="w-full bg-transparent text-xs text-ink outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1">
-              Password
+            <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1.5">
+              Admin Security Password
             </label>
-            <div className="relative flex items-center border border-ivory-300 rounded bg-ivory-50 p-2.5 focus-within:border-gold">
-              <Lock className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+            <div className="relative flex items-center border border-ivory-300 rounded bg-white p-2.5 focus-within:border-gold transition-colors">
+              <Lock className="w-4 h-4 text-gold mr-2.5 flex-shrink-0" />
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errorMessage) setErrorMessage("");
+                }}
+                placeholder="••••••••"
                 className="w-full bg-transparent text-xs text-ink outline-none pr-8"
               />
               <button
@@ -85,35 +115,21 @@ export default function AdminLoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3.5 bg-crimson hover:bg-crimson-800 text-ivory text-xs uppercase tracking-[0.24em] font-semibold transition-all shadow-md flex items-center justify-center space-x-2"
+            disabled={isSubmitting}
+            className="w-full py-3.5 bg-crimson hover:bg-burgundy text-ivory text-xs uppercase tracking-[0.24em] font-semibold transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-60"
           >
             <Shield className="w-4 h-4" />
-            <span>Sign In to Admin Portal</span>
+            <span>{isSubmitting ? "Authenticating..." : "Sign In to Admin Portal"}</span>
           </button>
         </form>
 
-        {/* Demo Preset Button */}
-        <div className="pt-4 border-t border-ivory-300 space-y-3">
-          <button
-            type="button"
-            onClick={handleOneClickDemo}
-            className="w-full py-3 bg-gold hover:bg-gold-dark text-ivory text-xs uppercase tracking-[0.2em] font-semibold transition-all flex items-center justify-center space-x-2 shadow-sm"
-          >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>1-Click Admin Demo Login</span>
-          </button>
-          <p className="text-[10px] text-center text-ink-muted">
-            Preset: admin@kavvustyle.com / admin123
-          </p>
-        </div>
-
-        <div className="pt-2 text-center">
+        <div className="pt-2 border-t border-ivory-300 text-center">
           <a
             href="/"
             className="inline-flex items-center text-xs text-ink-muted hover:text-crimson transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            <span>Back to Customer Website</span>
+            <span>Back to Customer Storefront</span>
           </a>
         </div>
       </div>

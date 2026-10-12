@@ -59,7 +59,7 @@ export default function AdminInstagramPage() {
               <Instagram className="w-12 h-12 text-gold mx-auto opacity-50" />
               <h3 className="font-serif text-lg text-ink uppercase">No Instagram Posts Added</h3>
               <p className="text-xs text-ink-muted max-w-md mx-auto">
-                All demo Instagram posts have been removed. Click the "Add Instagram Post" button above to upload photos and add links to your official @kaavu_styles Instagram posts.
+                Click the "Add Instagram Post" button above to upload photos and add links to your official @kaavu_styles Instagram posts.
               </p>
             </div>
           ) : (

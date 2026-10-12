@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
                   <DollarSign className="w-5 h-5 text-gold" />
                 </div>
               </div>
-              <p className="font-serif text-3xl font-extrabold text-gold" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-gold" suppressHydrationWarning>
                 {isMounted ? formatPrice(totalSales) : "₹0"}
               </p>
               <p className="text-[10px] text-ivory-300 font-medium">From {isMounted ? orders.length : 0} completed orders</p>
@@ -106,7 +106,7 @@ export default function AdminDashboardPage() {
                   <ClipboardList className="w-5 h-5 text-amber-800" />
                 </div>
               </div>
-              <p className="font-serif text-3xl font-extrabold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? orders.length : 0}
               </p>
               <p className="text-[10px] text-amber-800 font-semibold">Customer checkout orders logged</p>
@@ -122,7 +122,7 @@ export default function AdminDashboardPage() {
                   <ShoppingBag className="w-5 h-5 text-emerald-700" />
                 </div>
               </div>
-              <p className="font-serif text-3xl font-extrabold text-emerald-950" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-emerald-950" suppressHydrationWarning>
                 {isMounted ? products.length : 0}
               </p>
               <p className="text-[10px] text-emerald-800 font-medium" suppressHydrationWarning>
@@ -140,7 +140,7 @@ export default function AdminDashboardPage() {
                   <Ticket className="w-5 h-5 text-amber-700" />
                 </div>
               </div>
-              <p className="font-serif text-3xl font-extrabold text-crimson" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-crimson" suppressHydrationWarning>
                 {isMounted ? activeCouponsCount : 0}
               </p>
               <p className="text-[10px] text-amber-900 font-semibold" suppressHydrationWarning>
@@ -153,21 +153,21 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-ivory p-4 border border-ivory-300 shadow-sm space-y-1">
               <span className="text-[10px] uppercase tracking-widest font-bold text-ink-muted">Categories</span>
-              <p className="font-serif text-2xl font-bold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? categories.length : 0}
               </p>
               <span className="text-[9px] text-gold uppercase font-bold">Catalog Taxonomies</span>
             </div>
             <div className="bg-ivory p-4 border border-ivory-300 shadow-sm space-y-1">
               <span className="text-[10px] uppercase tracking-widest font-bold text-ink-muted">Hero Banners</span>
-              <p className="font-serif text-2xl font-bold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? banners.length : 0}
               </p>
               <span className="text-[9px] text-gold uppercase font-bold">Homepage Slider</span>
             </div>
             <div className="bg-ivory p-4 border border-ivory-300 shadow-sm space-y-1">
               <span className="text-[10px] uppercase tracking-widest font-bold text-ink-muted">Attributes & Tags</span>
-              <p className="font-serif text-2xl font-bold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? lifestyleTags.length + sizes.length + colors.length : 0}
               </p>
               <span className="text-[9px] text-gold uppercase font-bold" suppressHydrationWarning>
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
             </div>
             <div className="bg-ivory p-4 border border-ivory-300 shadow-sm space-y-1">
               <span className="text-[10px] uppercase tracking-widest font-bold text-ink-muted">Instagram Feed</span>
-              <p className="font-serif text-2xl font-bold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? instagramPosts.length : 0}
               </p>
               <span className="text-[9px] text-gold uppercase font-bold">Social Showcase Posts</span>

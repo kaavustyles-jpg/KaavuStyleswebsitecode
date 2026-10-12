@@ -90,7 +90,7 @@ export default function AdminOrdersPage() {
               <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-ink-muted">
                 Total Orders (All-Time)
               </span>
-              <p className="font-serif text-3xl font-extrabold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? totalOrdersCount : 0}
               </p>
               <span className="text-[10px] text-gold font-semibold block">
@@ -103,7 +103,7 @@ export default function AdminOrdersPage() {
               <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-amber-900">
                 This Month's Orders
               </span>
-              <p className="font-serif text-3xl font-extrabold text-amber-800" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-amber-800" suppressHydrationWarning>
                 {isMounted ? thisMonthOrdersCount : 0}
               </p>
               <span className="text-[10px] text-amber-700 font-semibold block uppercase">
@@ -116,7 +116,7 @@ export default function AdminOrdersPage() {
               <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-ink-muted">
                 Total Sales Revenue
               </span>
-              <p className="font-serif text-3xl font-extrabold text-crimson" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-crimson" suppressHydrationWarning>
                 {isMounted ? formatPrice(totalRevenue) : "₹0"}
               </p>
               <span className="text-[10px] text-emerald-700 font-semibold block">Lifetime Revenue Logged</span>
@@ -127,7 +127,7 @@ export default function AdminOrdersPage() {
               <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-emerald-900">
                 This Month's Revenue
               </span>
-              <p className="font-serif text-3xl font-extrabold text-emerald-800" suppressHydrationWarning>
+              <p className="font-sans text-3xl font-bold text-emerald-800" suppressHydrationWarning>
                 {isMounted ? formatPrice(thisMonthRevenue) : "₹0"}
               </p>
               <span className="text-[10px] text-emerald-700 font-semibold block uppercase">
@@ -170,7 +170,7 @@ export default function AdminOrdersPage() {
           <div className="bg-ivory border border-ivory-300 shadow-sm overflow-hidden print:hidden">
             <div className="lg:hidden space-y-3 p-3">
 {!isMounted ? <p className="p-6 text-center text-ink-muted">Loading orders…</p> : filteredOrders.length === 0 ? <p className="p-6 text-center text-ink-muted">No orders match your filters.</p> : filteredOrders.map(o => <AdminListCard key={o.id} title={o.orderNumber} subtitle={o.customerName} badge={o.status}>
-<div className="flex justify-between gap-3"><span className="text-ink-muted">Total</span><strong className="text-crimson">{formatPrice(o.totalAmount)}</strong></div>
+<div className="flex justify-between gap-3"><span className="text-ink-muted">Total</span><strong className="font-sans font-semibold text-crimson">{formatPrice(o.totalAmount)}</strong></div>
 <div className="flex justify-between items-center text-xs py-1.5 border-y border-ivory-300">
   <span className="text-ink-muted">Payment:</span>
   <div className="flex items-center space-x-2">
@@ -228,7 +228,7 @@ export default function AdminOrdersPage() {
                         <td data-label="Items Count" className="py-3 px-4 text-ink font-semibold">
                           {o.items.reduce((sum, item) => sum + item.quantity, 0)} items
                         </td>
-                        <td data-label="Total Amount" className="py-3 px-4 font-serif text-sm font-bold text-crimson">
+                        <td data-label="Total Amount" className="py-3 px-4 font-sans text-sm font-semibold text-crimson">
                           {formatPrice(o.totalAmount)}
                         </td>
                         <td data-label="Payment" className="py-3 px-4">
@@ -427,7 +427,7 @@ export default function AdminOrdersPage() {
                 <div className="text-right space-y-1.5 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-ivory-300">
                   <div className="text-sm font-bold uppercase tracking-wider text-ink flex justify-between sm:justify-end space-x-6 border-t border-ivory-300 pt-1.5 print:border-black">
                     <span>Grand Total Amount:</span>
-                    <span className="font-serif text-2xl font-extrabold text-crimson print:text-black">
+                    <span className="font-sans text-2xl font-bold text-crimson print:text-black">
                       {formatPrice(selectedOrder.totalAmount)}
                     </span>
                   </div>

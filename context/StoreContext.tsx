@@ -388,8 +388,19 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, [customerUser]);
 
   useEffect(() => {
-    if (adminUser) localStorage.setItem("ks_admin_user", JSON.stringify(adminUser));
-    else localStorage.removeItem("ks_admin_user");
+    if (typeof window !== "undefined") {
+      if (adminUser) {
+        localStorage.setItem("ks_admin_user", JSON.stringify(adminUser));
+      } else {
+        localStorage.removeItem("ks_admin_user");
+        try {
+          const savedUser = localStorage.getItem("ks_user");
+          if (savedUser && JSON.parse(savedUser).role === "admin") {
+            localStorage.removeItem("ks_user");
+          }
+        } catch {}
+      }
+    }
   }, [adminUser]);
 
   // Auth Actions
@@ -420,8 +431,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    if (isAdminRoute) setAdminUser(null);
-    else setCustomerUser(null);
+    if (isAdminRoute) {
+      setAdminUser(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("ks_admin_user");
+        try {
+          const savedUser = localStorage.getItem("ks_user");
+          if (savedUser && JSON.parse(savedUser).role === "admin") {
+            localStorage.removeItem("ks_user");
+          }
+        } catch {}
+      }
+    } else {
+      setCustomerUser(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("ks_user");
+      }
+    }
   };
 
   // Cart Actions

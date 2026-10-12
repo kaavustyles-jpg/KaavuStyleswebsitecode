@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import {
   LayoutDashboard,
@@ -23,6 +23,7 @@ import {
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { logout, currentUser } = useStore();
   const [isMounted, setIsMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,6 +34,20 @@ export default function AdminSidebar() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const handleSignOut = () => {
+    logout();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ks_admin_user");
+      try {
+        const savedUser = localStorage.getItem("ks_user");
+        if (savedUser && JSON.parse(savedUser).role === "admin") {
+          localStorage.removeItem("ks_user");
+        }
+      } catch {}
+    }
+    router.replace("/admin/login");
+  };
 
   const links = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -106,8 +121,9 @@ export default function AdminSidebar() {
         </Link>
 
         <button
-          onClick={logout}
-          className="w-full flex items-center space-x-2 text-xs text-crimson-100 hover:text-crimson transition-colors pt-1"
+          type="button"
+          onClick={handleSignOut}
+          className="w-full flex items-center space-x-2 text-xs text-crimson-100 hover:text-crimson transition-colors pt-1 cursor-pointer"
         >
           <LogOut className="w-4 h-4 text-crimson flex-shrink-0" />
           <span>Sign Out</span>

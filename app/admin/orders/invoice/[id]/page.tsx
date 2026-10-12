@@ -289,7 +289,7 @@ export default function AdminOrderInvoicePage() {
           <div className="p-5 space-y-2 bg-white">
             <div className="flex justify-between text-sm font-extrabold text-ink pt-1 print:text-black">
               <span>TOTAL:</span>
-              <span className="font-serif text-xl font-extrabold text-crimson print:text-black">{formatPrice(order.totalAmount)}</span>
+              <span className="font-sans text-xl font-bold text-crimson print:text-black">{formatPrice(order.totalAmount)}</span>
             </div>
             <div className="pt-2 border-t border-gold/30 print:border-black space-y-1 font-sans text-[11px]">
               <div className="flex justify-between items-center">

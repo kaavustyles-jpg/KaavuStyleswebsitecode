@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
-import { ExternalLink, Shield } from "lucide-react";
+import { ExternalLink, Shield, LogOut } from "lucide-react";
 
 export default function AdminHeader({ title }: { title: string }) {
-  const { currentUser } = useStore();
+  const { currentUser, logout } = useStore();
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const section = pathname?.split("/")[2] || "dashboard";
@@ -17,6 +18,20 @@ export default function AdminHeader({ title }: { title: string }) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const handleSignOut = () => {
+    logout();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("ks_admin_user");
+      try {
+        const savedUser = localStorage.getItem("ks_user");
+        if (savedUser && JSON.parse(savedUser).role === "admin") {
+          localStorage.removeItem("ks_user");
+        }
+      } catch {}
+    }
+    router.replace("/admin/login");
+  };
 
   return (
     <header className="bg-ivory border-b border-ivory-300 min-h-[72px] py-3 lg:py-4 pl-16 pr-3 sm:pr-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-3 sticky top-0 z-30 shadow-sm">
@@ -31,12 +46,12 @@ export default function AdminHeader({ title }: { title: string }) {
         </p>
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <Link
           href="/"
           target="_blank"
           aria-label="Open live storefront"
-          className="flex items-center justify-center gap-1.5 min-h-10 min-w-10 rounded-lg border border-ivory-300 lg:border-0 text-xs uppercase tracking-wider text-ink hover:text-crimson transition-colors"
+          className="flex items-center justify-center gap-1.5 min-h-10 min-w-10 px-2.5 rounded-lg border border-ivory-300 lg:border-0 text-xs uppercase tracking-wider text-ink hover:text-crimson transition-colors"
         >
           <span className="hidden sm:inline">Live Site</span>
           <ExternalLink className="w-3.5 h-3.5 text-gold" />
@@ -48,6 +63,16 @@ export default function AdminHeader({ title }: { title: string }) {
             {isMounted ? currentUser?.name || "Admin User" : "Admin User"}
           </span>
         </div>
+
+        <button
+          type="button"
+          onClick={handleSignOut}
+          title="Sign Out of Admin"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-rose-200 bg-rose-50/80 hover:bg-rose-100 text-rose-800 text-xs font-semibold transition-colors cursor-pointer"
+        >
+          <LogOut className="w-3.5 h-3.5 text-crimson" />
+          <span className="hidden sm:inline">Sign Out</span>
+        </button>
       </div>
     </header>
   );

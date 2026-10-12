@@ -64,7 +64,9 @@ export default function AdminOrdersPage() {
       o.orderNumber.toLowerCase().includes(query) ||
       o.customerName.toLowerCase().includes(query) ||
       o.customerEmail.toLowerCase().includes(query) ||
-      o.customerPhone.includes(query);
+      o.customerPhone.includes(query) ||
+      (o.razorpayPaymentId && o.razorpayPaymentId.toLowerCase().includes(query)) ||
+      (o.paymentId && o.paymentId.toLowerCase().includes(query));
 
     return matchesStatus && matchesQuery;
   });
@@ -168,7 +170,17 @@ export default function AdminOrdersPage() {
           <div className="bg-ivory border border-ivory-300 shadow-sm overflow-hidden print:hidden">
             <div className="lg:hidden space-y-3 p-3">
 {!isMounted ? <p className="p-6 text-center text-ink-muted">Loading orders…</p> : filteredOrders.length === 0 ? <p className="p-6 text-center text-ink-muted">No orders match your filters.</p> : filteredOrders.map(o => <AdminListCard key={o.id} title={o.orderNumber} subtitle={o.customerName} badge={o.status}>
-<div className="flex justify-between gap-3"><span className="text-ink-muted">Total</span><strong className="text-crimson">{formatPrice(o.totalAmount)}</strong></div><p className="text-xs text-ink-muted">{o.items.reduce((sum,item) => sum + item.quantity,0)} items · {new Date(o.createdAt).toLocaleDateString('en-IN')}</p>
+<div className="flex justify-between gap-3"><span className="text-ink-muted">Total</span><strong className="text-crimson">{formatPrice(o.totalAmount)}</strong></div>
+<div className="flex justify-between items-center text-xs py-1 border-y border-ivory-300">
+  <span className="text-ink-muted">Payment:</span>
+  <span className="font-mono text-[10px] text-burgundy font-bold truncate max-w-[150px]">{o.razorpayPaymentId || o.paymentId || "—"}</span>
+  <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
+    (o.paymentStatus === "Paid" || (!o.paymentStatus && (o.razorpayPaymentId || o.paymentId))) ? "bg-emerald-100 text-emerald-800" : o.paymentStatus === "Failed" ? "bg-rose-100 text-rose-800" : "bg-amber-100 text-amber-800"
+  }`}>
+    {(o.paymentStatus === "Paid" || (!o.paymentStatus && (o.razorpayPaymentId || o.paymentId))) ? "Paid" : o.paymentStatus || "Pending"}
+  </span>
+</div>
+<p className="text-xs text-ink-muted">{o.items.reduce((sum,item) => sum + item.quantity,0)} items · {new Date(o.createdAt).toLocaleDateString('en-IN')}</p>
 <div className="bg-white border border-ivory-300 rounded-lg p-3 space-y-1"><p className="font-medium">{o.customerName}</p><p className="text-xs text-ink-muted break-all">{o.customerEmail}</p><p className="text-xs text-ink-muted">{o.customerPhone}</p></div>
 <label className="block text-xs text-ink-muted">Order status<select aria-label={`Status for ${o.orderNumber}`} value={o.status} onChange={event => handleStatusChange(o.id,event.target.value as Order['status'])} className="block w-full mt-2 p-3 border border-ivory-300 rounded-lg bg-white">{['Pending','Processing','Shipped','Delivered','Cancelled'].map(status => <option key={status}>{status}</option>)}</select></label>
 <button onClick={() => setSelectedOrder(o)} className="w-full bg-crimson text-ivory rounded-lg py-3 text-xs">View details & invoice</button>
@@ -181,7 +193,8 @@ export default function AdminOrdersPage() {
                     <th className="py-3.5 px-4">Customer Details</th>
                     <th className="py-3.5 px-4">Items Count</th>
                     <th className="py-3.5 px-4">Total Amount</th>
-                    <th className="py-3.5 px-4">Guest IP</th>
+                    <th className="py-3.5 px-4">Razorpay Payment ID</th>
+                    <th className="py-3.5 px-4">Payment Status</th>
                     <th className="py-3.5 px-4">Status</th>
                     <th className="py-3.5 px-4">Date</th>
                     <th className="py-3.5 px-4 text-right">Actions</th>
@@ -190,13 +203,13 @@ export default function AdminOrdersPage() {
                 <tbody className="divide-y divide-ivory-200">
                   {!isMounted ? (
                     <tr>
-                      <td data-label="" colSpan={8} className="py-8 text-center text-ink-muted font-semibold">
+                      <td data-label="" colSpan={9} className="py-8 text-center text-ink-muted font-semibold">
                         Loading Orders Log...
                       </td>
                     </tr>
                   ) : filteredOrders.length === 0 ? (
                     <tr>
-                      <td data-label="" colSpan={8} className="py-8 text-center text-ink-muted font-semibold">
+                      <td data-label="" colSpan={9} className="py-8 text-center text-ink-muted font-semibold">
                         No orders matching the selected filter criteria.
                       </td>
                     </tr>
@@ -217,8 +230,25 @@ export default function AdminOrdersPage() {
                         <td data-label="Total Amount" className="py-3 px-4 font-serif text-sm font-bold text-crimson">
                           {formatPrice(o.totalAmount)}
                         </td>
-                        <td data-label="Guest IP" className="py-3 px-4 font-mono text-[10px] text-ink-muted">
-                          {o.ipAddress || "—"}
+                        <td data-label="Razorpay Payment ID" className="py-3 px-4 font-mono text-[11px]">
+                          {o.razorpayPaymentId || o.paymentId ? (
+                            <span className="text-burgundy font-semibold bg-gold/15 px-2 py-0.5 rounded border border-gold/30">
+                              {o.razorpayPaymentId || o.paymentId}
+                            </span>
+                          ) : (
+                            <span className="text-ink-muted font-sans">—</span>
+                          )}
+                        </td>
+                        <td data-label="Payment Status" className="py-3 px-4">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                            (o.paymentStatus === "Paid" || (!o.paymentStatus && (o.razorpayPaymentId || o.paymentId)))
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : o.paymentStatus === "Failed"
+                              ? "bg-rose-100 text-rose-800 border border-rose-300"
+                              : "bg-amber-100 text-amber-800 border border-amber-300"
+                          }`}>
+                            {(o.paymentStatus === "Paid" || (!o.paymentStatus && (o.razorpayPaymentId || o.paymentId))) ? "Paid" : o.paymentStatus || "Pending"}
+                          </span>
                         </td>
                         <td data-label="Status" className="py-3 px-4">
                           <select
@@ -322,7 +352,7 @@ export default function AdminOrdersPage() {
 
               <div className="space-y-1.5">
                 <p className="font-bold text-ink uppercase tracking-wider text-[10px] text-gold print:text-black">
-                  Shipping Destination & Order Status
+                  Shipping Destination & Payment Details
                 </p>
                 <p className="text-ink font-medium flex items-start print:text-black">
                   <MapPin className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 mt-0.5 print:hidden" />
@@ -331,9 +361,26 @@ export default function AdminOrdersPage() {
                 <p className="text-ink-muted text-[11px] print:text-gray-800">
                   Order Status: <span className="font-bold uppercase text-crimson print:text-black">{selectedOrder.status}</span>
                 </p>
-                <p className="text-ink-muted text-[11px] font-mono print:text-gray-800">
-                  Guest IP Logged: {selectedOrder.ipAddress || "—"}
-                </p>
+                <div className="pt-1.5 border-t border-ivory-300 space-y-1">
+                  <p className="text-[11px] font-mono text-ink print:text-gray-800">
+                    <span className="text-ink-muted font-sans font-semibold">Razorpay Payment ID: </span>
+                    <span className="font-bold text-burgundy bg-gold/20 px-2 py-0.5 rounded border border-gold/40 print:bg-transparent print:border-none">
+                      {selectedOrder.razorpayPaymentId || selectedOrder.paymentId || "—"}
+                    </span>
+                  </p>
+                  <p className="text-[11px] font-sans text-ink print:text-gray-800 flex items-center space-x-1.5">
+                    <span className="text-ink-muted font-semibold">Payment Status: </span>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      (selectedOrder.paymentStatus === "Paid" || (!selectedOrder.paymentStatus && (selectedOrder.razorpayPaymentId || selectedOrder.paymentId)))
+                        ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                        : selectedOrder.paymentStatus === "Failed"
+                        ? "bg-rose-100 text-rose-800 border border-rose-300"
+                        : "bg-amber-100 text-amber-800 border border-amber-300"
+                    }`}>
+                      {(selectedOrder.paymentStatus === "Paid" || (!selectedOrder.paymentStatus && (selectedOrder.razorpayPaymentId || selectedOrder.paymentId))) ? "Paid" : selectedOrder.paymentStatus || "Pending"}
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
 

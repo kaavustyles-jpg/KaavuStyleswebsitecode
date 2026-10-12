@@ -62,7 +62,10 @@ export interface Order {
   totalAmount: number;
   status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
   items: OrderItem[];
-  ipAddress: string;
+  ipAddress?: string;
+  razorpayPaymentId?: string;
+  paymentId?: string;
+  paymentStatus?: "Paid" | "Pending" | "Failed";
   createdAt: string;
 }
 

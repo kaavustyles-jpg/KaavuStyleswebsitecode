@@ -38,8 +38,27 @@ export default function ProductDetailModal({
   const [selectedSize, setSelectedSize] = useState((product.sizes.length ? product.sizes : ["Standard"]).find(size => stockForSize(product, size) > 0) || product.sizes[0] || "Standard");
   const [selectedColor, setSelectedColor] = useState(product.colors[0] || "Standard");
 
-  const gallery = product.colorImages?.[selectedColor]?.length ? product.colorImages[selectedColor] : product.images;
-  useEffect(() => { setSelectedImage(gallery[0] || ""); }, [gallery, selectedColor, product.id]);
+  const colorSpecificPhotos = product.colorImages?.[selectedColor]?.length
+    ? product.colorImages[selectedColor]
+    : product.images.filter((img) => img.toLowerCase().includes(selectedColor.toLowerCase()));
+
+  const gallery = colorSpecificPhotos.length > 0
+    ? colorSpecificPhotos
+    : (product.images.length > 0 ? product.images : ["https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800"]);
+
+  useEffect(() => {
+    const colIdx = product.colors.indexOf(selectedColor);
+    const colPhotos = product.colorImages?.[selectedColor]?.length
+      ? product.colorImages[selectedColor]
+      : product.images.filter((img) => img.toLowerCase().includes(selectedColor.toLowerCase()));
+    if (colPhotos.length > 0) {
+      setSelectedImage(colPhotos[0]);
+    } else if (colIdx >= 0 && colIdx < product.images.length) {
+      setSelectedImage(product.images[colIdx]);
+    } else if (product.images[0]) {
+      setSelectedImage(product.images[0]);
+    }
+  }, [selectedColor, product.id]);
 
   // Fullscreen Inspection Modal state for Mobile & Touch/Click
   const [isFullscreenZoomOpen, setIsFullscreenZoomOpen] = useState(false);
@@ -282,8 +301,17 @@ export default function ProductDetailModal({
                           key={col}
                           onClick={() => {
                             setSelectedColor(col);
-                            const photos = product.colorImages?.[col]?.length ? product.colorImages[col] : product.images;
-                            setSelectedImage(photos[0] || "");
+                            const colIdx = product.colors.indexOf(col);
+                            const photos = product.colorImages?.[col]?.length
+                              ? product.colorImages[col]
+                              : product.images.filter((img) => img.toLowerCase().includes(col.toLowerCase()));
+                            if (photos.length > 0) {
+                              setSelectedImage(photos[0]);
+                            } else if (colIdx >= 0 && colIdx < product.images.length) {
+                              setSelectedImage(product.images[colIdx]);
+                            } else if (product.images[0]) {
+                              setSelectedImage(product.images[0]);
+                            }
                             setFullscreenScale(1);
                           }}
                           className={`px-3.5 py-2 text-xs uppercase tracking-wider transition-all border cursor-pointer ${

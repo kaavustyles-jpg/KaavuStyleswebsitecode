@@ -227,11 +227,16 @@ export default function OrdersPage() {
 
                 <div>
                   <span className="font-semibold text-gold uppercase tracking-wider block mb-1">
-                    Payment Status
+                    Payment Details
                   </span>
                   <p className="text-emerald-700 font-semibold uppercase tracking-wider">
-                    Paid / Confirmed
+                    {(order.paymentStatus === "Paid" || (!order.paymentStatus && (order.razorpayPaymentId || order.paymentId))) ? "Paid / Confirmed" : order.paymentStatus || "Pending"}
                   </p>
+                  {(order.razorpayPaymentId || order.paymentId) && (
+                    <p className="text-ink-muted text-[11px] font-mono">
+                      Ref: {order.razorpayPaymentId || order.paymentId}
+                    </p>
+                  )}
                   <p className="text-ink-muted text-[11px]">Standard Express Delivery</p>
                 </div>
               </div>

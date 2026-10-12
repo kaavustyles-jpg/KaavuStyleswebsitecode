@@ -79,6 +79,8 @@ export function mapDbBannerToBanner(row: any): Banner {
 }
 
 export function mapDbOrderToOrder(row: any): Order {
+  const pId = row.razorpay_payment_id || row.payment_id || row.gateway_payment_id || row.payment_reference || "";
+  const pStatus = row.payment_status || (pId ? "Paid" : (row.status === "Cancelled" ? "Failed" : "Pending"));
   return {
     id: row.id,
     orderNumber: row.order_number,
@@ -91,7 +93,10 @@ export function mapDbOrderToOrder(row: any): Order {
     totalAmount: Number(row.total_amount),
     status: row.status || "Pending",
     items: row.items || [],
-    ipAddress: row.ip_address || "127.0.0.1",
+    ipAddress: row.ip_address || "",
+    razorpayPaymentId: pId,
+    paymentId: pId,
+    paymentStatus: pStatus,
     createdAt: row.created_at || new Date().toISOString(),
   };
 }

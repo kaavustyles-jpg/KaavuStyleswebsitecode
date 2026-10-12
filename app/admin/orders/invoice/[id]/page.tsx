@@ -216,16 +216,13 @@ export default function AdminOrderInvoicePage() {
             <p className="text-gray-800 font-mono text-[10px] pt-0.5">
               Fulfillment Status: <span className="font-bold text-crimson print:text-black uppercase">{order.status}</span>
             </p>
-            <div className="pt-2 border-t border-gold/40 print:border-black text-[10px] space-y-0.5">
-              <p className="text-gray-800 font-mono">
-                <span className="font-semibold text-gray-700">Razorpay Payment ID: </span>
-                <span className="font-bold text-black">{order.razorpayPaymentId || order.paymentId || "—"}</span>
-              </p>
+            <div className="pt-2 border-t border-gold/40 print:border-black text-[10px]">
               <p className="text-gray-800">
-                <span className="font-semibold text-gray-700">Payment Status: </span>
-                <span className="font-bold text-emerald-800 print:text-black uppercase">
+                <span className="font-semibold text-gray-700">Payment: </span>
+                <span className="font-bold text-emerald-800 print:text-black uppercase mr-2">
                   {(order.paymentStatus === "Paid" || (!order.paymentStatus && (order.razorpayPaymentId || order.paymentId))) ? "PAID" : order.paymentStatus || "PENDING"}
                 </span>
+                <span className="font-mono text-gray-900 font-semibold">{order.razorpayPaymentId || order.paymentId || "—"}</span>
               </p>
             </div>
           </div>
@@ -296,18 +293,14 @@ export default function AdminOrderInvoicePage() {
             </div>
             <div className="pt-2 border-t border-gold/30 print:border-black space-y-1 font-sans text-[11px]">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Payment Mode:</span>
-                <span className="font-semibold text-black">Razorpay Online</span>
-              </div>
-              <div className="flex justify-between items-center font-mono">
-                <span className="text-gray-600 font-sans">Payment ID:</span>
-                <span className="font-bold text-black text-[10px]">{order.razorpayPaymentId || order.paymentId || "—"}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Payment Status:</span>
-                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold uppercase rounded text-[10px] border border-emerald-300 print:bg-transparent print:border-none print:text-black">
+                <span className="text-gray-600">Payment:</span>
+                <span className="font-bold text-emerald-800 uppercase">
                   {(order.paymentStatus === "Paid" || (!order.paymentStatus && (order.razorpayPaymentId || order.paymentId))) ? "PAID" : order.paymentStatus || "PENDING"}
                 </span>
+              </div>
+              <div className="flex justify-between items-center font-mono text-[10px]">
+                <span className="text-gray-600 font-sans">Payment ID:</span>
+                <span className="font-bold text-black">{order.razorpayPaymentId || order.paymentId || "—"}</span>
               </div>
             </div>
           </div>

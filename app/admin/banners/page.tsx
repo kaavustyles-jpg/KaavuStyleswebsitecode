@@ -74,15 +74,27 @@ export default function AdminBannersPage() {
     setSaving(true);
     setSaveError("");
     try {
-    // Also compress older inline uploads when a banner is edited and saved.
-    const optimizeInlineImage = async (image: string, maxDimension: number) => {
+    // Upload any inline data images to the Supabase Storage bucket
+    const ensureStorageUrl = async (image: string, maxDimension: number) => {
+      if (!image) return "";
       if (!image.startsWith("data:image/")) return image;
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image, folder: "banners", name: "banner" }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) return data.url;
+      } catch (e) {
+        console.warn("Storage upload fallback for banner:", e);
+      }
       const blob = await (await fetch(image)).blob();
       return compressAndOptimizeImage(new File([blob], "banner", { type: blob.type }), maxDimension, 0.78, true);
     };
     const [landscapeImage, mobileImage] = await Promise.all([
-      optimizeInlineImage(bannerImages[0], 1600),
-      optimizeInlineImage(mobileImages[0] || "", 1000),
+      ensureStorageUrl(bannerImages[0], 1600),
+      ensureStorageUrl(mobileImages[0] || "", 1000),
     ]);
     if (editingBannerId) {
       await updateBanner(editingBannerId, {
@@ -475,9 +487,9 @@ export default function AdminBannersPage() {
                         </div>
                       </div>
                     </div>
-                    <ImageUploader images={mobileImages} onChange={setMobileImages} single={true} alwaysOptimize maxDimension={1000} quality={0.78} label="Mobile Banner — 800 × 1000 px (optional)" />
+                    <ImageUploader images={mobileImages} onChange={setMobileImages} single={true} alwaysOptimize maxDimension={1000} quality={0.78} label="Mobile Banner — 800 × 1000 px (optional)" folder="banners" />
                     <p className="text-xs text-ink-muted">Mobile uses the landscape image when no mobile photo is uploaded.</p>
-                    {/* Image Uploader (WebP Compression) */}
+                    {/* Image Uploader (WebP Compression to Supabase Storage) */}
                     <ImageUploader
                       images={bannerImages}
                       onChange={setBannerImages}
@@ -486,6 +498,7 @@ export default function AdminBannersPage() {
                       maxDimension={1600}
                       quality={0.78}
                       label="Landscape Banner — 1600 × 500 px"
+                      folder="banners"
                     />
                   </div>
                 </div>

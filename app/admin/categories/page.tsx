@@ -21,15 +21,30 @@ export default function AdminCategoriesPage() {
     if (!name) return;
     setError("");
     try {
-    if (editingId) await updateCategory(editingId, { name, imageUrl: categoryImages[0] || "" });
-    else await addCategory({
-      name,
-      slug: name.toLowerCase().replace(/\s+/g, "-"),
-      imageUrl: categoryImages[0] || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800",
-    });
-    setName("");
-    setCategoryImages([]);
-    setIsModalOpen(false);
+      let finalImageUrl = categoryImages[0] || "";
+      if (finalImageUrl.startsWith("data:image/")) {
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: finalImageUrl, folder: "categories", name: "category" }),
+          });
+          const data = await res.json();
+          if (res.ok && data.url) finalImageUrl = data.url;
+        } catch (err) {
+          console.warn("Storage upload fallback for category:", err);
+        }
+      }
+
+      if (editingId) await updateCategory(editingId, { name, imageUrl: finalImageUrl });
+      else await addCategory({
+        name,
+        slug: name.toLowerCase().replace(/\s+/g, "-"),
+        imageUrl: finalImageUrl || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800",
+      });
+      setName("");
+      setCategoryImages([]);
+      setIsModalOpen(false);
     } catch (error) { setError(error instanceof Error ? error.message : "Could not save category."); }
   };
 
@@ -123,12 +138,13 @@ export default function AdminCategoriesPage() {
                 />
               </div>
 
-              {/* Image File Uploader */}
+              {/* Image File Uploader (Uploads to Supabase Storage images/categories) */}
               <ImageUploader
                 images={categoryImages}
                 onChange={setCategoryImages}
                 single={true}
                 label="Category Cover Image File"
+                folder="categories"
               />
 
               <button

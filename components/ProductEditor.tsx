@@ -51,6 +51,26 @@ export default function ProductEditor({ productId }: { productId?: string }) {
 
   };
 
+  const ensureStorageUrls = async (urls: string[]): Promise<string[]> => {
+    const hasDataUrl = urls.some((u) => typeof u === "string" && u.startsWith("data:image/"));
+    if (!hasDataUrl) return urls;
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ images: urls, folder: "products", name: "product" }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.urls)) {
+        return data.urls;
+      }
+    } catch (e) {
+      console.warn("Storage upload fallback in ProductEditor:", e);
+    }
+    return urls;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (saving) return;
@@ -59,6 +79,12 @@ export default function ProductEditor({ productId }: { productId?: string }) {
 
     const catObj = categories.find((c) => c.name === category);
     if (!catObj) { setSaveError("Please select a category."); setSaving(false); return; }
+
+    const finalImages = await ensureStorageUrls(productImages);
+    const finalColorImages: Record<string, string[]> = {};
+    for (const col of selectedColors) {
+      finalColorImages[col] = await ensureStorageUrls(colorImages[col] || []);
+    }
 
     const productPayload = {
       name,
@@ -69,11 +95,11 @@ export default function ProductEditor({ productId }: { productId?: string }) {
       categoryId: catObj.id,
       stock: selectedSizes.length ? selectedSizes.reduce((sum, size) => sum + (sizeStock[size] ?? 0), 0) : generalStock,
       sizeStock: selectedSizes.length ? Object.fromEntries(selectedSizes.map(size => [size, sizeStock[size] ?? 0])) : {},
-      colorImages: Object.fromEntries(selectedColors.map(color => [color, colorImages[color] || []])),
+      colorImages: finalColorImages,
       sizes: selectedSizes,
       colors: selectedColors,
       lifestyleTags: selectedTags,
-      images: productImages.length > 0 ? productImages : ["https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800"],
+      images: finalImages.length > 0 ? finalImages : ["https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800"],
       isLatest,
       isFeatured,
     };
@@ -267,13 +293,14 @@ export default function ProductEditor({ productId }: { productId?: string }) {
                 </div>
               </div>
 
-              {selectedColors.map(color => <ImageUploader key={color} images={colorImages[color] || []} onChange={images => setColorImages(prev => ({...prev, [color]: images}))} label={`Photos for ${color}`} />)}
+              {selectedColors.map(color => <ImageUploader key={color} images={colorImages[color] || []} onChange={images => setColorImages(prev => ({...prev, [color]: images}))} label={`Photos for ${color}`} folder="products" />)}
               {saveError && <p role="alert" className="text-crimson">{saveError}</p>}
-              {/* IMAGE FILE UPLOADER (No raw URL typing required!) */}
+              {/* IMAGE FILE UPLOADER (Uploads directly to Supabase Storage images bucket) */}
               <ImageUploader
                 images={productImages}
                 onChange={setProductImages}
                 label="Product Images (Select Image Files from Device)"
+                folder="products"
               />
 
               <div className="flex items-center space-x-6 pt-2">

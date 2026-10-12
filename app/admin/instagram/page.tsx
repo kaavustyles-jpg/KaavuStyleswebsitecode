@@ -20,7 +20,22 @@ export default function AdminInstagramPage() {
     e.preventDefault();
     if (igImages.length === 0) return;
 
-    await addInstagramPost(postUrl, igImages[0], caption);
+    let finalImageUrl = igImages[0] || "";
+    if (finalImageUrl.startsWith("data:image/")) {
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: finalImageUrl, folder: "instagram", name: "instagram" }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) finalImageUrl = data.url;
+      } catch (err) {
+        console.warn("Storage upload fallback for instagram:", err);
+      }
+    }
+
+    await addInstagramPost(postUrl, finalImageUrl, caption);
     setPostUrl("https://instagram.com");
     setIgImages([]);
     setCaption("");
@@ -137,12 +152,13 @@ export default function AdminInstagramPage() {
                 />
               </div>
 
-              {/* Image File Uploader */}
+              {/* Image File Uploader (Uploads to Supabase Storage images/instagram) */}
               <ImageUploader
                 images={igImages}
                 onChange={setIgImages}
                 single={true}
                 label="Instagram Photo File"
+                folder="instagram"
               />
 
               <div>

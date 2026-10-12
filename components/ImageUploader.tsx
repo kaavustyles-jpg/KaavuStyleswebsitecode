@@ -14,6 +14,7 @@ interface ImageUploaderProps {
   maxDimension?: number;
   quality?: number;
   alwaysOptimize?: boolean;
+  folder?: string;
 }
 
 interface ImageDimension {
@@ -31,6 +32,7 @@ export default function ImageUploader({
   maxDimension = 1600,
   quality = 0.85,
   alwaysOptimize = false,
+  folder = "products",
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [urlInput, setUrlInput] = useState("");
@@ -62,7 +64,7 @@ export default function ImageUploader({
     const fileList = Array.from(files);
 
     try {
-      let newImages: string[] = [];
+      let preparedImages: string[] = [];
 
       if (noOptimize) {
         const promises = fileList.map(
@@ -74,16 +76,34 @@ export default function ImageUploader({
               reader.readAsDataURL(file);
             })
         );
-        newImages = await Promise.all(promises);
+        preparedImages = await Promise.all(promises);
       } else {
         const promises = fileList.map((file) => compressAndOptimizeImage(file, maxDimension, quality, alwaysOptimize));
-        newImages = await Promise.all(promises);
+        preparedImages = await Promise.all(promises);
+      }
+
+      // Upload to Supabase Storage bucket via server API route
+      let finalImages: string[] = preparedImages;
+      try {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ images: preparedImages, folder, name: folder }),
+        });
+        const uploadData = await uploadRes.json();
+        if (uploadRes.ok && Array.isArray(uploadData.urls) && uploadData.urls.length > 0) {
+          finalImages = uploadData.urls;
+        } else {
+          console.warn("Storage upload API error, fallback to prepared:", uploadData);
+        }
+      } catch (uploadErr) {
+        console.warn("Storage bucket upload network error, fallback to prepared:", uploadErr);
       }
 
       if (single) {
-        onChange([newImages[0]]);
+        onChange([finalImages[0]]);
       } else {
-        onChange([...images, ...newImages]);
+        onChange([...images, ...finalImages]);
       }
     } catch (err) {
       console.error("Image upload error:", err);
@@ -153,10 +173,10 @@ export default function ImageUploader({
             <div className="py-2 space-y-2">
               <Loader2 className="w-8 h-8 text-gold animate-spin mx-auto" />
               <p className="text-xs font-bold text-gold uppercase tracking-wider">
-                ✨ Optimizing & Compressing High-Res Photo...
+                ✨ Uploading to Supabase Storage Bucket...
               </p>
               <p className="text-[10px] text-ink-muted">
-                Resizing & applying WebP compression for instant saving without memory quota limits.
+                Optimizing photo & saving to public cloud storage bucket ({folder}/).
               </p>
             </div>
           ) : (
@@ -225,6 +245,11 @@ export default function ImageUploader({
                     {idx === 0 && (
                       <span className="absolute top-1 left-1 bg-crimson/90 text-ivory text-[8px] uppercase font-bold px-1.5 py-0.5 rounded tracking-wider z-10">
                         Cover
+                      </span>
+                    )}
+                    {imgSrc.includes("/storage/v1/object/public/") && (
+                      <span className="absolute bottom-1 right-1 bg-emerald-800/90 text-ivory text-[7px] uppercase font-bold px-1.5 py-0.5 rounded tracking-wider z-10">
+                        Storage Bucket
                       </span>
                     )}
                   </div>

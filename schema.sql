@@ -218,3 +218,23 @@ BEGIN
   RETURN to_jsonb(order_row);
 END;
 $$;
+
+-- 10. SUPABASE STORAGE BUCKET FOR MEDIA ASSETS
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+    'images',
+    'images',
+    true,
+    10485760,
+    ARRAY['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif']
+)
+ON CONFLICT (id) DO UPDATE SET
+    public = true,
+    file_size_limit = 10485760,
+    allowed_mime_types = ARRAY['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'];
+
+-- Storage bucket access policies
+CREATE POLICY "Public Read Images" ON storage.objects FOR SELECT USING (bucket_id = 'images');
+CREATE POLICY "Public Insert Images" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'images');
+CREATE POLICY "Public Update Images" ON storage.objects FOR UPDATE USING (bucket_id = 'images');
+CREATE POLICY "Public Delete Images" ON storage.objects FOR DELETE USING (bucket_id = 'images');

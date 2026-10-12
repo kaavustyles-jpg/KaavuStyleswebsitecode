@@ -77,7 +77,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Product Info */}
         <div className="p-3.5 flex-1 flex flex-col justify-between space-y-2">
           <div>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold block">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold block truncate" title={product.category}>
               {product.category}
             </span>
             <h3 className="font-serif text-base text-ink font-normal leading-tight group-hover:text-crimson transition-colors line-clamp-1 mt-0.5">

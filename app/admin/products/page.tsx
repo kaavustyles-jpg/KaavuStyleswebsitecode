@@ -197,8 +197,10 @@ export default function AdminProductsPage() {
                           {p.id}
                         </span>
                       </td>
-                      <td data-label="Category" className="py-4 px-3 text-ink-muted break-words">
-                        {p.category}
+                      <td data-label="Category" className="py-4 px-3 text-ink-muted">
+                        <span className="block truncate max-w-full" title={p.category}>
+                          {p.category}
+                        </span>
                       </td>
                       <td data-label="Price" className="py-4 px-3 font-semibold text-crimson">
                         {formatPrice(p.price)}

@@ -209,7 +209,10 @@ export default function ProductDetailModal({
 
               {/* 2. PRODUCT DETAILS & SELECTORS */}
               <div className="space-y-5 flex flex-col justify-between">
-                <div className="space-y-3">
+                <div className="space-y-2">
+                  <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gold font-semibold block truncate" title={product.category}>
+                    {product.category}
+                  </span>
                   <h2 className="font-serif text-xl sm:text-3xl text-ink font-normal leading-tight">
                     {product.name}
                   </h2>

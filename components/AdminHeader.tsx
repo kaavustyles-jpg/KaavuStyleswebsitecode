@@ -41,8 +41,8 @@ export default function AdminHeader({ title }: { title: string }) {
           <span className="hidden lg:block">{title}</span>
         </h1>
         <p className="text-[10px] text-gold font-sans mt-1 leading-tight lg:uppercase lg:tracking-[0.2em] lg:font-semibold">
-          <span className="lg:hidden">Kaavu Styles · Admin</span>
-          <span className="hidden lg:inline">Kaavu Styles Control Center</span>
+          <span className="lg:hidden">Demo Ecommerce · Admin</span>
+          <span className="hidden lg:inline">Demo Ecommerce Control Center</span>
         </p>
       </div>
 

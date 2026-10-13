@@ -16,7 +16,7 @@ export default function MobileBottomNav() {
   }, []);
 
   // Hide mobile bottom nav on Admin pages
-  if (pathname?.startsWith("/admin")) {
+  if (pathname?.startsWith("/admin") || (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"))) {
     return null;
   }
 

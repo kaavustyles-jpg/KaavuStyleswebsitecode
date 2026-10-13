@@ -38,13 +38,13 @@ export default function AdminLoginPage() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="relative w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-gold shadow-md bg-white">
-            <Image src="/icon.jpeg" alt="Kaavu Styles" fill className="object-cover" priority />
+            <Image src="/icon.jpeg" alt="Demo Ecommerce" fill className="object-cover" priority />
           </div>
           <h1 className="font-serif text-3xl text-ink uppercase tracking-wider font-normal">
-            Kaavu Admin
+            Demo Ecommerce
           </h1>
           <p className="text-[10px] uppercase tracking-[0.24em] text-gold font-sans font-semibold">
-            Management Portal Login
+            Admin & Seller Portal Login
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
                   setEmail(e.target.value);
                   if (errorMessage) setErrorMessage("");
                 }}
-                placeholder="kaavustyles@gmail.com"
+                placeholder="admin@kaavustyle.com"
                 className="w-full bg-transparent text-xs text-ink outline-none"
               />
             </div>

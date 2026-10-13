@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import AuthModal from "@/components/AuthModal";
-import CartDrawer from "@/components/CartDrawer";
-import ToastNotification from "@/components/ToastNotification";
-import SiteEntrance from "@/components/SiteEntrance";
-
-import MobileBottomNav from "@/components/MobileBottomNav";
+import StoreFrontShell from "@/components/StoreFrontShell";
 
 export const metadata: Metadata = {
-  title: "Kaavu Styles | For Every Version Of You",
+  title: "Demo Ecommerce | Online Store",
   description:
-    "Luxury clothing brand featuring royal  designer kurtis.",
+    "Demo Ecommerce luxury fashion apparel, kurtis, lehengas, and artisanal ensembles.",
   icons: {
     icon: "/icon.jpeg",
   },
@@ -36,15 +29,7 @@ export default function RootLayout({
       </head>
       <body className="bg-ivory text-ink min-h-screen flex flex-col font-sans selection:bg-crimson selection:text-ivory">
         <StoreProvider>
-          <SiteEntrance>
-          <Navbar />
-          <main className="flex-grow min-w-0 w-full pb-16 lg:pb-0">{children}</main>
-          <Footer />
-          <MobileBottomNav />
-          <AuthModal />
-          <CartDrawer />
-          <ToastNotification />
-          </SiteEntrance>
+          <StoreFrontShell>{children}</StoreFrontShell>
         </StoreProvider>
       </body>
     </html>

@@ -10,8 +10,8 @@ SHIPROCKET_PASSWORD="LlC&6xk8o5R3G#7^D$#RDx5AKF*NWUxf"
 
 SHIPROCKET_EMAIL=vyshnavigowda@gmail.com
 
-ADMIN_LOGIN_EMAILS="kaavustyles@gmail.com,admin@kavvustyle.com"
+ADMIN_LOGIN_EMAILS="admin@kaavustyle.com,kaavustyles@gmail.com"
 
-ADMIN_LOGIN_PASSWORD="admin123"
+ADMIN_LOGIN_PASSWORD="Kaavu@admin123"
 
 ADMIN_SESSION_SECRET="93f20f860913e3ee298d905a437ed4011a308116910a9afd785b5b81ae0b43c6"

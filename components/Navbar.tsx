@@ -180,7 +180,7 @@ export default function Navbar() {
               className={`hover:text-burgundy transition-colors ${pathname === "/shop" ? "text-burgundy font-bold border-b-2 border-gold pb-1" : ""
                 }`}
             >
-              Shop Collection
+              Shop Collections
             </Link>
 
             <Link
@@ -442,7 +442,7 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="hover:text-burgundy transition-colors"
                 >
-                  Shop Collection
+                  Shop Collections
                 </Link>
 
                 {currentUser && (

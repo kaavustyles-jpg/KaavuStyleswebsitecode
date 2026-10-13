@@ -34,7 +34,7 @@ export default function CategoriesPage() {
           </div>
 
           <h1 className="font-serif text-4xl sm:text-6xl text-white uppercase font-light tracking-wide">
-           Our Collection 
+           Our Collections
           </h1>
 
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />

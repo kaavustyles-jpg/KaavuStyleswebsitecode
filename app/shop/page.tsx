@@ -81,7 +81,7 @@ function ShopContent() {
       {/* 1. HERO BOUTIQUE HEADER (#2B0B14 BURGUNDY BACKGROUND) */}
       <div className="relative bg-[#2B0B14] border-y-2 border-gold/40 p-8 sm:p-14 text-center space-y-4 shadow-2xl overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(#E5C378_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none" />
-        
+
         <div className="relative z-10 space-y-2">
           <div className="flex items-center justify-center space-x-2 text-[#E5C378]">
             <Sparkles className="w-4 h-4 text-[#E5C378]" />
@@ -98,9 +98,10 @@ function ShopContent() {
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />
 
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
-Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every side of you.
+Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every version of you.
 
- From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles.          </p>
+ From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles
+        </p>
         </div>
       </div>
 
@@ -119,11 +120,10 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
         <div className="flex items-center space-x-3 overflow-x-auto scrollbar-none pb-2 pt-1 text-xs">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${
-              selectedCategory === "all"
+            className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${selectedCategory === "all"
                 ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-            }`}
+              }`}
           >
             <span>All Categories</span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full ${selectedCategory === "all" ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"}`}>
@@ -138,11 +138,10 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${
-                  isSelected
+                className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${isSelected
                     ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
                     : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-                }`}
+                  }`}
               >
                 <span>{cat.name}</span>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full ${isSelected ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"}`}>
@@ -211,11 +210,10 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
 
           <button
             onClick={() => setSelectedTag("all")}
-            className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${
-              selectedTag === "all"
+            className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${selectedTag === "all"
                 ? "bg-gold text-ivory font-bold"
                 : "bg-ivory-200 text-ink hover:bg-ivory-300"
-            }`}
+              }`}
           >
             All Aesthetics
           </button>
@@ -223,11 +221,10 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
             <button
               key={tag.id}
               onClick={() => setSelectedTag(tag.name)}
-              className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${
-                selectedTag.toLowerCase() === tag.name.toLowerCase()
+              className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${selectedTag.toLowerCase() === tag.name.toLowerCase()
                   ? "bg-gold text-ivory font-bold"
                   : "bg-ivory-200 text-ink hover:bg-ivory-300"
-              }`}
+                }`}
             >
               #{tag.name}
             </button>
@@ -325,9 +322,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <button
                       onClick={() => setSelectedCategory("all")}
-                      className={`p-2.5 border text-center font-semibold text-xs cursor-pointer ${
-                        selectedCategory === "all" ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
-                      }`}
+                      className={`p-2.5 border text-center font-semibold text-xs cursor-pointer ${selectedCategory === "all" ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
+                        }`}
                     >
                       All ({products.length})
                     </button>
@@ -335,9 +331,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
                       <button
                         key={cat.id}
                         onClick={() => setSelectedCategory(cat.slug)}
-                        className={`p-2.5 border text-center font-semibold text-xs truncate cursor-pointer ${
-                          selectedCategory === cat.slug ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
-                        }`}
+                        className={`p-2.5 border text-center font-semibold text-xs truncate cursor-pointer ${selectedCategory === cat.slug ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
+                          }`}
                       >
                         {cat.name} ({getCategoryCount(cat.slug)})
                       </button>
@@ -365,9 +360,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
                   <div className="flex flex-wrap gap-2 text-xs">
                     <button
                       onClick={() => setSelectedTag("all")}
-                      className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
-                        selectedTag === "all" ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
-                      }`}
+                      className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${selectedTag === "all" ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
+                        }`}
                     >
                       All Aesthetics
                     </button>
@@ -375,9 +369,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
                       <button
                         key={tag.id}
                         onClick={() => setSelectedTag(tag.name)}
-                        className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
-                          selectedTag.toLowerCase() === tag.name.toLowerCase() ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
-                        }`}
+                        className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${selectedTag.toLowerCase() === tag.name.toLowerCase() ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
+                          }`}
                       >
                         #{tag.name}
                       </button>

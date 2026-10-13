@@ -19,6 +19,9 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<"latest" | "price-low" | "price-high">("latest");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  // TOGGLE: Set to true when you want to unhide the mobile filter button & drawer
+  const SHOW_MOBILE_FILTER = false;
+
   // Category product count helper
   const getCategoryCount = (slug: string) => {
     if (slug === "all") return products.length;
@@ -263,138 +266,145 @@ function ShopContent() {
         </div>
       )}
 
-      {/* FIXED MOBILE FILTER BUTTON (FLOATING BOTTOM CENTER) */}
-      <div className="fixed bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 z-30 lg:hidden">
-        <button
-          onClick={() => setIsMobileFilterOpen(true)}
-          className="px-6 py-3 bg-[#2B0B14] text-[#E5C378] border-2 border-gold/60 rounded-full shadow-2xl flex items-center space-x-2 text-xs uppercase tracking-[0.2em] font-bold backdrop-blur-md cursor-pointer hover:scale-105 transition-transform"
-        >
-          <Filter className="w-4 h-4 text-[#E5C378]" />
-          <span>Refine & Filter ({filteredProducts.length})</span>
-          {hasActiveFilters && (
-            <span className="w-2.5 h-2.5 rounded-full bg-crimson border border-gold" />
-          )}
-        </button>
-      </div>
-
-      {/* MOBILE FILTER SLIDE-UP SHEET */}
-      {isMobileFilterOpen && (
-        <div className="fixed inset-0 z-50 bg-ink/75 backdrop-blur-sm flex flex-col justify-end lg:hidden animate-fadeIn">
-          <div className="bg-ivory border-t-2 border-gold rounded-t-2xl max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-ivory-300 pb-4">
-              <div className="flex items-center space-x-2 text-[#2B0B14]">
-                <Filter className="w-5 h-5 text-crimson" />
-                <h3 className="font-serif text-xl uppercase font-bold text-ink">Filter & Sort Ensembles</h3>
-              </div>
-              <button
-                onClick={() => setIsMobileFilterOpen(false)}
-                className="p-1 text-ink-muted hover:text-crimson transition-colors cursor-pointer"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Search */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Search Keywords</label>
-              <div className="flex items-center border border-ivory-300 bg-ivory-50 p-3">
-                <Search className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Silk sarees, kurtis, lehengas..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-xs text-ink outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Category */}
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Category</label>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <button
-                  onClick={() => setSelectedCategory("all")}
-                  className={`p-2.5 border text-center font-semibold text-xs cursor-pointer ${
-                    selectedCategory === "all" ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
-                  }`}
-                >
-                  All ({products.length})
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.slug)}
-                    className={`p-2.5 border text-center font-semibold text-xs truncate cursor-pointer ${
-                      selectedCategory === cat.slug ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
-                    }`}
-                  >
-                    {cat.name} ({getCategoryCount(cat.slug)})
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sort */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Sort By</label>
-              <select
-                value={sortBy}
-                onChange={(e: any) => setSortBy(e.target.value)}
-                className="w-full bg-ivory border border-ivory-300 p-3 text-xs text-ink uppercase tracking-wider outline-none cursor-pointer"
-              >
-                <option value="latest">Latest Arrivals</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-              </select>
-            </div>
-
-            {/* Lifestyle Tags */}
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Lifestyle Aesthetic</label>
-              <div className="flex flex-wrap gap-2 text-xs">
-                <button
-                  onClick={() => setSelectedTag("all")}
-                  className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
-                    selectedTag === "all" ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
-                  }`}
-                >
-                  All Aesthetics
-                </button>
-                {lifestyleTags.map((tag) => (
-                  <button
-                    key={tag.id}
-                    onClick={() => setSelectedTag(tag.name)}
-                    className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
-                      selectedTag.toLowerCase() === tag.name.toLowerCase() ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
-                    }`}
-                  >
-                    #{tag.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="pt-4 border-t border-ivory-300 flex items-center space-x-3">
+      {/* =========================================================================
+          MOBILE FILTER (TEMPORARILY HIDDEN - SET SHOW_MOBILE_FILTER = true TO UNHIDE)
+          ========================================================================= */}
+      {SHOW_MOBILE_FILTER && (
+        <>
+          {/* FIXED MOBILE FILTER BUTTON (FLOATING BOTTOM CENTER) */}
+          <div className="fixed bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 z-30 lg:hidden">
+            <button
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="px-6 py-3 bg-[#2B0B14] text-[#E5C378] border-2 border-gold/60 rounded-full shadow-2xl flex items-center space-x-2 text-xs uppercase tracking-[0.2em] font-bold backdrop-blur-md cursor-pointer hover:scale-105 transition-transform"
+            >
+              <Filter className="w-4 h-4 text-[#E5C378]" />
+              <span>Refine & Filter ({filteredProducts.length})</span>
               {hasActiveFilters && (
-                <button
-                  onClick={clearFilters}
-                  className="py-3 px-4 border border-crimson text-crimson text-xs uppercase font-bold tracking-wider cursor-pointer"
-                >
-                  Reset
-                </button>
+                <span className="w-2.5 h-2.5 rounded-full bg-crimson border border-gold" />
               )}
-              <button
-                onClick={() => setIsMobileFilterOpen(false)}
-                className="flex-1 py-3.5 bg-crimson text-ivory text-xs uppercase font-bold tracking-[0.2em] shadow-md cursor-pointer"
-              >
-                Apply Filters ({filteredProducts.length})
-              </button>
-            </div>
+            </button>
           </div>
-        </div>
+
+          {/* MOBILE FILTER SLIDE-UP SHEET */}
+          {isMobileFilterOpen && (
+            <div className="fixed inset-0 z-50 bg-ink/75 backdrop-blur-sm flex flex-col justify-end lg:hidden animate-fadeIn">
+              <div className="bg-ivory border-t-2 border-gold rounded-t-2xl max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-ivory-300 pb-4">
+                  <div className="flex items-center space-x-2 text-[#2B0B14]">
+                    <Filter className="w-5 h-5 text-crimson" />
+                    <h3 className="font-serif text-xl uppercase font-bold text-ink">Filter & Sort Ensembles</h3>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="p-1 text-ink-muted hover:text-crimson transition-colors cursor-pointer"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Search */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Search Keywords</label>
+                  <div className="flex items-center border border-ivory-300 bg-ivory-50 p-3">
+                    <Search className="w-4 h-4 text-gold mr-2 flex-shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Silk sarees, kurtis, lehengas..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-transparent text-xs text-ink outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Category</label>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <button
+                      onClick={() => setSelectedCategory("all")}
+                      className={`p-2.5 border text-center font-semibold text-xs cursor-pointer ${
+                        selectedCategory === "all" ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
+                      }`}
+                    >
+                      All ({products.length})
+                    </button>
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.slug)}
+                        className={`p-2.5 border text-center font-semibold text-xs truncate cursor-pointer ${
+                          selectedCategory === cat.slug ? "bg-crimson text-ivory border-crimson" : "bg-ivory border-ivory-300 text-ink"
+                        }`}
+                      >
+                        {cat.name} ({getCategoryCount(cat.slug)})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sort */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Sort By</label>
+                  <select
+                    value={sortBy}
+                    onChange={(e: any) => setSortBy(e.target.value)}
+                    className="w-full bg-ivory border border-ivory-300 p-3 text-xs text-ink uppercase tracking-wider outline-none cursor-pointer"
+                  >
+                    <option value="latest">Latest Arrivals</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                  </select>
+                </div>
+
+                {/* Lifestyle Tags */}
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold">Lifestyle Aesthetic</label>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <button
+                      onClick={() => setSelectedTag("all")}
+                      className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
+                        selectedTag === "all" ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
+                      }`}
+                    >
+                      All Aesthetics
+                    </button>
+                    {lifestyleTags.map((tag) => (
+                      <button
+                        key={tag.id}
+                        onClick={() => setSelectedTag(tag.name)}
+                        className={`px-3 py-1.5 border text-[10px] uppercase cursor-pointer ${
+                          selectedTag.toLowerCase() === tag.name.toLowerCase() ? "bg-gold text-ivory font-bold" : "bg-ivory-200 text-ink"
+                        }`}
+                      >
+                        #{tag.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-4 border-t border-ivory-300 flex items-center space-x-3">
+                  {hasActiveFilters && (
+                    <button
+                      onClick={clearFilters}
+                      className="py-3 px-4 border border-crimson text-crimson text-xs uppercase font-bold tracking-wider cursor-pointer"
+                    >
+                      Reset
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="flex-1 py-3.5 bg-crimson text-ivory text-xs uppercase font-bold tracking-[0.2em] shadow-md cursor-pointer"
+                  >
+                    Apply Filters ({filteredProducts.length})
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

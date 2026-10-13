@@ -35,7 +35,7 @@ export default function StoryNarrative() {
           </p>
           <blockquote className="border-l border-gold/60 pl-4 mt-4 sm:mt-5 max-w-lg">
             <p className="font-serif text-lg sm:text-xl leading-relaxed text-crimson italic">
-              &ldquo;Rich maroon, soft gold, unhurried silhouettes. Clothing and adornment that belongs to every mood, every day.&rdquo;
+              &ldquo;We all have those outfits that make us feel a little more confident, a little more comfortable, and a little more ourselves. That’s exactly what we want Kaavu Styless to be about.&rdquo;
             </p>
             <footer className="mt-2 text-[9px] uppercase tracking-[0.22em] text-gold">The Kaavu ethos</footer>
           </blockquote>

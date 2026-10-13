@@ -41,7 +41,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-xs text-ivory-300 leading-relaxed font-sans pt-1">
-              Rich maroon, soft gold, unhurried silhouettes. Clothing and adornment that belongs to every mood, every day.
+              We all have those outfits that make us feel a little more confident, a little more comfortable, and a little more ourselves. That’s exactly what we want Kaavu Styless to be about.
             </p>
 
             <div className="pt-2 flex items-center space-x-3">

@@ -4,7 +4,7 @@ import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import ProductCard from "@/components/ProductCard";
-import { Search, X, Sparkles, Filter, RefreshCw, ArrowUpDown } from "lucide-react";
+import { Search, X, Sparkles, Filter, RefreshCw, ArrowUpDown, ChevronDown } from "lucide-react";
 
 function ShopContent() {
   const searchParams = useSearchParams();

@@ -442,6 +442,36 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
+            {/* Terms & Conditions (3 Points from Policy) & Signatory Box */}
+            <div className="p-4 border-2 border-gold/60 bg-white grid grid-cols-1 sm:grid-cols-3 text-[10px] text-gray-800 gap-4 print:border-black">
+              <div className="sm:col-span-2 space-y-1.5">
+                <p className="font-extrabold uppercase text-ink print:text-black tracking-wider text-[11px] border-b border-gold/40 pb-1">
+                  Terms & Conditions (Official Store Policy):
+                </p>
+                <ol className="list-decimal list-inside space-y-1 text-[10px] text-gray-700 leading-relaxed">
+                  <li>
+                    <strong className="text-ink print:text-black">Strict No Return & No Replacement Policy:</strong> All sales are strictly final. In accordance with luxury couture standards, handcrafted garments, designer kurtis, and bespoke sets cannot be returned, exchanged for alternate sizes/colors, or refunded under any circumstances.
+                  </li>
+                  <li>
+                    <strong className="text-ink print:text-black">Non-Cancellable Orders & Immediate Processing:</strong> Orders cannot be cancelled or modified once placed. Shipping address adjustments must be submitted within 3 hours via <span className="text-crimson font-medium">kaavustyles@gmail.com</span> prior to courier dispatch.
+                  </li>
+                  <li>
+                    <strong className="text-ink print:text-black">Artisan Craftsmanship Care & Jurisdiction:</strong> Professional dry clean only. Natural variations in artisanal weaving and embroidery are intrinsic hallmarks of craftsmanship, not defects. All transactions subject to Bengaluru / Hyderabad jurisdiction only.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="text-right flex flex-col justify-between items-end space-y-4 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:border-gold/40 sm:pl-4">
+                <div>
+                  <p className="font-bold text-ink uppercase text-[11px] print:text-black">For KAAVU STYLES</p>
+                  <p className="text-[9px] text-gray-500 font-mono">Retail Atelier Unit</p>
+                </div>
+                <div className="pt-6 border-t-2 border-gold w-40 text-center font-mono font-bold text-[10px] uppercase text-black print:border-black">
+                  Authorised Signatory
+                </div>
+              </div>
+            </div>
+
             {/* Print Footer Notice & Digital Stamp */}
             <div className="pt-4 border-t border-ivory-300 flex flex-col sm:flex-row gap-3 justify-between sm:items-center text-[10px] text-ink-muted print:text-black">
               <div>

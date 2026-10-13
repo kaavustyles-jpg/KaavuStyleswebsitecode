@@ -75,8 +75,8 @@ export default function HomePage() {
     activeTag === "all"
       ? products
       : products.filter((p) =>
-          p.lifestyleTags.some((t) => t.toLowerCase() === activeTag.toLowerCase())
-        );
+        p.lifestyleTags.some((t) => t.toLowerCase() === activeTag.toLowerCase())
+      );
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -192,48 +192,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. LUXURY TRUST & ESSENCE HALLMARK BAR */}
-      <section className="w-full bg-[#2B0B14] border-y-2 border-gold/40 text-ivory py-8 sm:py-10 px-4 shadow-2xl relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#E5C378_1px,transparent_1px)] [background-size:20px_20px] opacity-15 pointer-events-none" />
-
-        <div className="relative z-10 w-full px-2 sm:px-6 lg:px-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          <div data-reveal="up" className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <Award className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Artisanal Handcraft</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Pure Silks & Handloom Sarees</p>
-          </div>
-
-          <div data-reveal="up" style={{ transitionDelay: "100ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <Truck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Express Delivery</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Free Shipping Across India</p>
-          </div>
-
-          <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Cash On Delivery</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">100% Safe Payment Verification</p>
-          </div>
-
-          <div data-reveal="up" style={{ transitionDelay: "300ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Bespoke Guarantee</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Tailored Fit Assistance</p>
-          </div>
-        </div>
-      </section>
-
-      <StoryNarrative />
-
-      {/* 5. LATEST PRODUCTS ADDED (HORIZONTAL SCROLL SLIDER) */}
+      {/* 3. LATEST PRODUCTS ADDED (HORIZONTAL SCROLL SLIDER) */}
       <section className="w-full px-4 sm:px-6 lg:px-12 space-y-6">
         <div data-reveal="up" className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-ivory-300 pb-3 gap-4 text-center sm:text-left">
           <div className="flex flex-col items-center sm:items-start">
@@ -301,7 +260,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. SHOP BY LIFESTYLE TAGS SECTION */}
+      <StoryNarrative />
+
+      {/* 5. SHOP BY LIFESTYLE TAGS SECTION */}
       <section className="w-full px-4 sm:px-6 lg:px-12 space-y-6 bg-ivory-200 border-y border-ivory-300 py-10">
         <div data-reveal="up" className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-ivory-300 pb-3 gap-4 text-center sm:text-left">
           <div className="flex flex-col items-center sm:items-start">
@@ -339,11 +300,10 @@ export default function HomePage() {
               setActiveTag("all");
               if (lifestyleSliderRef.current) lifestyleSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
             }}
-            className={`px-5 py-2.5 border transition-all cursor-pointer ${
-              activeTag === "all"
+            className={`px-5 py-2.5 border transition-all cursor-pointer ${activeTag === "all"
                 ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
-            }`}
+              }`}
           >
             All Lifestyles
           </button>
@@ -354,11 +314,10 @@ export default function HomePage() {
                 setActiveTag(tag.name);
                 if (lifestyleSliderRef.current) lifestyleSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
               }}
-              className={`px-5 py-2.5 border transition-all whitespace-nowrap cursor-pointer ${
-                activeTag.toLowerCase() === tag.name.toLowerCase()
+              className={`px-5 py-2.5 border transition-all whitespace-nowrap cursor-pointer ${activeTag.toLowerCase() === tag.name.toLowerCase()
                   ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
                   : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
-              }`}
+                }`}
             >
               #{tag.name}
             </button>
@@ -400,6 +359,46 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      </section>
+
+
+      {/* 6. LUXURY TRUST & ESSENCE HALLMARK BAR */}
+      <section className="w-full bg-[#2B0B14] border-y-2 border-gold/40 text-ivory py-8 sm:py-10 px-4 shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(#E5C378_1px,transparent_1px)] [background-size:20px_20px] opacity-15 pointer-events-none" />
+
+        <div className="relative z-10 w-full px-2 sm:px-6 lg:px-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div data-reveal="up" className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <Award className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Artisanal Handcraft</h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Luxury Kurtis & Ethnic Couture</p>
+          </div>
+
+          <div data-reveal="up" style={{ transitionDelay: "100ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <Truck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Express Delivery</h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Free Shipping Across India</p>
+          </div>
+
+          <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Cash On Delivery</h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">100% Safe Payment Verification</p>
+          </div>
+
+          <div data-reveal="up" style={{ transitionDelay: "300ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Bespoke Guarantee</h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Tailored Fit Assistance</p>
+          </div>
+        </div>
       </section>
 
       {/* 7. INSTAGRAM JOURNAL & GALLERY SECTION */}

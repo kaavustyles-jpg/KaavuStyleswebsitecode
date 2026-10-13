@@ -128,7 +128,7 @@ export default function HomePage() {
               <span>Curated Heritage</span>
             </span>
             <h2 className="font-serif text-2xl sm:text-4xl uppercase font-light text-ink text-center md:text-left">
-              Explore Our <span className="text-crimson font-normal italic">Ethnic Wear Collection</span>
+              Which Version <span className="text-crimson font-normal italic">are you today</span>
             </h2>
           </div>
           <Link

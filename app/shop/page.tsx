@@ -98,8 +98,9 @@ function ShopContent() {
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />
 
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
-            Discover handcrafted pure silk sarees, designer kurtis, royal lehengas, and fusion silhouettes woven for every mood and occasion.
-          </p>
+Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every side of you.
+
+ From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles.          </p>
         </div>
       </div>
 

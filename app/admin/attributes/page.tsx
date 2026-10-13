@@ -97,7 +97,7 @@ export default function AdminAttributesPage() {
           <div className="bg-ivory border border-ivory-300 p-6 space-y-6 shadow-sm">
             <div className="flex items-center space-x-2 border-b border-ivory-300 pb-3">
               <Tag className="w-5 h-5 text-crimson" />
-              <h2 className="font-serif text-xl text-ink uppercase">Lifestyle Tags ({lifestyleTags.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase">Lifestyle Tags <span className="font-sans font-bold">({lifestyleTags.length})</span></h2>
             </div>
 
             <form onSubmit={handleAddTag} className="flex flex-col sm:flex-row gap-3 max-w-md">
@@ -156,7 +156,7 @@ export default function AdminAttributesPage() {
           <div className="bg-ivory border border-ivory-300 p-6 space-y-6 shadow-sm">
             <div className="flex items-center space-x-2 border-b border-ivory-300 pb-3">
               <Layers className="w-5 h-5 text-gold" />
-              <h2 className="font-serif text-xl text-ink uppercase">Size Options ({sizes.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase">Size Options <span className="font-sans font-bold">({sizes.length})</span></h2>
             </div>
 
             <form onSubmit={handleAddSize} className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
@@ -226,7 +226,7 @@ export default function AdminAttributesPage() {
           <div className="bg-ivory border border-ivory-300 p-6 space-y-6 shadow-sm">
             <div className="flex items-center space-x-2 border-b border-ivory-300 pb-3">
               <Palette className="w-5 h-5 text-crimson" />
-              <h2 className="font-serif text-xl text-ink uppercase">Color Palette Options ({colors.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase">Color Palette Options <span className="font-sans font-bold">({colors.length})</span></h2>
             </div>
 
             <form onSubmit={handleAddColor} className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">

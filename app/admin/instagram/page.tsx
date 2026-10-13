@@ -43,7 +43,7 @@ export default function AdminInstagramPage() {
         <main className="p-4 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center bg-ivory p-4 border border-ivory-300">
             <div>
-              <h2 className="font-serif text-xl text-ink uppercase">Instagram Posts Feed ({instagramPosts.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase">Instagram Posts Feed <span className="font-sans font-bold">({instagramPosts.length})</span></h2>
               <p className="text-xs text-ink-muted">Manage Instagram post URLs, image previews, and captions for homepage feed.</p>
             </div>
             <button

@@ -178,10 +178,10 @@ export default function AdminOrderInvoicePage() {
             <div className="inline-block bg-[#2B0B14] text-gold px-3 py-1 font-bold text-xs uppercase tracking-widest border border-gold/40 print:bg-black print:text-white print:border-black">
               RETAIL INVOICE
             </div>
-            <p className="font-mono text-sm font-extrabold text-crimson print:text-black pt-1">
+            <p className="font-sans text-sm font-extrabold text-crimson print:text-black pt-1">
               Invoice #: <span>INV-{order.orderNumber}</span>
             </p>
-            <p className="text-[11px] font-mono text-gray-800">
+            <p className="text-[11px] font-sans text-gray-800">
               Date: {order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN") : "—"}
             </p>
           </div>
@@ -194,11 +194,11 @@ export default function AdminOrderInvoicePage() {
               <span>Billed To (Buyer Information)</span>
             </p>
             <p className="font-serif font-bold text-sm text-ink print:text-black pt-1">{order.customerName}</p>
-            <p className="text-gray-800 font-mono text-[11px] flex items-center">
+            <p className="text-gray-800 font-sans text-[11px] flex items-center">
               <Mail className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 print:hidden" />
               <span>{order.customerEmail}</span>
             </p>
-            <p className="text-gray-800 font-mono text-[11px] flex items-center">
+            <p className="text-gray-800 font-sans text-[11px] flex items-center">
               <Phone className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 print:hidden" />
               <span>Phone: {order.customerPhone}</span>
             </p>
@@ -213,7 +213,7 @@ export default function AdminOrderInvoicePage() {
               <MapPin className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 mt-0.5 print:hidden" />
               <span>{order.shippingAddress}, {order.city} - {order.postalCode}</span>
             </p>
-            <p className="text-gray-800 font-mono text-[10px] pt-0.5">
+            <p className="text-gray-800 font-sans text-[10px] pt-0.5">
               Fulfillment Status: <span className="font-bold text-crimson print:text-black uppercase">{order.status}</span>
             </p>
             <div className="pt-2 border-t border-gold/40 print:border-black text-[10px]">
@@ -222,7 +222,7 @@ export default function AdminOrderInvoicePage() {
                 <span className="font-bold text-emerald-800 print:text-black uppercase mr-2">
                   {(order.paymentStatus === "Paid" || (!order.paymentStatus && (order.razorpayPaymentId || order.paymentId))) ? "PAID" : order.paymentStatus || "PENDING"}
                 </span>
-                <span className="font-mono text-gray-900 font-semibold">{order.razorpayPaymentId || order.paymentId || "—"}</span>
+                <span className="font-sans text-gray-900 font-semibold">{order.razorpayPaymentId || order.paymentId || "—"}</span>
               </p>
             </div>
           </div>
@@ -247,16 +247,16 @@ export default function AdminOrderInvoicePage() {
 
                 return (
                   <tr key={idx} className="text-[11px] hover:bg-[#FAF8F5]">
-                    <td className="p-3 border-r border-gold/30 print:border-black text-center font-mono font-bold">{idx + 1}</td>
+                    <td className="p-3 border-r border-gold/30 print:border-black text-center font-sans font-bold">{idx + 1}</td>
                     <td className="p-3 border-r border-gold/30 print:border-black font-serif font-bold text-ink print:text-black">
                       {item.name}
                     </td>
                     <td className="p-3 border-r border-gold/30 print:border-black text-gray-800 text-[10px]">
                       Size: <span className="font-semibold text-black">{item.size || "S"}</span> • Color: <span className="font-semibold text-black">{item.color || "Std"}</span>
                     </td>
-                    <td className="p-3 border-r border-gold/30 print:border-black text-center font-mono font-bold">{item.quantity}</td>
-                    <td className="p-3 border-r border-gold/30 print:border-black text-right font-mono">{formatPrice(item.price)}</td>
-                    <td className="p-3 text-right font-mono font-extrabold text-crimson print:text-black">
+                    <td className="p-3 border-r border-gold/30 print:border-black text-center font-sans font-bold">{item.quantity}</td>
+                    <td className="p-3 border-r border-gold/30 print:border-black text-right font-sans font-semibold">{formatPrice(item.price)}</td>
+                    <td className="p-3 text-right font-sans font-extrabold text-crimson print:text-black">
                       {formatPrice(lineTotal)}
                     </td>
                   </tr>
@@ -298,7 +298,7 @@ export default function AdminOrderInvoicePage() {
                   {(order.paymentStatus === "Paid" || (!order.paymentStatus && (order.razorpayPaymentId || order.paymentId))) ? "PAID" : order.paymentStatus || "PENDING"}
                 </span>
               </div>
-              <div className="flex justify-between items-center font-mono text-[10px]">
+              <div className="flex justify-between items-center font-sans text-[10px]">
                 <span className="text-gray-600 font-sans">Payment ID:</span>
                 <span className="font-bold text-black">{order.razorpayPaymentId || order.paymentId || "—"}</span>
               </div>
@@ -312,15 +312,15 @@ export default function AdminOrderInvoicePage() {
             <p className="font-extrabold uppercase text-ink print:text-black tracking-wider text-[11px] border-b border-gold/40 pb-1 print:border-black">
               Terms & Conditions (Official Store Policy):
             </p>
-            <ol className="list-decimal list-inside space-y-1 text-[10px] text-gray-700 leading-relaxed">
+            <ol className="list-decimal list-inside space-y-1 text-[10px] text-gray-700 leading-relaxed font-sans">
               <li>
-                <strong className="text-ink print:text-black">Strict No Return & No Replacement Policy:</strong> All sales are strictly final. In accordance with luxury couture standards, handcrafted garments, designer kurtis, and bespoke sets cannot be returned, exchanged for alternate sizes/colors, or refunded under any circumstances.
+                <strong className="text-ink print:text-black font-sans">Strict No Return & No Replacement Policy:</strong> All sales are strictly final. In accordance with luxury couture standards, handcrafted garments, designer kurtis, and bespoke sets cannot be returned, exchanged for alternate sizes/colors, or refunded under any circumstances.
               </li>
               <li>
-                <strong className="text-ink print:text-black">Non-Cancellable Orders & Immediate Processing:</strong> Orders cannot be cancelled or modified once placed. Shipping address adjustments must be submitted within 3 hours via <span className="text-crimson font-medium">kaavustyles@gmail.com</span> prior to courier dispatch.
+                <strong className="text-ink print:text-black font-sans">Non-Cancellable Orders & Immediate Processing:</strong> Orders cannot be cancelled or modified once placed. Shipping address adjustments must be submitted within 3 hours via <span className="text-crimson font-medium">kaavustyles@gmail.com</span> prior to courier dispatch.
               </li>
               <li>
-                <strong className="text-ink print:text-black">Artisan Craftsmanship Care & Jurisdiction:</strong> Professional dry clean only. Natural variations in artisanal weaving and embroidery are intrinsic hallmarks of craftsmanship, not defects. All transactions subject to Bengaluru / Hyderabad jurisdiction only.
+                <strong className="text-ink print:text-black font-sans">Artisan Craftsmanship Care & Jurisdiction:</strong> Professional dry clean only. Natural variations in artisanal weaving and embroidery are intrinsic hallmarks of craftsmanship, not defects. All transactions subject to Bengaluru / Hyderabad jurisdiction only.
               </li>
             </ol>
           </div>
@@ -328,9 +328,9 @@ export default function AdminOrderInvoicePage() {
           <div className="text-right flex flex-col justify-between items-end space-y-4 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:border-gold/40 sm:pl-4 print:border-black">
             <div>
               <p className="font-bold text-ink uppercase text-[11px] print:text-black">For KAAVU STYLES</p>
-              <p className="text-[9px] text-gray-500 font-mono">Retail Atelier Unit</p>
+              <p className="text-[9px] text-gray-500 font-sans">Retail Atelier Unit</p>
             </div>
-            <div className="pt-6 border-t-2 border-gold w-40 text-center font-mono font-bold text-[10px] uppercase text-black print:border-black">
+            <div className="pt-6 border-t-2 border-gold w-40 text-center font-sans font-bold text-[10px] uppercase text-black print:border-black">
               Authorised Signatory
             </div>
           </div>

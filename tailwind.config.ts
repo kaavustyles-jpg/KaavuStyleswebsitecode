@@ -48,6 +48,7 @@ const config: Config = {
       fontFamily: {
         serif: ["Cormorant Garamond", "Georgia", "serif"],
         sans: ["Jost", "system-ui", "sans-serif"],
+        mono: ["Jost", "system-ui", "monospace"],
       },
       boxShadow: {
         luxury: "0 22px 40px rgba(60, 20, 30, 0.12)",

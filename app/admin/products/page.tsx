@@ -60,28 +60,28 @@ export default function AdminProductsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-ivory border border-ivory-300 p-4 space-y-1 shadow-sm">
               <span className="text-[10px] uppercase tracking-widest font-bold text-ink-muted">Total Products</span>
-              <p className="font-serif text-2xl font-bold text-ink" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-ink" suppressHydrationWarning>
                 {isMounted ? totalProductsCount : 0}
               </p>
               <span className="text-[9px] text-gold uppercase font-bold">Catalog Total</span>
             </div>
             <div className="bg-emerald-50/50 border border-emerald-200 p-4 space-y-1 shadow-sm">
               <span className="text-[10px] uppercase tracking-widest font-bold text-emerald-800">In Stock (&gt;5)</span>
-              <p className="font-serif text-2xl font-bold text-emerald-700" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-emerald-700" suppressHydrationWarning>
                 {isMounted ? inStockCount : 0}
               </p>
               <span className="text-[9px] text-emerald-600 uppercase font-bold">Healthy Stock</span>
             </div>
             <div className="bg-amber-50/50 border border-amber-200 p-4 space-y-1 shadow-sm">
               <span className="text-[10px] uppercase tracking-widest font-bold text-amber-800">Low Stock (1-5)</span>
-              <p className="font-serif text-2xl font-bold text-amber-700" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-amber-700" suppressHydrationWarning>
                 {isMounted ? lowStockCount : 0}
               </p>
               <span className="text-[9px] text-amber-600 uppercase font-bold">Needs Reorder</span>
             </div>
             <div className="bg-rose-50/50 border border-rose-200 p-4 space-y-1 shadow-sm">
               <span className="text-[10px] uppercase tracking-widest font-bold text-rose-800">Sold out (0)</span>
-              <p className="font-serif text-2xl font-bold text-crimson" suppressHydrationWarning>
+              <p className="font-sans text-2xl font-bold text-crimson" suppressHydrationWarning>
                 {isMounted ? outOfStockCount : 0}
               </p>
               <span className="text-[9px] text-rose-600 uppercase font-bold">Unavailable</span>

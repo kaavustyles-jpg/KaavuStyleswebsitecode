@@ -124,7 +124,7 @@ export default function AdminBannersPage() {
         <main className="p-4 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center bg-ivory p-4 border border-ivory-300">
             <div>
-              <h2 className="font-serif text-xl text-ink uppercase" suppressHydrationWarning>Home Hero Banners ({banners.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase" suppressHydrationWarning>Home Hero Banners <span className="font-sans font-bold">({banners.length})</span></h2>
               <p className="text-xs text-ink-muted">Manage homepage image slider banners, text alignments, and colors. Upload landscape images at 1600 × 500 px and mobile images at 800 × 1000 px.</p>
             </div>
             <button

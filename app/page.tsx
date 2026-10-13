@@ -421,7 +421,7 @@ export default function HomePage() {
               <Lock className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
             </div>
             <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">
-              100% Secure & Private
+              <span className="font-sans font-bold">100%</span> Secure & Private
             </h4>
             <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">
               PCI-DSS Encrypted Razorpay

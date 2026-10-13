@@ -221,15 +221,15 @@ export default function AdminOrdersPage() {
                   ) : (
                     filteredOrders.map((o) => (
                       <tr key={o.id} className="hover:bg-ivory-200/50">
-                        <td data-label="Order #" className="py-3 px-4 font-mono font-bold text-crimson">
+                        <td data-label="Order #" className="py-3 px-4 font-sans font-bold text-crimson">
                           #{o.orderNumber}
                         </td>
                         <td data-label="Customer Details" className="py-3 px-4">
                           <span className="font-semibold text-ink block">{o.customerName}</span>
-                          <span className="text-[10px] text-ink-muted font-mono block">{o.customerEmail}</span>
-                          <span className="text-[10px] text-gold block">{o.customerPhone}</span>
+                          <span className="text-[10px] text-ink-muted font-sans block">{o.customerEmail}</span>
+                          <span className="text-[10px] text-gold font-sans font-medium block">{o.customerPhone}</span>
                         </td>
-                        <td data-label="Items Count" className="py-3 px-4 text-ink font-semibold">
+                        <td data-label="Items Count" className="py-3 px-4 text-ink font-semibold font-sans">
                           {o.items.reduce((sum, item) => sum + item.quantity, 0)} items
                         </td>
                         <td data-label="Total Amount" className="py-3 px-4 font-sans text-sm font-semibold text-crimson">
@@ -248,7 +248,7 @@ export default function AdminOrdersPage() {
                                 {(o.paymentStatus === "Paid" || (!o.paymentStatus && (o.razorpayPaymentId || o.paymentId))) ? "Paid" : o.paymentStatus || "Pending"}
                               </span>
                             </div>
-                            <span className="font-mono text-[11px] text-ink-muted block whitespace-nowrap">
+                            <span className="font-sans text-[11px] text-ink-muted block whitespace-nowrap">
                               {o.razorpayPaymentId || o.paymentId || "—"}
                             </span>
                           </div>
@@ -315,7 +315,7 @@ export default function AdminOrdersPage() {
                 <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-ink uppercase tracking-wide print:text-black mt-0.5">
                   OFFICIAL RETAIL INVOICE
                 </h3>
-                <p className="text-xs text-ink-muted font-mono mt-1 print:text-gray-700">
+                <p className="text-xs text-ink-muted font-sans mt-1 print:text-gray-700">
                   Invoice No: <span className="font-bold text-crimson print:text-black">INV-{selectedOrder.orderNumber}</span> • Date: {new Date(selectedOrder.createdAt).toLocaleDateString("en-IN")}
                 </p>
               </div>
@@ -348,10 +348,10 @@ export default function AdminOrdersPage() {
                   Billed To / Client Details
                 </p>
                 <p className="font-serif text-sm font-bold text-ink print:text-black">{selectedOrder.customerName}</p>
-                <p className="text-ink-muted flex items-center font-mono print:text-gray-800">
+                <p className="text-ink-muted flex items-center font-sans print:text-gray-800">
                   <Mail className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 print:hidden" /> {selectedOrder.customerEmail}
                 </p>
-                <p className="text-ink-muted flex items-center font-mono print:text-gray-800">
+                <p className="text-ink-muted flex items-center font-sans print:text-gray-800">
                   <Phone className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0 print:hidden" /> {selectedOrder.customerPhone}
                 </p>
               </div>
@@ -379,7 +379,7 @@ export default function AdminOrdersPage() {
                     }`}>
                       {(selectedOrder.paymentStatus === "Paid" || (!selectedOrder.paymentStatus && (selectedOrder.razorpayPaymentId || selectedOrder.paymentId))) ? "Paid" : selectedOrder.paymentStatus || "Pending"}
                     </span>
-                    <span className="font-mono text-ink font-semibold">
+                    <span className="font-sans text-ink font-semibold">
                       {selectedOrder.razorpayPaymentId || selectedOrder.paymentId || "—"}
                     </span>
                   </p>
@@ -407,16 +407,16 @@ export default function AdminOrdersPage() {
                   <tbody className="divide-y divide-ivory-300 print:divide-gray-300">
                     {selectedOrder.items.map((item, idx) => (
                       <tr key={idx} className="hover:bg-ivory-100/80">
-                        <td data-label="#" className="p-3 font-mono font-bold">{idx + 1}</td>
+                        <td data-label="#" className="p-3 font-sans font-bold">{idx + 1}</td>
                         <td data-label="Item Description" className="p-3 font-serif font-semibold text-ink print:text-black">
                           {item.name}
                         </td>
                         <td data-label="Variant Details" className="p-3 text-ink-muted text-[11px]">
                           Size: <span className="font-semibold text-ink print:text-black">{item.size || "Standard"}</span> • Color: <span className="font-semibold text-ink print:text-black">{item.color || "Default"}</span>
                         </td>
-                        <td data-label="Qty" className="p-3 font-bold font-mono">{item.quantity}</td>
-                        <td data-label="Unit Rate" className="p-3 font-mono">{formatPrice(item.price)}</td>
-                        <td data-label="Line Total" className="p-3 text-right font-mono font-bold text-crimson print:text-black">
+                        <td data-label="Qty" className="p-3 font-bold font-sans">{item.quantity}</td>
+                        <td data-label="Unit Rate" className="p-3 font-sans font-semibold">{formatPrice(item.price)}</td>
+                        <td data-label="Line Total" className="p-3 text-right font-sans font-bold text-crimson print:text-black">
                           {formatPrice(item.price * item.quantity)}
                         </td>
                       </tr>
@@ -464,9 +464,9 @@ export default function AdminOrdersPage() {
               <div className="text-right flex flex-col justify-between items-end space-y-4 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:border-gold/40 sm:pl-4">
                 <div>
                   <p className="font-bold text-ink uppercase text-[11px] print:text-black">For KAAVU STYLES</p>
-                  <p className="text-[9px] text-gray-500 font-mono">Retail Atelier Unit</p>
+                  <p className="text-[9px] text-gray-500 font-sans">Retail Atelier Unit</p>
                 </div>
-                <div className="pt-6 border-t-2 border-gold w-40 text-center font-mono font-bold text-[10px] uppercase text-black print:border-black">
+                <div className="pt-6 border-t-2 border-gold w-40 text-center font-sans font-bold text-[10px] uppercase text-black print:border-black">
                   Authorised Signatory
                 </div>
               </div>

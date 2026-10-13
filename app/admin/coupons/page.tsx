@@ -161,7 +161,7 @@ export default function AdminCouponsPage() {
             <div>
               <h2 className="font-serif text-xl text-ink uppercase flex items-center space-x-2">
                 <Ticket className="w-5 h-5 text-crimson" />
-                <span suppressHydrationWarning>Store Coupons ({isMounted ? coupons.length : 0})</span>
+                <span suppressHydrationWarning>Store Coupons <span className="font-sans font-bold">({isMounted ? coupons.length : 0})</span></span>
               </h2>
               <p className="text-xs text-ink-muted mt-1">
                 Manage promo codes, percentage discounts, fixed amount caps, minimum order rules & expiration dates.

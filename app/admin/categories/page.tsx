@@ -48,7 +48,7 @@ export default function AdminCategoriesPage() {
         <main className="p-4 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center bg-ivory p-4 border border-ivory-300">
             <div>
-              <h2 className="font-serif text-xl text-ink uppercase" suppressHydrationWarning>Active Categories ({categories.length})</h2>
+              <h2 className="font-serif text-xl text-ink uppercase" suppressHydrationWarning>Active Categories <span className="font-sans font-bold">({categories.length})</span></h2>
               <p className="text-xs text-ink-muted">Manage product categories displayed on storefront</p>
             </div>
             <button

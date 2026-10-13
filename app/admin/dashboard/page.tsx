@@ -191,7 +191,7 @@ export default function AdminDashboardPage() {
             >
               <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center">
                 <h3 className="font-serif text-lg text-ink uppercase group-hover:text-crimson font-bold" suppressHydrationWarning>
-                  Products ({isMounted ? products.length : 0})
+                  Products <span className="font-sans font-bold">({isMounted ? products.length : 0})</span>
                 </h3>
                 <ArrowUpRight className="w-5 h-5 text-gold group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>
@@ -206,7 +206,7 @@ export default function AdminDashboardPage() {
             >
               <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center">
                 <h3 className="font-serif text-lg text-ink uppercase group-hover:text-crimson font-bold" suppressHydrationWarning>
-                  Coupons ({isMounted ? coupons.length : 0})
+                  Coupons <span className="font-sans font-bold">({isMounted ? coupons.length : 0})</span>
                 </h3>
                 <ArrowUpRight className="w-5 h-5 text-gold group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>
@@ -221,7 +221,7 @@ export default function AdminDashboardPage() {
             >
               <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center">
                 <h3 className="font-serif text-lg text-ink uppercase group-hover:text-crimson font-bold" suppressHydrationWarning>
-                  Orders ({isMounted ? orders.length : 0})
+                  Orders <span className="font-sans font-bold">({isMounted ? orders.length : 0})</span>
                 </h3>
                 <ArrowUpRight className="w-5 h-5 text-gold group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
             >
               <div className="flex flex-col sm:flex-row gap-3 justify-between sm:items-center">
                 <h3 className="font-serif text-lg text-ink uppercase group-hover:text-crimson font-bold" suppressHydrationWarning>
-                  Banners ({isMounted ? banners.length : 0})
+                  Banners <span className="font-sans font-bold">({isMounted ? banners.length : 0})</span>
                 </h3>
                 <ArrowUpRight className="w-5 h-5 text-gold group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>

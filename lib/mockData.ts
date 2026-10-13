@@ -66,6 +66,18 @@ export interface Order {
   razorpayPaymentId?: string;
   paymentId?: string;
   paymentStatus?: "Paid" | "Pending" | "Failed";
+  shiprocket?: {
+    status: "Creating" | "Created";
+    orderId?: number;
+    shipmentId?: number;
+    weight: number;
+    length: number;
+    width: number;
+    height: number;
+    pickupLocation: string;
+    deliveryState: string;
+    createdAt?: string;
+  };
   createdAt: string;
 }
 

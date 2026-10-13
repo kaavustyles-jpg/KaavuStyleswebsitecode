@@ -97,6 +97,7 @@ export function mapDbOrderToOrder(row: any): Order {
     razorpayPaymentId: pId,
     paymentId: pId,
     paymentStatus: pStatus,
+    shiprocket: row.shiprocket || undefined,
     createdAt: row.created_at || new Date().toISOString(),
   };
 }

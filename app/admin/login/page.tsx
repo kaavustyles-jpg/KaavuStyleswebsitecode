@@ -16,25 +16,19 @@ export default function AdminLoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Authorized Admin Credentials
-  const authorizedEmails = ["kaavustyles@gmail.com", "admin@kavvustyle.com"];
-  const authorizedPassword = "admin123";
-
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage("");
-    setIsSubmitting(true);
-
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanPassword = password.trim();
-
-    if (authorizedEmails.includes(cleanEmail) && cleanPassword === authorizedPassword) {
+    if (isSubmitting) return;
+    setErrorMessage(""); setIsSubmitting(true);
+    try {
+      const cleanEmail = email.trim().toLowerCase();
+      const response = await fetch("/api/admin/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: cleanEmail, password }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Admin sign-in failed.");
       login(cleanEmail, "admin", "Admin User");
       router.push("/admin/dashboard");
-    } else {
-      setErrorMessage("Invalid admin email or password. Please check your credentials.");
-      setIsSubmitting(false);
-    }
+    } catch (error) { setErrorMessage(error instanceof Error ? error.message : "Admin sign-in failed."); }
+    finally { setIsSubmitting(false); }
   };
 
   return (

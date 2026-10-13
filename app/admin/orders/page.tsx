@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import AdminListCard from "@/components/AdminListCard";
+import ShiprocketOrderDialog from "@/components/ShiprocketOrderDialog";
 import { useStore } from "@/context/StoreContext";
 import { Order } from "@/lib/mockData";
 import { formatPrice } from "@/lib/utils";
@@ -13,6 +14,8 @@ import { ClipboardList, Eye, X, MapPin, Phone, Mail, Globe, Printer } from "luci
 
 export default function AdminOrdersPage() {
   const { orders, updateOrderStatus } = useStore();
+  const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
+  const [shippingUpdates, setShippingUpdates] = useState<Record<string, Order["shiprocket"]>>({});
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -56,7 +59,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const filteredOrders = orders.filter((o) => {
+  const filteredOrders = orders.map(order => shippingUpdates[order.id] ? { ...order, shiprocket: shippingUpdates[order.id] } : order).filter((o) => {
     const matchesStatus = statusFilter === "All" || o.status.toLowerCase() === statusFilter.toLowerCase();
     const query = searchQuery.toLowerCase();
     const matchesQuery =
@@ -185,6 +188,7 @@ export default function AdminOrdersPage() {
 <p className="text-xs text-ink-muted">{o.items.reduce((sum,item) => sum + item.quantity,0)} items · {new Date(o.createdAt).toLocaleDateString('en-IN')}</p>
 <div className="bg-white border border-ivory-300 rounded-lg p-3 space-y-1"><p className="font-medium">{o.customerName}</p><p className="text-xs text-ink-muted break-all">{o.customerEmail}</p><p className="text-xs text-ink-muted">{o.customerPhone}</p></div>
 <label className="block text-xs text-ink-muted">Order status<select aria-label={`Status for ${o.orderNumber}`} value={o.status} onChange={event => handleStatusChange(o.id,event.target.value as Order['status'])} className="block w-full mt-2 p-3 border border-ivory-300 rounded-lg bg-white">{['Pending','Processing','Shipped','Delivered','Cancelled'].map(status => <option key={status}>{status}</option>)}</select></label>
+<button onClick={() => setShippingOrder(o)} className="w-full border border-gold rounded-lg py-3 text-xs">{o.shiprocket?.orderId ? "View shipment" : "Shipping · enter parcel details"}</button>
 <button onClick={() => setSelectedOrder(o)} className="w-full bg-crimson text-ivory rounded-lg py-3 text-xs">View details & invoice</button>
 </AdminListCard>)}
 </div><div className="hidden lg:block overflow-x-auto">
@@ -267,6 +271,7 @@ export default function AdminOrdersPage() {
                         </td>
                         <td data-label="Actions" className="py-3 px-4 text-right">
                           <div className="flex items-center justify-end space-x-2">
+                            <button type="button" onClick={() => setShippingOrder(o)} className="px-3 py-1.5 border border-gold rounded text-[10px] font-semibold">{o.shiprocket?.orderId ? "Shipment" : "Shipping"}</button>
                             <Link
                               href={`/admin/orders/invoice/${o.id}`}
                               target="_blank"
@@ -294,6 +299,8 @@ export default function AdminOrdersPage() {
           </div>
         </main>
       </div>
+
+      {shippingOrder && <ShiprocketOrderDialog key={shippingOrder.id} order={shippingOrder} onClose={() => setShippingOrder(null)} onSaved={shipping => setShippingUpdates(previous => ({ ...previous, [shippingOrder.id]: shipping }))} />}
 
       {/* Order Details & Printable Invoice Modal */}
       {selectedOrder && (

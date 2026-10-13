@@ -119,7 +119,7 @@ export default function HomePage() {
       {/* 1. HERO BANNER SLIDER WITH PARALLAX MOTION */}
       <HeroBanner />
 
-      {/* 2. CATEGORIES SECTION (EXPLORE OUR ETHNIC WEAR COLLECTION) */}
+      {/* 2. CATEGORIES SECTION (Which Version are you today ) */}
       <section className="w-full px-4 sm:px-6 lg:px-12 space-y-6 pt-4">
         <div data-reveal="up" className="flex flex-col md:flex-row md:items-end justify-between border-b border-ivory-300 pb-3 gap-2 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">

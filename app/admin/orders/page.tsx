@@ -13,7 +13,7 @@ import Link from "next/link";
 import { ClipboardList, Eye, X, MapPin, Phone, Mail, Globe, Printer } from "lucide-react";
 
 export default function AdminOrdersPage() {
-  const { orders, updateOrderStatus } = useStore();
+  const { orders, ordersError, ordersLoading, updateOrderStatus } = useStore();
   const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
   const [shippingUpdates, setShippingUpdates] = useState<Record<string, Order["shiprocket"]>>({});
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -46,8 +46,8 @@ export default function AdminOrdersPage() {
   const processingCount = orders.filter((o) => o.status === "Processing").length;
   const deliveredCount = orders.filter((o) => o.status === "Delivered").length;
 
-  const handleStatusChange = (orderId: string, newStatus: Order["status"]) => {
-    updateOrderStatus(orderId, newStatus);
+  const handleStatusChange = async (orderId: string, newStatus: Order["status"]) => {
+    try { await updateOrderStatus(orderId, newStatus); } catch { return; }
     if (selectedOrder && selectedOrder.id === orderId) {
       setSelectedOrder({ ...selectedOrder, status: newStatus });
     }
@@ -86,6 +86,8 @@ export default function AdminOrdersPage() {
         </div>
 
         <main className="p-6 sm:p-8 space-y-6 print:p-0 print:m-0">
+          {ordersError && <div role="alert" className="rounded-lg border border-crimson/20 bg-crimson/5 p-4 text-sm text-crimson print:hidden">{ordersError} <Link href="/admin/login" className="underline">Sign in again</Link></div>}
+          {ordersLoading && <p role="status" className="text-sm text-ink-muted print:hidden">Loading orders…</p>}
           {/* Top Key Order & Revenue Metrics */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 print:hidden">
             {/* Total Orders Card */}

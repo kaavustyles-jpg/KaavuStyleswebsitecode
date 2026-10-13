@@ -4,6 +4,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { mapDbProductToProduct } from "./supabase";
 import { reduceInventory, resolveProductColor } from "./inventory";
 import type { OrderItem } from "./mockData";
+import { permanentOrderImage } from "./order-image-storage";
 
 export function paymentDb() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -38,12 +39,12 @@ export async function prepareOrder(input: any) {
   const { data, error } = await db.from("products").select("*").in("id", input.items.map((item: any) => item.productId));
   if (error) throw new Error("Could not check product prices and stock.");
   const products = (data || []).map(mapDbProductToProduct);
-  const items: OrderItem[] = input.items.map((item: any) => {
+  const items: OrderItem[] = await Promise.all(input.items.map(async (item: any) => {
     const product = products.find(p => p.id === item.productId);
     if (!product || !Number.isSafeInteger(item.quantity) || item.quantity < 1 || item.quantity > 100) throw new Error("Invalid cart item.");
     const color = resolveProductColor(product, item.color);
-    return { productId: product.id, name: product.name, price: product.price, quantity: item.quantity, size: item.size, color, image: product.colorImages?.[color]?.[0] || product.images[0] || "" };
-  });
+    return { productId: product.id, name: product.name, price: product.price, quantity: item.quantity, size: item.size, color, image: await permanentOrderImage(db, product.colorImages?.[color]?.[0] || product.images[0]) };
+  }));
   reduceInventory(products, items);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   let discount = 0;

@@ -23,6 +23,7 @@ import {
   INITIAL_INSTAGRAM_POSTS,
   INITIAL_COUPONS,
 } from "@/lib/mockData";
+import { cleanOrderItems } from "@/lib/order-images";
 import { stockForSize, reduceInventory } from "@/lib/inventory";
 import { getClientIp } from "@/lib/utils";
 import {
@@ -62,6 +63,8 @@ interface StoreContextType {
   categories: Category[];
   banners: Banner[];
   orders: Order[];
+  ordersError: string;
+  ordersLoading: boolean;
   lifestyleTags: LifestyleTag[];
   sizes: SizeOption[];
   colors: ColorOption[];
@@ -145,7 +148,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [banners, setBanners] = useState<Banner[]>(INITIAL_BANNERS);
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [lifestyleTags, setLifestyleTags] = useState<LifestyleTag[]>(INITIAL_LIFESTYLE_TAGS);
   const [sizes, setSizes] = useState<SizeOption[]>(INITIAL_SIZES);
   const [colors, setColors] = useState<ColorOption[]>(INITIAL_COLORS);
@@ -279,7 +282,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           const [
             { data: pData, error: pErr },
             { data: cData, error: cErr },
-            { data: oData, error: oErr },
             { data: tData },
             { data: sData },
             { data: colData },
@@ -293,7 +295,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
               if (!cancelled && !result.error && result.data) setCategories(result.data.map(mapDbCategoryToCategory));
               return result;
             }),
-            supabase.from("orders").select("*").order("created_at", { ascending: false }),
             supabase.from("lifestyle_tags").select("*"),
             supabase.from("sizes").select("*"),
             supabase.from("colors").select("*"),
@@ -305,7 +306,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
           if (!pErr && pData && pData.length > 0) setProducts(pData.map(mapDbProductToProduct));
           if (!cErr && cData && cData.length > 0) setCategories(cData.map(mapDbCategoryToCategory));
-          if (!oErr && oData && oData.length > 0) setOrders(oData.map(mapDbOrderToOrder));
           if (tData && tData.length > 0) setLifestyleTags(tData.map(mapDbTagToTag));
           if (sData && sData.length > 0) setSizes(sData.map(mapDbSizeToSize));
           if (colData && colData.length > 0) setColors(colData.map(mapDbColorToColor));
@@ -318,8 +318,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           const savedCategories = localStorage.getItem("ks_categories");
           if (savedCategories) setCategories(JSON.parse(savedCategories));
 
-          const savedOrders = localStorage.getItem("ks_orders");
-          if (savedOrders) setOrders(JSON.parse(savedOrders));
 
           const savedCoupons = localStorage.getItem("ks_coupons");
           if (savedCoupons) setCoupons(JSON.parse(savedCoupons));
@@ -334,6 +332,29 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     loadDataFromSupabase();
     return () => { cancelled = true; };
   }, []);
+
+  const [ordersError, setOrdersError] = useState("");
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  useEffect(() => {
+    // Public pages do not request or preload the order collection.
+    if (!isAdminRoute && pathname !== "/orders") { setOrders([]); return; }
+    if (!isSupabaseConfigured) {
+      const saved = localStorage.getItem("ks_orders");
+      if (saved) setOrders(JSON.parse(saved));
+      return;
+    }
+    if (isAdminRoute && !adminUser) { setOrders([]); return; }
+    const controller = new AbortController();
+    setOrders([]); setOrdersError(""); setOrdersLoading(true);
+    const endpoint = isAdminRoute ? "/api/admin/orders" : "/api/orders";
+    fetch(endpoint, { signal: controller.signal, cache: "no-store" }).then(async response => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not load orders.");
+      if (!controller.signal.aborted) setOrders(result.orders.map(mapDbOrderToOrder));
+    }).catch(error => { if (!controller.signal.aborted) setOrdersError(error.message); })
+      .finally(() => { if (!controller.signal.aborted) setOrdersLoading(false); });
+    return () => controller.abort();
+  }, [isAdminRoute, pathname === "/orders", adminUser]);
 
   // Save Cart & Wishlist locally with QuotaExceeded error prevention
   useEffect(() => {
@@ -432,7 +453,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    setOrders([]);
     if (isAdminRoute) {
+      void fetch("/api/admin/session", { method: "DELETE" });
       setAdminUser(null);
       if (typeof window !== "undefined") {
         localStorage.removeItem("ks_admin_user");
@@ -444,6 +467,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         } catch {}
       }
     } else {
+      void fetch("/api/orders", { method: "DELETE" });
       setCustomerUser(null);
       if (typeof window !== "undefined") {
         localStorage.removeItem("ks_user");
@@ -856,30 +880,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const addOrder = async (orderData: Omit<Order, "id" | "orderNumber" | "createdAt">): Promise<Order> => {
     let newOrder: Order;
+    orderData = { ...orderData, items: cleanOrderItems(orderData.items) };
     const nextOrderNumber = getNextKaavuOrderNumber(orders);
 
     if (isSupabaseConfigured) {
-      const payload = {
-        ...orderData,
-        orderNumber: nextOrderNumber,
-        order_number: nextOrderNumber,
-      };
-      const { data, error } = await supabase.rpc("place_order_with_stock", { order_data: payload });
-      if (error) throw new Error(error.message);
-      if (!data) throw new Error("Order was not saved. Please try again.");
-
-      if (data && (!data.order_number || !data.order_number.startsWith("KAAVU"))) {
-        try {
-          await supabase.from("orders").update({ order_number: nextOrderNumber }).eq("id", data.id);
-          data.order_number = nextOrderNumber;
-        } catch (e) {
-          console.error("Error updating order_number to KAAVU format:", e);
-        }
-      }
-
-      newOrder = mapDbOrderToOrder(data);
-      const { data: refreshed } = await supabase.from("products").select("*").order("created_at", { ascending: false });
-      if (refreshed) setProducts(refreshed.map(mapDbProductToProduct));
+      throw new Error("Please use verified Razorpay checkout to place this order.");
     } else {
       const updated = reduceInventory(products, orderData.items);
       newOrder = {
@@ -898,13 +903,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateOrderStatus = async (id: string, status: Order["status"]) => {
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
-    if (isSupabaseConfigured) {
-      try {
-        await supabase.from("orders").update({ status }).eq("id", id);
-      } catch (err) {
-        console.error("Error updating order status in Supabase:", err);
+    try {
+      if (isSupabaseConfigured) {
+        const response = await fetch('/api/admin/orders/' + encodeURIComponent(id), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not update order.");
       }
+      setOrders(previous => previous.map(order => order.id === id ? { ...order, status } : order));
+    } catch (error) {
+      showToast({ type: "info", title: "Order update failed", message: error instanceof Error ? error.message : "Please retry." });
+      throw error;
     }
   };
 
@@ -1193,6 +1201,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         categories,
         banners,
         orders,
+        ordersError,
+        ordersLoading,
         lifestyleTags,
         sizes,
         colors,

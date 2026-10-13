@@ -8,7 +8,7 @@ import { formatPrice } from "@/lib/utils";
 import { Package, Search, ShoppingBag, ArrowRight, CheckCircle2, Clock, Truck, AlertCircle, User as UserIcon } from "lucide-react";
 
 export default function OrdersPage() {
-  const { orders, currentUser, openAuthModal } = useStore();
+  const { orders, ordersError, ordersLoading, currentUser, openAuthModal } = useStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
@@ -91,6 +91,9 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {ordersLoading && <p role="status" className="text-sm text-ink-muted">Loading your orders…</p>}
+      {ordersError && <p role="alert" className="text-sm text-crimson">{ordersError}</p>}
+      <p className="text-xs text-ink-muted">Order receipts from verified payments in this browser are shown here. For older orders or orders placed on another device, contact support.</p>
       {/* 1. PAGE HEADER */}
       <div className="bg-ivory-200 border border-ivory-300 p-8 sm:p-12 text-center space-y-3 shadow-luxury">
         <div className="flex items-center justify-center space-x-2 text-burgundy mb-1">

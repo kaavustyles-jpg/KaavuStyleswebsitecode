@@ -14,7 +14,7 @@ function load(file, dependencies, extra = {}) {
 const inventory = load('lib/inventory.ts', {});
 const product = { id: 'product-1', name: 'Dress', price: 1599, stock: 2, sizes: ['M'], colors: ['Red'], images: ['photo'], sizeStock: { M: 2 } };
 function server(db, fetch = async () => { throw new Error('Unexpected gateway call'); }) {
-  return load('lib/razorpay-server.ts', { 'server-only': {}, '@supabase/supabase-js': { createClient: () => db }, './supabase': { mapDbProductToProduct: row => row }, './inventory': inventory }, { fetch });
+  return load('lib/razorpay-server.ts', { 'server-only': {}, '@supabase/supabase-js': { createClient: () => db }, './supabase': { mapDbProductToProduct: row => row }, './inventory': inventory, './order-image-storage': load('lib/order-image-storage.ts', { './order-images': load('lib/order-images.ts', {}), 'server-only': {} }) }, { fetch });
 }
 function input(quantity = 1) {
   return { customerName: 'Customer', customerEmail: 'customer@example.com', customerPhone: '9999999999', shippingAddress: 'Street', city: 'City', postalCode: '500001', totalAmount: 1, items: [{ productId: product.id, price: 1, quantity, size: 'M', color: 'Red' }] };

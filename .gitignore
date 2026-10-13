@@ -20,6 +20,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # environment variables
+.local-backups/
 .env
 .env*.local
 

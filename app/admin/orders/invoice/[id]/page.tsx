@@ -6,7 +6,6 @@ import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/lib/utils";
 import { isSupabaseConfigured, mapDbOrderToOrder } from "@/lib/supabase";
 import type { Order } from "@/lib/mockData";
-import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Printer, Shield, CheckCircle, Mail, Phone, MapPin, Sparkles } from "lucide-react";
@@ -57,14 +56,13 @@ export default function AdminOrderInvoicePage() {
     async function loadInvoice() {
       try {
         if (!isSupabaseConfigured || !orderId) return;
-        const column = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId) ? "id" : "order_number";
-        // Use an independent read client so checkout/auth activity cannot block the invoice.
-        const invoiceDb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
-        const { data, error } = await invoiceDb.from("orders").select("*").eq(column, orderId).abortSignal(controller.signal).maybeSingle();
-        if (error) throw error;
+        const response = await fetch('/api/admin/orders/' + encodeURIComponent(orderId), { signal: controller.signal, cache: "no-store" });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not load invoice.");
+        const data = result.order;
         if (!cancelled && data) setSavedOrder(mapDbOrderToOrder(data));
-      } catch {
-        if (!cancelled) setLoadError("Could not load this invoice. Please check your connection and retry.");
+      } catch (error) {
+        if (!cancelled) setLoadError(error instanceof Error ? error.message : "Could not load this invoice. Please retry.");
       } finally {
         clearTimeout(timeout);
         if (!cancelled) setLoadingInvoice(false);

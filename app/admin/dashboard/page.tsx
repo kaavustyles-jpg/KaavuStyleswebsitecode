@@ -25,6 +25,7 @@ export default function AdminDashboardPage() {
     products,
     categories,
     orders,
+    ordersError,
     banners,
     coupons,
     lifestyleTags,
@@ -54,6 +55,7 @@ export default function AdminDashboardPage() {
         <AdminHeader title="Admin Overview Dashboard" />
 
         <main className="p-6 sm:p-8 space-y-8">
+          {ordersError && <p role="alert" className="rounded-lg bg-crimson/5 p-4 text-sm text-crimson">{ordersError} <Link href="/admin/login" className="underline">Sign in again</Link></p>}
           {/* Database Sync Status Banner (Rich Deep Burgundy Theme) */}
           <div className="bg-[#2B0B14] text-ivory p-5 border-2 border-gold/40 shadow-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center space-x-3.5">

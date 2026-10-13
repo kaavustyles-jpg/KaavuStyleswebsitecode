@@ -4,7 +4,7 @@ import React, { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import ProductCard from "@/components/ProductCard";
-import { Search, X, Sparkles, Filter, RefreshCw } from "lucide-react";
+import { Search, X, Sparkles, Filter, RefreshCw, ArrowUpDown } from "lucide-react";
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -98,10 +98,119 @@ function ShopContent() {
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />
 
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
-Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every version of you.
+            Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every version of you.
 
- From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles
-        </p>
+            From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles
+          </p>
+        </div>
+      </div>
+
+      {/* MOBILE SORT & FILTER RADIO BAR (BELOW BANNER) */}
+      <div className="lg:hidden bg-ivory-50 border border-ivory-300 p-3 sm:p-4 space-y-2.5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-bold flex items-center space-x-1.5">
+            <ArrowUpDown className="w-3.5 h-3.5 text-gold" />
+            <span>Sort Ensembles</span>
+          </span>
+          <span className="text-[10px] uppercase tracking-wider text-ink-muted">
+            {filteredProducts.length} {filteredProducts.length === 1 ? "Creation" : "Creations"}
+          </span>
+        </div>
+
+        {/* 3 Radio Button Controls */}
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+          {/* 1. New Arrivals (Default) */}
+          <label
+            onClick={() => setSortBy("latest")}
+            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+              sortBy === "latest"
+                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
+                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+            }`}
+          >
+            <input
+              type="radio"
+              name="mobile-sort-radio"
+              value="latest"
+              checked={sortBy === "latest"}
+              onChange={() => setSortBy("latest")}
+              className="sr-only"
+            />
+            <span
+              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                sortBy === "latest" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+              }`}
+            >
+              {sortBy === "latest" && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
+              )}
+            </span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
+              New Arrivals
+            </span>
+          </label>
+
+          {/* 2. Low to High */}
+          <label
+            onClick={() => setSortBy("price-low")}
+            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+              sortBy === "price-low"
+                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
+                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+            }`}
+          >
+            <input
+              type="radio"
+              name="mobile-sort-radio"
+              value="price-low"
+              checked={sortBy === "price-low"}
+              onChange={() => setSortBy("price-low")}
+              className="sr-only"
+            />
+            <span
+              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                sortBy === "price-low" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+              }`}
+            >
+              {sortBy === "price-low" && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
+              )}
+            </span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
+              Low to High
+            </span>
+          </label>
+
+          {/* 3. High to Low */}
+          <label
+            onClick={() => setSortBy("price-high")}
+            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+              sortBy === "price-high"
+                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
+                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+            }`}
+          >
+            <input
+              type="radio"
+              name="mobile-sort-radio"
+              value="price-high"
+              checked={sortBy === "price-high"}
+              onChange={() => setSortBy("price-high")}
+              className="sr-only"
+            />
+            <span
+              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
+                sortBy === "price-high" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+              }`}
+            >
+              {sortBy === "price-high" && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
+              )}
+            </span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
+              High to Low
+            </span>
+          </label>
         </div>
       </div>
 
@@ -121,8 +230,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
           <button
             onClick={() => setSelectedCategory("all")}
             className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${selectedCategory === "all"
-                ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
-                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+              ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
+              : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
               }`}
           >
             <span>All Categories</span>
@@ -139,8 +248,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
                 className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${isSelected
-                    ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
-                    : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+                  ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
+                  : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
                   }`}
               >
                 <span>{cat.name}</span>
@@ -211,8 +320,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
           <button
             onClick={() => setSelectedTag("all")}
             className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${selectedTag === "all"
-                ? "bg-gold text-ivory font-bold"
-                : "bg-ivory-200 text-ink hover:bg-ivory-300"
+              ? "bg-gold text-ivory font-bold"
+              : "bg-ivory-200 text-ink hover:bg-ivory-300"
               }`}
           >
             All Aesthetics
@@ -222,8 +331,8 @@ Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish s
               key={tag.id}
               onClick={() => setSelectedTag(tag.name)}
               className={`px-3 py-1 text-[10px] uppercase tracking-wider transition-all whitespace-nowrap ${selectedTag.toLowerCase() === tag.name.toLowerCase()
-                  ? "bg-gold text-ivory font-bold"
-                  : "bg-ivory-200 text-ink hover:bg-ivory-300"
+                ? "bg-gold text-ivory font-bold"
+                : "bg-ivory-200 text-ink hover:bg-ivory-300"
                 }`}
             >
               #{tag.name}

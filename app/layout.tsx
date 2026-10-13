@@ -13,7 +13,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 export const metadata: Metadata = {
   title: "Kaavu Styles | For Every Version Of You",
   description:
-    "Luxury clothing brand featuring royal Kanjeevaram sarees, designer kurtis, bridal lehengas, and Indo-Western couture.",
+    "Luxury clothing brand featuring royal  designer kurtis.",
   icons: {
     icon: "/icon.jpeg",
   },

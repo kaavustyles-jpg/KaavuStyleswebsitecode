@@ -46,7 +46,7 @@ export default function SiteEntrance({ children }: { children: React.ReactNode }
             <Image src="/icon.jpeg" alt="" width={88} height={88} priority className="rounded-full object-cover" />
           </div>
           <p className="font-serif text-3xl sm:text-4xl tracking-[0.16em] text-ivory uppercase mt-7">Kaavu Style</p>
-          <p className="text-gold text-[10px] sm:text-xs tracking-[0.28em] uppercase mt-3">Online Store</p>
+          <p className="text-gold text-[10px] sm:text-xs tracking-[0.28em] uppercase mt-3">For Every Version Of You</p>
           <div className="site-entrance-track" aria-hidden="true"><span /></div>
           <span className="sr-only">Loading your shopping experience…</span>
         </div>

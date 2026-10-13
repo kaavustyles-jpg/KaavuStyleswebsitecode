@@ -35,7 +35,7 @@ export default function Footer() {
                   Kaavu Style
                 </span>
                 <span className="text-[9px] tracking-[0.28em] text-[#E5C378] uppercase font-sans -mt-0.5 font-bold">
-                  Online Store
+                  For Every Version Of You
                 </span>
               </div>
             </Link>

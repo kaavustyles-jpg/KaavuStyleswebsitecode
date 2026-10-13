@@ -124,7 +124,7 @@ export default function Navbar() {
                 Kaavu Style
               </span>
               <span className="text-[8px] sm:text-[9px] tracking-[0.2em] uppercase text-gold font-sans -mt-0.5 block">
-                Online Store
+                For Every Version Of You
               </span>
             </div>
           </Link>

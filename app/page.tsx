@@ -16,6 +16,8 @@ import {
   Sparkles,
   Truck,
   ShieldCheck,
+  ShieldAlert,
+  Lock,
   RefreshCw,
   Award,
 } from "lucide-react";
@@ -362,42 +364,93 @@ export default function HomePage() {
       </section>
 
 
-      {/* 6. LUXURY TRUST & ESSENCE HALLMARK BAR */}
+      {/* 6. LUXURY TRUST & ESSENCE HALLMARK BAR (4 KEY PILLARS FROM TERMS & PRIVACY) */}
       <section className="w-full bg-[#2B0B14] border-y-2 border-gold/40 text-ivory py-8 sm:py-10 px-4 shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(#E5C378_1px,transparent_1px)] [background-size:20px_20px] opacity-15 pointer-events-none" />
 
         <div className="relative z-10 w-full px-2 sm:px-6 lg:px-12 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          <div data-reveal="up" className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+          {/* Point 1: Terms of Service - No Return / No Replacement */}
+          <Link
+            href="/terms"
+            data-reveal="up"
+            className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md block"
+          >
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <ShieldAlert className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">
+              No Returns or Exchanges
+            </h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">
+              Strict Final Sale Policy
+            </p>
+            <span className="text-[8px] sm:text-[9px] text-ivory-300/80 block font-sans">
+              Handcrafted Couture • Terms Apply
+            </span>
+          </Link>
+
+          {/* Point 2: Terms of Service - Artisanal Craftsmanship */}
+          <Link
+            href="/shop"
+            data-reveal="up"
+            style={{ transitionDelay: "100ms" }}
+            className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md block"
+          >
             <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
               <Award className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
             </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Artisanal Handcraft</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Luxury Kurtis & Ethnic Couture</p>
-          </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">
+              Artisanal Craftsmanship
+            </h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">
+              Designer Kurtis & Ethnic Sets
+            </p>
+            <span className="text-[8px] sm:text-[9px] text-ivory-300/80 block font-sans">
+              100% Quality Audited Prior Dispatch
+            </span>
+          </Link>
 
-          <div data-reveal="up" style={{ transitionDelay: "100ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
+          {/* Point 3: Privacy Policy - 100% Encrypted & Private */}
+          <Link
+            href="/privacy"
+            data-reveal="up"
+            style={{ transitionDelay: "200ms" }}
+            className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md block"
+          >
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
+              <Lock className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
+            </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">
+              100% Secure & Private
+            </h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">
+              PCI-DSS Encrypted Razorpay
+            </p>
+            <span className="text-[8px] sm:text-[9px] text-ivory-300/80 block font-sans">
+              Zero Third-Party Data Sharing
+            </span>
+          </Link>
+
+          {/* Point 4: Terms of Service & Privacy - Tracked Dispatch & Concierge */}
+          <Link
+            href="/terms"
+            data-reveal="up"
+            style={{ transitionDelay: "300ms" }}
+            className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md block"
+          >
             <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
               <Truck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
             </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Express Delivery</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Free Shipping Across India</p>
-          </div>
-
-          <div data-reveal="up" style={{ transitionDelay: "200ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Cash On Delivery</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">100% Safe Payment Verification</p>
-          </div>
-
-          <div data-reveal="up" style={{ transitionDelay: "300ms" }} className="bg-ivory/5 border border-gold/30 p-3.5 sm:p-6 text-center space-y-1.5 sm:space-y-2 group hover:border-gold hover:bg-ivory/10 transition-all shadow-md">
-            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full border border-gold bg-[#2B0B14] flex items-center justify-center text-gold mx-auto group-hover:scale-110 transition-transform shadow-inner">
-              <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6 text-[#E5C378]" />
-            </div>
-            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">Bespoke Guarantee</h4>
-            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">Tailored Fit Assistance</p>
-          </div>
+            <h4 className="font-serif text-xs sm:text-base uppercase tracking-wider text-white font-normal">
+              Pan-India Tracked Dispatch
+            </h4>
+            <p className="text-[9px] sm:text-[11px] text-[#E5C378] uppercase tracking-widest font-sans font-semibold">
+              Inspected & Shipped With Care
+            </p>
+            <span className="text-[8px] sm:text-[9px] text-ivory-300/80 block font-sans">
+              Support: kaavustyles@gmail.com
+            </span>
+          </Link>
         </div>
       </section>
 

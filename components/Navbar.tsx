@@ -85,7 +85,7 @@ export default function Navbar() {
       {/* 1. TOP ANNOUNCEMENT BAR (DYNAMIC SCROLLING MARQUEE) */}
       {isMounted && (
         <div className="bg-[#2B0B14] text-ivory py-1.5 overflow-hidden text-[11px] font-sans tracking-wide border-b border-gold/30">
-          <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 sm:space-x-8 font-medium">
+          <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 sm:space-x-8 font-medium" style={{ animationDuration: "50s" }}>
             {[1, 2, 3, 4, 5, 6].map((group) => (
               <React.Fragment key={group}>
                 {navbarCoupons.length > 0 ? (
@@ -105,7 +105,7 @@ export default function Navbar() {
                     <div className="flex items-center space-x-2.5">
                       <Sparkles className="w-3.5 h-3.5 text-[#E5C378] flex-shrink-0 animate-pulse" />
                       <span className="text-[#E5C378] font-medium">
-                        Welcome to Kaavu Styless
+                        Welcome to Kaavu Styles
                       </span>
                     </div>
                     <span className="text-[#E5C378]/60">•</span>

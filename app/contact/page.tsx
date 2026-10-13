@@ -127,7 +127,7 @@ export default function ContactPage() {
         {/* Store Info & Locations */}
         <div className="space-y-8 flex flex-col justify-between">
           <div className="bg-ivory-200 border border-ivory-300 p-8 space-y-6">
-            <h2 className="font-serif text-2xl text-ink uppercase">Flagship Locations</h2>
+            <h2 className="font-serif text-2xl text-ink uppercase"> Locations</h2>
 
             <div className="space-y-5 text-xs text-ink-muted">
               {/* Location 2: Bengaluru */}
@@ -164,7 +164,7 @@ export default function ContactPage() {
 
           <div className="bg-ink text-ivory p-8 border border-gold space-y-3">
             <h3 className="font-serif text-xl uppercase tracking-wider text-gold">
-              Boutique Hours
+              Working Hours
             </h3>
             <div className="text-xs space-y-1 text-ivory/80">
               <p>Monday – Saturday: 10:30 AM – 8:30 PM</p>

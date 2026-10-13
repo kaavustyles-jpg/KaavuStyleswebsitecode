@@ -106,28 +106,62 @@ function ShopContent() {
       </div>
 
       {/* MOBILE SORT & FILTER RADIO BAR (BELOW BANNER) */}
-      <div className="lg:hidden bg-ivory-50 border border-ivory-300 p-3 sm:p-4 space-y-2.5 shadow-sm">
+      <div className="lg:hidden bg-ivory-50 border border-ivory-300 p-3 sm:p-4 space-y-3 shadow-sm">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-bold flex items-center space-x-1.5">
+          <span className="text-[11px] uppercase tracking-[0.25em] text-gold font-bold flex items-center space-x-1.5">
             <ArrowUpDown className="w-3.5 h-3.5 text-gold" />
-            <span>Sort Ensembles</span>
+            <span>Filter & Sort by Price</span>
           </span>
-          <span className="text-[10px] uppercase tracking-wider text-ink-muted">
-            {filteredProducts.length} {filteredProducts.length === 1 ? "Creation" : "Creations"}
-          </span>
+          <div className="flex items-center space-x-3">
+            {sortBy !== "latest" && (
+              <button
+                onClick={() => setSortBy("latest")}
+                className="text-[10px] text-crimson hover:underline uppercase tracking-wider font-semibold flex items-center space-x-1 cursor-pointer"
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Reset</span>
+              </button>
+            )}
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted">
+              {filteredProducts.length} {filteredProducts.length === 1 ? "Creation" : "Creations"}
+            </span>
+          </div>
         </div>
 
-        {/* 3 Radio Button Controls */}
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+        {/* Mobile Friendly Radio Button Controls */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {/* 1. New Arrivals (Default) */}
           <label
             onClick={() => setSortBy("latest")}
-            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
               sortBy === "latest"
                 ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
             }`}
           >
+            <div className="flex items-center space-x-2.5 min-w-0">
+              <span
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                  sortBy === "latest" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+                }`}
+              >
+                {sortBy === "latest" && (
+                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
+                )}
+              </span>
+              <span className="text-xs uppercase tracking-wider font-sans">
+                New Arrivals
+              </span>
+            </div>
+            <span
+              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
+                sortBy === "latest"
+                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
+                  : "border-ivory-300 text-ink-muted bg-ivory-100"
+              }`}
+            >
+              Default
+            </span>
             <input
               type="radio"
               name="mobile-sort-radio"
@@ -136,29 +170,40 @@ function ShopContent() {
               onChange={() => setSortBy("latest")}
               className="sr-only"
             />
-            <span
-              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                sortBy === "latest" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-              }`}
-            >
-              {sortBy === "latest" && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
-              )}
-            </span>
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
-              New Arrivals
-            </span>
           </label>
 
-          {/* 2. Low to High */}
+          {/* 2. Price: Low to High */}
           <label
             onClick={() => setSortBy("price-low")}
-            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
               sortBy === "price-low"
                 ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
             }`}
           >
+            <div className="flex items-center space-x-2.5 min-w-0">
+              <span
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                  sortBy === "price-low" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+                }`}
+              >
+                {sortBy === "price-low" && (
+                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
+                )}
+              </span>
+              <span className="text-xs uppercase tracking-wider font-sans">
+                Price: Low to High
+              </span>
+            </div>
+            <span
+              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
+                sortBy === "price-low"
+                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
+                  : "border-ivory-300 text-ink-muted bg-ivory-100"
+              }`}
+            >
+              ₹ → ₹₹₹
+            </span>
             <input
               type="radio"
               name="mobile-sort-radio"
@@ -167,29 +212,40 @@ function ShopContent() {
               onChange={() => setSortBy("price-low")}
               className="sr-only"
             />
-            <span
-              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                sortBy === "price-low" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-              }`}
-            >
-              {sortBy === "price-low" && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
-              )}
-            </span>
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
-              Low to High
-            </span>
           </label>
 
-          {/* 3. High to Low */}
+          {/* 3. Price: High to Low */}
           <label
             onClick={() => setSortBy("price-high")}
-            className={`flex items-center justify-center space-x-1 sm:space-x-1.5 px-1.5 sm:px-2 py-2.5 border transition-all cursor-pointer text-center select-none ${
+            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
               sortBy === "price-high"
                 ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
             }`}
           >
+            <div className="flex items-center space-x-2.5 min-w-0">
+              <span
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                  sortBy === "price-high" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
+                }`}
+              >
+                {sortBy === "price-high" && (
+                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
+                )}
+              </span>
+              <span className="text-xs uppercase tracking-wider font-sans">
+                Price: High to Low
+              </span>
+            </div>
+            <span
+              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
+                sortBy === "price-high"
+                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
+                  : "border-ivory-300 text-ink-muted bg-ivory-100"
+              }`}
+            >
+              ₹₹₹ → ₹
+            </span>
             <input
               type="radio"
               name="mobile-sort-radio"
@@ -198,18 +254,6 @@ function ShopContent() {
               onChange={() => setSortBy("price-high")}
               className="sr-only"
             />
-            <span
-              className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                sortBy === "price-high" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-              }`}
-            >
-              {sortBy === "price-high" && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#E5C378]" />
-              )}
-            </span>
-            <span className="text-[10px] sm:text-xs uppercase tracking-wider truncate font-sans">
-              High to Low
-            </span>
           </label>
         </div>
       </div>

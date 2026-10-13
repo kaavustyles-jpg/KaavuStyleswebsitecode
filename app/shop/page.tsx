@@ -92,7 +92,7 @@ function ShopContent() {
           </div>
 
           <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl uppercase font-light text-white tracking-tight">
-            Our Complete <span className="text-[#E5C378] italic font-normal">Collection</span>
+            Our Complete <span className="text-[#E5C378] italic font-normal">Collections</span>
           </h1>
 
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />

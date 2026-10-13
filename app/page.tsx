@@ -178,7 +178,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent" />
                   <div className="absolute bottom-4 left-3 right-3 text-ivory space-y-1 z-10 text-center">
                     <span className="text-[9px] uppercase tracking-[0.3em] text-gold font-sans font-bold block">
-                      Collection
+                      Collections
                     </span>
                     <h3 className="font-serif text-sm sm:text-2xl uppercase font-light tracking-wide group-hover:text-gold transition-colors line-clamp-1 text-center">
                       {cat.name}

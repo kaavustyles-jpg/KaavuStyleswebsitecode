@@ -41,7 +41,7 @@ export default function HeroBanner() {
     <section className="bg-[#2B0B14] min-h-[360px] sm:min-h-[420px] flex flex-col items-center justify-center text-center px-6 text-ivory">
       <p className="text-gold text-xs uppercase tracking-[0.2em]">Kaavu Styless</p>
       <h1 className="font-serif text-4xl sm:text-6xl mt-4">For Every Version Of You</h1>
-      <Link href="/shop" className="mt-8 border border-gold px-8 py-3 text-sm">Explore the Collection</Link>
+      <Link href="/shop" className="mt-8 border border-gold px-8 py-3 text-sm">Explore the Collections</Link>
     </section>
   );
   const banner = activeBanners[currentIdx % activeBanners.length];

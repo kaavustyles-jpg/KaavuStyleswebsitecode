@@ -248,7 +248,7 @@ export default function CheckoutPage() {
           className="flex items-center space-x-2 text-xs uppercase tracking-wider font-bold text-ink hover:text-crimson transition-colors bg-white px-4 py-2 border border-gold/40 shadow-sm"
         >
           <ArrowLeft className="w-4 h-4 text-gold" />
-          <span>Back to Collection</span>
+          <span>Back to Collections</span>
         </Link>
 
         <div className="flex items-center space-x-2 text-xs uppercase tracking-widest text-burgundy font-bold bg-ivory-200 px-4 py-2 border border-gold/40 shadow-sm">

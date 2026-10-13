@@ -160,7 +160,7 @@ export default function Footer() {
               </li>
               <li className="pt-2 border-t border-gold/20 flex items-start space-x-2 text-ivory-300">
                 <MapPin className="w-4 h-4 text-[#E5C378] flex-shrink-0 mt-0.5" />
-                <span>Locations: Bengaluru, Karnataka, India</span>
+                <span>Location: Bengaluru, Karnataka, India</span>
               </li>
             </ul>
           </div>

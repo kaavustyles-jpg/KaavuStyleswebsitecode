@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import ProductCard from "@/components/ProductCard";
@@ -10,24 +10,70 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const { products, categories, lifestyleTags } = useStore();
 
-  const initialCat = searchParams.get("category") || "all";
+  const queryCat = searchParams.get("category");
 
   // Filter States
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCat);
+  const [selectedCategory, setSelectedCategory] = useState<string>(queryCat || "all");
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<"latest" | "price-low" | "price-high">("latest");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  // Sync category with URL searchParams (e.g. when navigating from /catory or /categories)
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    } else {
+      setSelectedCategory("all");
+    }
+  }, [searchParams]);
+
   // TOGGLE: Set to true when you want to unhide the mobile filter button & drawer
   const SHOW_MOBILE_FILTER = false;
 
+  // Active Category resolver
+  const activeCategoryObj = useMemo(() => {
+    if (!selectedCategory || selectedCategory === "all") return null;
+    const sel = selectedCategory.trim().toLowerCase();
+    return (
+      categories.find(
+        (c) =>
+          (c.slug && c.slug.toLowerCase() === sel) ||
+          (c.id && c.id.toLowerCase() === sel) ||
+          (c.name && c.name.toLowerCase() === sel) ||
+          (c.slug && c.slug.toLowerCase() === sel.replace(/\s+/g, "-")) ||
+          (c.name && c.name.toLowerCase().replace(/\s+/g, "-") === sel)
+      ) || null
+    );
+  }, [categories, selectedCategory]);
+
+  const activeCategoryName =
+    activeCategoryObj?.name ||
+    (selectedCategory && selectedCategory !== "all"
+      ? selectedCategory.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
+      : "");
+
   // Category product count helper
-  const getCategoryCount = (slug: string) => {
-    if (slug === "all") return products.length;
-    const catObj = categories.find((c) => c.slug === slug || c.id === slug);
-    if (!catObj) return 0;
-    return products.filter((p) => p.categoryId === catObj.id || p.category.toLowerCase() === catObj.name.toLowerCase()).length;
+  const getCategoryCount = (slugOrId: string) => {
+    if (slugOrId === "all") return products.length;
+    const sel = slugOrId.trim().toLowerCase();
+    const catObj = categories.find(
+      (c) =>
+        (c.slug && c.slug.toLowerCase() === sel) ||
+        (c.id && c.id.toLowerCase() === sel) ||
+        (c.name && c.name.toLowerCase() === sel)
+    );
+
+    return products.filter((p) => {
+      if (catObj) {
+        if (p.categoryId && (p.categoryId === catObj.id || p.categoryId.toLowerCase() === catObj.id.toLowerCase() || p.categoryId.toLowerCase() === (catObj.slug || "").toLowerCase())) return true;
+        if (p.category && (p.category.toLowerCase() === catObj.name.toLowerCase() || p.category.toLowerCase() === (catObj.slug || "").toLowerCase())) return true;
+      }
+      if (p.categoryId && (p.categoryId.toLowerCase() === sel || p.categoryId === slugOrId)) return true;
+      if (p.category && (p.category.toLowerCase() === sel || p.category.toLowerCase().replace(/\s+/g, "-") === sel || p.category.toLowerCase() === sel.replace(/-/g, " "))) return true;
+      return false;
+    }).length;
   };
 
   // Filtered & Sorted Products
@@ -44,9 +90,38 @@ function ShopContent() {
         }
 
         // Category filter
-        if (selectedCategory !== "all") {
-          const catObj = categories.find((c) => c.slug === selectedCategory || c.id === selectedCategory);
-          if (catObj && product.categoryId !== catObj.id && product.category.toLowerCase() !== catObj.name.toLowerCase()) {
+        if (selectedCategory && selectedCategory !== "all") {
+          const sel = selectedCategory.trim().toLowerCase();
+          const catObj = categories.find(
+            (c) =>
+              (c.slug && c.slug.toLowerCase() === sel) ||
+              (c.id && c.id.toLowerCase() === sel) ||
+              (c.name && c.name.toLowerCase() === sel) ||
+              (c.slug && c.slug.toLowerCase() === sel.replace(/\s+/g, "-")) ||
+              (c.name && c.name.toLowerCase().replace(/\s+/g, "-") === sel)
+          );
+
+          const matchesCategory =
+            // Match via resolved category object
+            (catObj && (
+              (product.categoryId && (product.categoryId === catObj.id || product.categoryId.toLowerCase() === catObj.id.toLowerCase() || product.categoryId.toLowerCase() === (catObj.slug || "").toLowerCase())) ||
+              (product.category && (
+                product.category.toLowerCase() === catObj.name.toLowerCase() ||
+                product.category.toLowerCase() === (catObj.slug || "").toLowerCase()
+              ))
+            )) ||
+            // Or direct match with selectedCategory param
+            (product.categoryId && (
+              product.categoryId.toLowerCase() === sel ||
+              product.categoryId === selectedCategory
+            )) ||
+            (product.category && (
+              product.category.toLowerCase() === sel ||
+              product.category.toLowerCase().replace(/\s+/g, "-") === sel ||
+              product.category.toLowerCase() === sel.replace(/-/g, " ")
+            ));
+
+          if (!matchesCategory) {
             return false;
           }
         }
@@ -92,13 +167,23 @@ function ShopContent() {
           </div>
 
           <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl uppercase font-light text-white tracking-tight">
-            Our Complete <span className="text-[#E5C378] italic font-normal">Collections</span>
+            {activeCategoryName ? (
+              <>
+                <span className="text-[#E5C378] italic font-normal">{activeCategoryName}</span> Collections
+              </>
+            ) : (
+              <>
+                Our Complete <span className="text-[#E5C378] italic font-normal">Collections</span>
+              </>
+            )}
           </h1>
 
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />
 
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
-Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western wears for every mood and moment. From office days to coffee dates, find your style with Kaavu Styles.
+            {activeCategoryName
+              ? `Discover hand-curated ${activeCategoryName} ensembles crafted for everyday elegance and festive celebrations with Kaavu Styles.`
+              : "Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western wears for every mood and moment. From office days to coffee dates, find your style with Kaavu Styles."}
           </p>
         </div>
       </div>
@@ -144,8 +229,8 @@ Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western
         </div>
       </div>
 
-      {/* 2. CATEGORY PILL CAROUSEL WITH PRODUCT COUNTS (DESKTOP ONLY - MOBILE USES FLOATING FILTER BUTTON) */}
-      <div className="hidden lg:block space-y-2">
+      {/* 2. CATEGORY PILL CAROUSEL WITH PRODUCT COUNTS (VISIBLE ON MOBILE & DESKTOP) */}
+      <div className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <span className="text-[11px] uppercase tracking-[0.25em] text-gold font-semibold flex items-center space-x-1.5">
             <Filter className="w-3.5 h-3.5 text-gold" />
@@ -156,34 +241,50 @@ Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western
           </span>
         </div>
 
-        <div className="flex items-center space-x-3 overflow-x-auto scrollbar-none pb-2 pt-1 text-xs">
+        <div className="flex items-center space-x-2.5 sm:space-x-3 overflow-x-auto scrollbar-none pb-2 pt-1 text-xs">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${selectedCategory === "all"
-              ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
-              : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-              }`}
+            className={`px-4 sm:px-5 py-2 sm:py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 cursor-pointer ${
+              !selectedCategory || selectedCategory === "all"
+                ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
+                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+            }`}
           >
             <span>All Categories</span>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full ${selectedCategory === "all" ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"}`}>
+            <span
+              className={`text-[10px] px-2 py-0.5 rounded-full ${
+                !selectedCategory || selectedCategory === "all"
+                  ? "bg-ivory/20 text-ivory"
+                  : "bg-ivory-300 text-ink-muted"
+              }`}
+            >
               {products.length}
             </span>
           </button>
 
           {categories.map((cat) => {
             const count = getCategoryCount(cat.slug);
-            const isSelected = selectedCategory === cat.slug;
+            const isSelected =
+              selectedCategory === cat.slug ||
+              selectedCategory === cat.id ||
+              (cat.slug && selectedCategory.toLowerCase() === cat.slug.toLowerCase()) ||
+              selectedCategory.toLowerCase() === cat.name.toLowerCase();
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-5 py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 ${isSelected
-                  ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
-                  : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-                  }`}
+                className={`px-4 sm:px-5 py-2 sm:py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 cursor-pointer ${
+                  isSelected
+                    ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
+                    : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
+                }`}
               >
                 <span>{cat.name}</span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full ${isSelected ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"}`}>
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full ${
+                    isSelected ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"
+                  }`}
+                >
                   {count}
                 </span>
               </button>
@@ -232,7 +333,7 @@ Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="px-4 py-2.5 border border-crimson text-crimson hover:bg-crimson hover:text-ivory text-xs uppercase tracking-wider transition-all font-semibold flex items-center space-x-1.5"
+                className="px-4 py-2.5 border border-crimson text-crimson hover:bg-crimson hover:text-ivory text-xs uppercase tracking-wider transition-all font-semibold flex items-center space-x-1.5 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Reset</span>
@@ -272,12 +373,38 @@ Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western
       </div>
 
       {/* 4. RESULTS INFO BAR */}
-      <div className="flex items-center justify-between border-b border-ivory-300 pb-3 text-xs uppercase tracking-wider text-ink-muted px-1">
-        <span>
-          Displaying <strong className="text-crimson font-semibold">{filteredProducts.length}</strong> {filteredProducts.length === 1 ? "Creation" : "Creations"}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ivory-300 pb-3 text-xs uppercase tracking-wider text-ink-muted px-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span>
+            Displaying <strong className="text-crimson font-semibold">{filteredProducts.length}</strong> {filteredProducts.length === 1 ? "Creation" : "Creations"}
+          </span>
+          {activeCategoryName && (
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1 bg-crimson text-ivory text-[11px] font-semibold tracking-wide rounded-full shadow-sm">
+              <span>Category: {activeCategoryName}</span>
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("all")}
+                className="hover:text-[#E5C378] p-0.5 ml-0.5 cursor-pointer"
+                title="Clear category filter"
+                aria-label="Clear category filter"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </span>
+          )}
+        </div>
+
         {hasActiveFilters && (
-          <span className="text-gold font-medium">Filtered View Active</span>
+          <div className="flex items-center space-x-3">
+            <span className="text-gold font-medium hidden sm:inline">Filtered View Active</span>
+            <button
+              onClick={clearFilters}
+              className="text-crimson hover:underline text-[11px] font-semibold flex items-center space-x-1 uppercase tracking-wider cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Clear All</span>
+            </button>
+          </div>
         )}
       </div>
 

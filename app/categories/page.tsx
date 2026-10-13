@@ -70,7 +70,7 @@ export default function CategoriesPage() {
             return (
               <Link
                 key={category.id}
-                href={`/shop?category=${category.slug}`}
+                href={`/shop?category=${encodeURIComponent(category.slug || category.id)}`}
                 className="group relative bg-ivory border-2 border-gold rounded-t-[999px] p-2 shadow-luxury hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col justify-between hover-lift"
               >
                 {/* Category Royal Arch Image Box */}

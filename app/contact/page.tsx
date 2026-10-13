@@ -9,7 +9,7 @@ export default function ContactPage() {
     name: "",
     email: "",
     phone: "",
-    location: "Hyderabad Flagship",
+    location: " Bengaluru Flagship",
     subject: "Bridal Inquiry",
     message: "",
   });
@@ -21,7 +21,7 @@ export default function ContactPage() {
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
-      setFormData({ name: "", email: "", phone: "", location: "Hyderabad Flagship", subject: "Bridal Inquiry", message: "" });
+      setFormData({ name: "", email: "", phone: "", location: " Bengaluru Flagship", subject: "Bridal Inquiry", message: "" });
     }, 4000);
   };
 
@@ -37,7 +37,7 @@ export default function ContactPage() {
             Contact Kaavu Styles
           </h1>
           <p className="text-xs text-ivory-300 max-w-md mx-auto">
-            Reach out to our boutique stylists in Hyderabad and Bengaluru for bridal appointments, bespoke fitting, or online orders.
+            Reach out to our boutique stylists in Bengaluru for bridal appointments, bespoke fitting, or online orders.
           </p>
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(#E5C378_1px,transparent_1px)] [background-size:20px_20px] opacity-15 pointer-events-none" />
@@ -100,39 +100,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1">
-                  Preferred Boutique Location
-                </label>
-                <select
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full border border-ivory-300 rounded bg-ivory p-3 text-xs text-ink outline-none focus:border-gold uppercase tracking-wider"
-                >
-                  <option>Hyderabad Flagship (Jubilee Hills)</option>
-                  <option>Bengaluru Boutique (Karnataka)</option>
-                  <option>Online Order Inquiry</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1">
-                  Inquiry Topic
-                </label>
-                <select
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full border border-ivory-300 rounded bg-ivory p-3 text-xs text-ink outline-none focus:border-gold uppercase tracking-wider"
-                >
-                  <option>Bridal Lehenga Consultation</option>
-                  <option>Kanjeevaram Saree Customization</option>
-                  <option>Order Status Inquiry</option>
-                  <option>General Concierge</option>
-                </select>
-              </div>
-            </div>
-
             <div>
               <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted mb-1">
                 Message
@@ -163,9 +130,6 @@ export default function ContactPage() {
             <h2 className="font-serif text-2xl text-ink uppercase">Flagship Locations</h2>
 
             <div className="space-y-5 text-xs text-ink-muted">
-              {/* Location 1: Hyderabad */}
-              
-
               {/* Location 2: Bengaluru */}
               <div className="flex items-start space-x-3 border-b border-ivory-300 pb-4">
                 <MapPin className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />

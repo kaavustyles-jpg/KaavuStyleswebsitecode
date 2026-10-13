@@ -424,7 +424,7 @@ export default function CheckoutModal({
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Hyderabad / Chennai / Bengaluru"
+                    placeholder="e.g. Bengaluru"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full border border-ivory-300 rounded-none bg-white p-2.5 text-xs text-ink outline-none focus:border-gold"

@@ -204,7 +204,7 @@ export default function TermsOfServicePage() {
               </h3>
             </div>
             <p className="text-ink-muted">
-              These terms and all boutique transactions are governed by the laws of India. Any disputes arising in connection with purchases, shipments, or concierge services shall be subject to the exclusive jurisdiction of the competent courts in Bengaluru, Karnataka or Hyderabad, India.
+              These terms and all boutique transactions are governed by the laws of India. Any disputes arising in connection with purchases, shipments, or concierge services shall be subject to the exclusive jurisdiction of the competent courts in Bengaluru, Karnataka, India.
             </p>
           </section>
 

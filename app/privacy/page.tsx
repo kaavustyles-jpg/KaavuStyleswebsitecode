@@ -228,7 +228,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <p>Kaavu Styles Legal & Privacy Officer</p>
               <p>Email: <a href="mailto:kaavustyles@gmail.com" className="text-crimson font-medium hover:underline">kaavustyles@gmail.com</a></p>
-              <p>Flagship Atelier: Bengaluru, Karnataka & Jubilee Hills, Hyderabad, India</p>
+              <p>Locations: Bengaluru, Karnataka & Jubilee Hills, Hyderabad, India</p>
             </div>
           </section>
 

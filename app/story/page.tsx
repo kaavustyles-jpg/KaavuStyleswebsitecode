@@ -41,7 +41,7 @@ export default function OurStoryPage() {
           <div className="relative w-full max-w-sm aspect-[3/4] rounded-t-[999px] border-2 border-gold p-2.5 bg-ivory-200 shadow-2xl overflow-hidden group">
             <div className="relative w-full h-full rounded-t-[990px] overflow-hidden">
               <Image
-                src="/image.jpg"
+                src="/foundations.JPEG"
                 alt="Kaavu Styles Journey"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"

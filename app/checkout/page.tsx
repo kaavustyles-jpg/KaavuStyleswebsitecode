@@ -482,7 +482,7 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Hyderabad / Chennai / Bengaluru"
+                    placeholder="e.g. Bengaluru"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full border border-ivory-300 bg-ivory-50 p-3 text-xs text-ink outline-none focus:border-gold"

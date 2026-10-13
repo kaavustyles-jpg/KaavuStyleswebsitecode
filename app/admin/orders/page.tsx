@@ -458,7 +458,7 @@ export default function AdminOrdersPage() {
                     <strong className="text-ink print:text-black">Non-Cancellable Orders & Immediate Processing:</strong> Orders cannot be cancelled or modified once placed. Shipping address adjustments must be submitted within 3 hours via <span className="text-crimson font-medium">kaavustyles@gmail.com</span> prior to courier dispatch.
                   </li>
                   <li>
-                    <strong className="text-ink print:text-black">Artisan Craftsmanship Care & Jurisdiction:</strong> Professional dry clean only. Natural variations in artisanal weaving and embroidery are intrinsic hallmarks of craftsmanship, not defects. All transactions subject to Bengaluru / Hyderabad jurisdiction only.
+                    <strong className="text-ink print:text-black">Artisan Craftsmanship Care & Jurisdiction:</strong> Professional dry clean only. Natural variations in artisanal weaving and embroidery are intrinsic hallmarks of craftsmanship, not defects. All transactions subject to Bengaluru jurisdiction only.
                   </li>
                 </ol>
               </div>

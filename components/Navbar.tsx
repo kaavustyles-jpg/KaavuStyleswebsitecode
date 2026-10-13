@@ -83,27 +83,57 @@ export default function Navbar() {
   return (
     <header onFocusCapture={() => setHeaderHidden(false)} className={`sticky top-0 z-50 shrink-0 bg-ivory shadow-luxury border-b border-gold/30 transition-transform duration-300 motion-reduce:transition-none lg:translate-y-0 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
       {/* 1. TOP ANNOUNCEMENT BAR (DYNAMIC SCROLLING MARQUEE) */}
-      {isMounted && navbarCoupons.length > 0 && <div className="bg-[#2B0B14] text-ivory py-1.5 overflow-hidden text-[11px] font-sans tracking-wide border-b border-gold/30">
-        <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 sm:space-x-8 font-medium">
-          {[1, 2, 3, 4, 5, 6].map((group) => (
-            <React.Fragment key={group}>
-              {
-                navbarCoupons.map((c) => (
-                  <React.Fragment key={`${group}-${c.id}`}>
+      {isMounted && (
+        <div className="bg-[#2B0B14] text-ivory py-1.5 overflow-hidden text-[11px] font-sans tracking-wide border-b border-gold/30">
+          <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 sm:space-x-8 font-medium">
+            {[1, 2, 3, 4, 5, 6].map((group) => (
+              <React.Fragment key={group}>
+                {navbarCoupons.length > 0 ? (
+                  navbarCoupons.map((c) => (
+                    <React.Fragment key={`${group}-${c.id}`}>
+                      <div className="flex items-center space-x-2.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#E5C378] flex-shrink-0 animate-pulse" />
+                        <span className="text-[#E5C378] font-medium">
+                          {c.description || `Enjoy Discount on Orders Above ₹${c.minOrderValue}`} — Use coupon Code: {c.code}
+                        </span>
+                      </div>
+                      <span className="text-[#E5C378]/60">•</span>
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <React.Fragment key={`${group}-welcome`}>
                     <div className="flex items-center space-x-2.5">
                       <Sparkles className="w-3.5 h-3.5 text-[#E5C378] flex-shrink-0 animate-pulse" />
                       <span className="text-[#E5C378] font-medium">
-                        {c.description || `Enjoy Discount on Orders Above ₹${c.minOrderValue}`}     Use coupon Code- {c.code}
+                        Welcome to Kaavu Styles
+                      </span>
+                    </div>
+                    <span className="text-[#E5C378]/60">•</span>
+                    <div className="flex items-center space-x-2.5">
+                      <span className="text-[#E5C378] font-medium">
+                        Artisanal Handcrafted Couture & Designer Kurtis
+                      </span>
+                    </div>
+                    <span className="text-[#E5C378]/60">•</span>
+                    <div className="flex items-center space-x-2.5">
+                      <span className="text-[#E5C378] font-medium">
+                        Free Express Delivery Across India
+                      </span>
+                    </div>
+                    <span className="text-[#E5C378]/60">•</span>
+                    <div className="flex items-center space-x-2.5">
+                      <span className="text-[#E5C378] font-medium">
+                        For Every Version Of You
                       </span>
                     </div>
                     <span className="text-[#E5C378]/60">•</span>
                   </React.Fragment>
-                ))
-              }
-            </React.Fragment>
-          ))}
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
-      </div>}
+      )}
 
       {/* 2. MAIN NAVIGATION ROW */}
       <div className="w-full px-4 sm:px-6 lg:px-12">

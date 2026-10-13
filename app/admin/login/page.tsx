@@ -38,10 +38,10 @@ export default function AdminLoginPage() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="relative w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-gold shadow-md bg-white">
-            <Image src="/icon.jpeg" alt="Demo Ecommerce" fill className="object-cover" priority />
+            <Image src="/icon.jpeg" alt="Kavvu Style" fill className="object-cover" priority />
           </div>
           <h1 className="font-serif text-3xl text-ink uppercase tracking-wider font-normal">
-            Demo Ecommerce
+            Kavvu Style
           </h1>
           <p className="text-[10px] uppercase tracking-[0.24em] text-gold font-sans font-semibold">
             Admin & Seller Portal Login

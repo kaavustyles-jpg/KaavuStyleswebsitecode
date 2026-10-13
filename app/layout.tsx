@@ -4,9 +4,9 @@ import { StoreProvider } from "@/context/StoreContext";
 import StoreFrontShell from "@/components/StoreFrontShell";
 
 export const metadata: Metadata = {
-  title: "Demo Ecommerce | Online Store",
+  title: "Kavvu Style | Online Store",
   description:
-    "Demo Ecommerce luxury fashion apparel, kurtis, lehengas, and artisanal ensembles.",
+    "Kavvu Style luxury fashion apparel, kurtis, lehengas, and artisanal ensembles.",
   icons: {
     icon: "/icon.jpeg",
   },

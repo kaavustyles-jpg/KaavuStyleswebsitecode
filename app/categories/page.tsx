@@ -40,7 +40,7 @@ export default function CategoriesPage() {
           <div className="w-24 h-0.5 bg-gold mx-auto my-3" />
 
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
-            Immerse yourself in our curated luxury ethnic ensembles — from royal silk sarees and bridal lehengas to everyday kurtis and fusion couture.
+            Discover versatile co-ord sets, elegant kurtis, stylish salwar suits and western wears for every mood and moment. From office days to coffee dates, find your style with Kaavu Styles.
           </p>
         </div>
 

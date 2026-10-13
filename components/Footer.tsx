@@ -79,7 +79,7 @@ export default function Footer() {
               <li>
                 <Link href="/shop" className="text-ivory-200 hover:text-[#E5C378] transition-colors flex items-center space-x-1.5 group">
                   <ChevronRight className="w-3 h-3 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <span>Shop Collection</span>
+                  <span>Shop Collections</span>
                 </Link>
               </li>
               <li>

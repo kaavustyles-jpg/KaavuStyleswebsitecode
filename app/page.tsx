@@ -195,7 +195,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. LATEST PRODUCTS ADDED (HORIZONTAL SCROLL SLIDER) */}
-      <section className="w-full px-4 sm:px-6 lg:px-12 space-y-6">
+      <section className="w-full px-4 sm:px-6 lg:px-12 space-y-6 bg-ivory-200 border-y border-ivory-300 py-10">
         <div data-reveal="up" className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-ivory-300 pb-3 gap-4 text-center sm:text-left">
           <div className="flex flex-col items-center sm:items-start">
             <span className="text-xs uppercase tracking-[0.3em] text-gold font-bold">

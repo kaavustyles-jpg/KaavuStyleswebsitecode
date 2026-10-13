@@ -4,8 +4,8 @@ import { ArrowRight } from "lucide-react";
 
 export default function StoryNarrative() {
   return (
-    <section aria-labelledby="story-heading" className="px-4 sm:px-8 lg:px-12">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 bg-ivory-200">
+    <section aria-labelledby="story-heading" className="px-4 sm:px-8 lg:px-12 py-6 sm:py-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
         <div data-reveal="left" className="relative group flex items-center justify-center px-6 pt-8 md:py-12 sm:px-10">
           <div className="relative w-48 sm:w-64 lg:w-80 aspect-[3/4] rounded-t-[999px] border-2 border-gold p-2 bg-ivory shadow-luxury">
             <div className="relative w-full h-full rounded-t-[990px] overflow-hidden">

@@ -105,156 +105,44 @@ function ShopContent() {
         </div>
       </div>
 
-      {/* MOBILE SORT & FILTER RADIO BAR (BELOW BANNER) */}
-      <div className="lg:hidden bg-ivory-50 border border-ivory-300 p-3 sm:p-4 space-y-3 shadow-sm">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] uppercase tracking-[0.25em] text-gold font-bold flex items-center space-x-1.5">
-            <ArrowUpDown className="w-3.5 h-3.5 text-gold" />
-            <span>Filter & Sort by Price</span>
-          </span>
-          <div className="flex items-center space-x-3">
-            {sortBy !== "latest" && (
+      {/* MOBILE ONE-LINE SEARCH BAR & SORT DROPDOWN (BELOW BANNER) */}
+      <div className="lg:hidden bg-ivory-50 border border-ivory-300 p-2 sm:p-2.5 shadow-sm">
+        <div className="flex items-center gap-2">
+          {/* 1. Mobile Search Bar */}
+          <div className="relative flex-1 min-w-0 bg-ivory border border-ivory-300 px-2.5 py-2 flex items-center focus-within:border-gold shadow-inner transition-colors">
+            <Search className="w-3.5 h-3.5 text-gold mr-1.5 flex-shrink-0" />
+            <input
+              type="text"
+              placeholder="Search creations..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent text-xs text-ink outline-none font-sans placeholder:text-ink-muted min-w-0"
+            />
+            {searchQuery && (
               <button
-                onClick={() => setSortBy("latest")}
-                className="text-[10px] text-crimson hover:underline uppercase tracking-wider font-semibold flex items-center space-x-1 cursor-pointer"
+                onClick={() => setSearchQuery("")}
+                className="text-ink-muted hover:text-crimson p-0.5 ml-1 flex-shrink-0 cursor-pointer"
+                aria-label="Clear search"
               >
-                <RefreshCw className="w-3 h-3" />
-                <span>Reset</span>
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
-            <span className="text-[10px] uppercase tracking-wider text-ink-muted">
-              {filteredProducts.length} {filteredProducts.length === 1 ? "Creation" : "Creations"}
-            </span>
           </div>
-        </div>
 
-        {/* Mobile Friendly Radio Button Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          {/* 1. New Arrivals (Default) */}
-          <label
-            onClick={() => setSortBy("latest")}
-            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
-              sortBy === "latest"
-                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
-                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-            }`}
-          >
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <span
-                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                  sortBy === "latest" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-                }`}
-              >
-                {sortBy === "latest" && (
-                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
-                )}
-              </span>
-              <span className="text-xs uppercase tracking-wider font-sans">
-                New Arrivals
-              </span>
-            </div>
-            <span
-              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
-                sortBy === "latest"
-                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
-                  : "border-ivory-300 text-ink-muted bg-ivory-100"
-              }`}
+          {/* 2. Mobile Filter & Sort by Price Dropdown (Text-only options) */}
+          <div className="relative flex-shrink-0">
+            <select
+              value={sortBy}
+              onChange={(e: any) => setSortBy(e.target.value)}
+              aria-label="Filter & Sort by Price"
+              className="bg-ivory border border-ivory-300 pl-2.5 pr-7 py-2 text-[11px] sm:text-xs text-ink outline-none tracking-wide focus:border-gold shadow-sm cursor-pointer appearance-none font-sans font-medium uppercase truncate max-w-[170px] sm:max-w-none"
             >
-              Default
-            </span>
-            <input
-              type="radio"
-              name="mobile-sort-radio"
-              value="latest"
-              checked={sortBy === "latest"}
-              onChange={() => setSortBy("latest")}
-              className="sr-only"
-            />
-          </label>
-
-          {/* 2. Price: Low to High */}
-          <label
-            onClick={() => setSortBy("price-low")}
-            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
-              sortBy === "price-low"
-                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
-                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-            }`}
-          >
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <span
-                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                  sortBy === "price-low" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-                }`}
-              >
-                {sortBy === "price-low" && (
-                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
-                )}
-              </span>
-              <span className="text-xs uppercase tracking-wider font-sans">
-                Price: Low to High
-              </span>
-            </div>
-            <span
-              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
-                sortBy === "price-low"
-                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
-                  : "border-ivory-300 text-ink-muted bg-ivory-100"
-              }`}
-            >
-              ₹ → ₹₹₹
-            </span>
-            <input
-              type="radio"
-              name="mobile-sort-radio"
-              value="price-low"
-              checked={sortBy === "price-low"}
-              onChange={() => setSortBy("price-low")}
-              className="sr-only"
-            />
-          </label>
-
-          {/* 3. Price: High to Low */}
-          <label
-            onClick={() => setSortBy("price-high")}
-            className={`flex items-center justify-between px-3.5 py-2.5 sm:py-3 border transition-all cursor-pointer select-none ${
-              sortBy === "price-high"
-                ? "bg-[#2B0B14] text-[#E5C378] border-gold font-bold shadow-md"
-                : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-            }`}
-          >
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <span
-                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                  sortBy === "price-high" ? "border-[#E5C378] bg-[#2B0B14]" : "border-ink-muted/50 bg-white"
-                }`}
-              >
-                {sortBy === "price-high" && (
-                  <span className="w-2 h-2 rounded-full bg-[#E5C378]" />
-                )}
-              </span>
-              <span className="text-xs uppercase tracking-wider font-sans">
-                Price: High to Low
-              </span>
-            </div>
-            <span
-              className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border ${
-                sortBy === "price-high"
-                  ? "border-[#E5C378]/40 text-[#E5C378]/80 bg-[#E5C378]/10"
-                  : "border-ivory-300 text-ink-muted bg-ivory-100"
-              }`}
-            >
-              ₹₹₹ → ₹
-            </span>
-            <input
-              type="radio"
-              name="mobile-sort-radio"
-              value="price-high"
-              checked={sortBy === "price-high"}
-              onChange={() => setSortBy("price-high")}
-              className="sr-only"
-            />
-          </label>
+              <option value="latest">New Arrivals</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-gold absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
         </div>
       </div>
 

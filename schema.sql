@@ -1,4 +1,4 @@
--- Kavvu Style Supabase Database Schema
+-- Kaavu Style Supabase Database Schema
 
 -- Enable UUID Extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

@@ -41,11 +41,11 @@ export default function SiteEntrance({ children }: { children: React.ReactNode }
   return (
     <>
       {!finished && (
-        <div className={`site-entrance ${leaving ? "site-entrance-leaving" : ""}`} role="status" aria-live="polite" aria-label="Loading Kavvu Style">
+        <div className={`site-entrance ${leaving ? "site-entrance-leaving" : ""}`} role="status" aria-live="polite" aria-label="Loading Kaavu Style">
           <div className="site-entrance-emblem">
             <Image src="/icon.jpeg" alt="" width={88} height={88} priority className="rounded-full object-cover" />
           </div>
-          <p className="font-serif text-3xl sm:text-4xl tracking-[0.16em] text-ivory uppercase mt-7">Kavvu Style</p>
+          <p className="font-serif text-3xl sm:text-4xl tracking-[0.16em] text-ivory uppercase mt-7">Kaavu Style</p>
           <p className="text-gold text-[10px] sm:text-xs tracking-[0.28em] uppercase mt-3">Online Store</p>
           <div className="site-entrance-track" aria-hidden="true"><span /></div>
           <span className="sr-only">Loading your shopping experience…</span>

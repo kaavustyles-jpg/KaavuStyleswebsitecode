@@ -4,9 +4,9 @@ import { StoreProvider } from "@/context/StoreContext";
 import StoreFrontShell from "@/components/StoreFrontShell";
 
 export const metadata: Metadata = {
-  title: "Kavvu Style | Online Store",
+  title: "Kaavu Style | Online Store",
   description:
-    "Kavvu Style luxury fashion apparel, kurtis, lehengas, and artisanal ensembles.",
+    "Kaavu Style luxury fashion apparel, kurtis, lehengas, and artisanal ensembles.",
   icons: {
     icon: "/icon.jpeg",
   },

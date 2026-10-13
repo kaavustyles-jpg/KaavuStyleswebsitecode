@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS public.banners (
     title TEXT NOT NULL,
     subtitle TEXT,
     image_url TEXT NOT NULL,
-    cta_text TEXT DEFAULT 'EXPLORE COLLECTION',
+    cta_text TEXT DEFAULT 'Explore Collections',
     cta_link TEXT DEFAULT '/shop',
     is_active BOOLEAN DEFAULT true,
     order_num INT DEFAULT 1,

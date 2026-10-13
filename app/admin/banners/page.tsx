@@ -23,7 +23,7 @@ export default function AdminBannersPage() {
   const [mobileImages, setMobileImages] = useState<string[]>([]);
   const [saveError, setSaveError] = useState("");
   const [saving, setSaving] = useState(false);
-  const [ctaText, setCtaText] = useState("EXPLORE COLLECTION");
+  const [ctaText, setCtaText] = useState("Explore Collections");
   const [ctaLink, setCtaLink] = useState("/shop");
   const [textAlign, setTextAlign] = useState<"left" | "center" | "right">("left");
   const [textColor, setTextColor] = useState<string>("#F8F3EC");
@@ -45,7 +45,7 @@ export default function AdminBannersPage() {
     setBannerImages([]);
     setMobileImages([]);
     setSaveError("");
-    setCtaText("EXPLORE COLLECTION");
+    setCtaText("Explore Collections");
     setCtaLink("/shop");
     setTextAlign("left");
     setTextColor("#F8F3EC");
@@ -60,7 +60,7 @@ export default function AdminBannersPage() {
     setBannerImages(banner.imageUrl ? [banner.imageUrl] : []);
     setMobileImages(banner.mobileImageUrl ? [banner.mobileImageUrl] : []);
     setSaveError("");
-    setCtaText(banner.ctaText || "EXPLORE COLLECTION");
+    setCtaText(banner.ctaText || "Explore Collections");
     setCtaLink(banner.ctaLink || "/shop");
     setTextAlign(banner.textAlign || "left");
     setTextColor(banner.textColor || "#F8F3EC");

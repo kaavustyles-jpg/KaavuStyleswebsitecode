@@ -172,7 +172,7 @@ export default function OrdersPage() {
               className="inline-flex items-center space-x-2 px-8 py-3.5 bg-burgundy hover:bg-burgundy-600 text-ivory text-xs uppercase tracking-[0.24em] font-semibold transition-all shadow-luxury"
             >
               <ShoppingBag className="w-4 h-4 text-gold" />
-              <span>Explore Collection</span>
+              <span>Explore Collections</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

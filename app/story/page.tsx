@@ -102,7 +102,7 @@ export default function OurStoryPage() {
               href="/shop"
               className="px-8 py-3.5 bg-crimson hover:bg-crimson-800 text-ivory text-xs uppercase tracking-[0.24em] font-semibold transition-all shadow-luxury"
             >
-              Explore Collection
+              Explore Collections
             </Link>
             <Link
               href="/contact"

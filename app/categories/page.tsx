@@ -88,7 +88,7 @@ export default function CategoriesPage() {
                 <div className="p-5 space-y-3 bg-ivory flex-1 flex flex-col justify-between text-center border-t border-ivory-200">
                   <div className="space-y-1.5 flex flex-col items-center">
                     <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
-                      Luxury Collection
+                      Luxury Collections
                     </span>
                     <h3 className="font-serif text-xl sm:text-2xl uppercase text-ink group-hover:text-crimson transition-colors line-clamp-1 font-normal">
                       {category.name}
@@ -101,7 +101,7 @@ export default function CategoriesPage() {
                   </div>
 
                   <div className="pt-3 flex items-center justify-center space-x-1.5 text-xs font-bold uppercase tracking-[0.2em] text-crimson group-hover:text-gold transition-colors border-t border-ivory-200">
-                    <span>Explore Collection</span>
+                    <span>Explore Collections</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
                   </div>
                 </div>

@@ -319,7 +319,7 @@ export default function CheckoutPage() {
             href="/shop"
             className="inline-block px-8 py-3.5 bg-crimson text-ivory text-xs uppercase tracking-[0.2em] font-bold shadow-md"
           >
-            Explore Collection Now
+            Explore Collections Now
           </Link>
         </div>
       ) : (

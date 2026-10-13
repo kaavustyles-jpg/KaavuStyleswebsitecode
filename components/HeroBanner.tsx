@@ -110,7 +110,7 @@ export default function HeroBanner() {
               href={banner.ctaLink || "/shop"}
               className="inline-flex items-center gap-3 px-6 py-3.5 sm:px-6 sm:py-3 border border-ivory/60 bg-ivory/10 backdrop-blur-sm text-ivory text-[11px] uppercase tracking-[0.16em] font-medium transition-colors duration-300 hover:bg-ivory hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory group/cta"
             >
-              {banner.ctaText || "Explore Collection"}
+              {banner.ctaText || "Explore Collections"}
               <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/cta:translate-x-1" aria-hidden="true" />
             </Link>
           </div>

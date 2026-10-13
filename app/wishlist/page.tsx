@@ -65,7 +65,7 @@ export default function WishlistPage() {
               href="/shop"
               className="inline-flex items-center space-x-2 px-8 py-3.5 bg-crimson hover:bg-crimson-800 text-ivory text-xs uppercase tracking-[0.24em] font-semibold transition-all shadow-luxury"
             >
-              <span>Explore Collection</span>
+              <span>Explore Collections</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

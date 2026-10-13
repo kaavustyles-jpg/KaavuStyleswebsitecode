@@ -12,7 +12,7 @@ export default function NotFound() {
         <em className="text-crimson font-normal">Does Not Exist</em>
       </h1>
       <p className="text-xs sm:text-sm text-ink-muted max-w-md font-sans">
-        The link you followed may be broken or the page may have been removed. Explore our latest luxury collections or return to the main boutique.
+        The link you followed may be broken or the page may have been removed. Explore our latest Luxury Collectionss or return to the main boutique.
       </p>
       <div className="pt-4 flex flex-col sm:flex-row gap-4">
         <Link

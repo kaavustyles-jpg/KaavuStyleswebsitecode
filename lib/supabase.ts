@@ -69,7 +69,7 @@ export function mapDbBannerToBanner(row: any): Banner {
     subtitle: row.subtitle || "",
     imageUrl: row.image_url,
     mobileImageUrl: row.mobile_image_url || undefined,
-    ctaText: row.cta_text || "EXPLORE COLLECTION",
+    ctaText: row.cta_text || "Explore Collections",
     ctaLink: row.cta_link || "/shop",
     isActive: row.is_active ?? true,
     orderNum: row.order_num || 1,

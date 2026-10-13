@@ -1,5 +1,5 @@
 -- ===================================================================
--- KAAVU STYLES - SUPABASE STORAGE BUCKET MIGRATION
+-- Kaavu StylesS - SUPABASE STORAGE BUCKET MIGRATION
 -- ===================================================================
 -- Ensures the public 'images' storage bucket is created and accessible
 -- for products, banners, categories, and instagram photos.

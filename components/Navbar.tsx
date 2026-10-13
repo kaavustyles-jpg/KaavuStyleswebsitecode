@@ -105,7 +105,7 @@ export default function Navbar() {
                     <div className="flex items-center space-x-2.5">
                       <Sparkles className="w-3.5 h-3.5 text-[#E5C378] flex-shrink-0 animate-pulse" />
                       <span className="text-[#E5C378] font-medium">
-                        Welcome to Kaavu Styles
+                        Welcome to Kaavu Styless
                       </span>
                     </div>
                     <span className="text-[#E5C378]/60">•</span>
@@ -143,7 +143,7 @@ export default function Navbar() {
             <div className="relative w-8 h-8 sm:w-9.5 sm:h-9.5 rounded-full overflow-hidden border-2 border-gold shadow-sm bg-ivory flex items-center justify-center group-hover:scale-105 transition-transform">
               <Image
                 src="/icon.jpeg"
-                alt="Kaavu Style"
+                alt="Kaavu Styles"
                 fill
                 className="object-cover"
                 priority
@@ -151,7 +151,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-serif text-base sm:text-xl font-normal tracking-[0.16em] text-ink uppercase group-hover:text-burgundy transition-colors">
-                Kaavu Style
+                Kaavu Styles
               </span>
               <span className="text-[8px] sm:text-[9px] tracking-[0.2em] uppercase text-gold font-sans -mt-0.5 block">
                 For Every Version Of You
@@ -386,7 +386,7 @@ export default function Navbar() {
                     <Image src="/icon.jpeg" alt="Logo" fill className="object-cover" />
                   </div>
                   <span className="font-serif text-lg text-burgundy font-medium uppercase tracking-widest">
-                    Kaavu Style
+                    Kaavu Styles
                   </span>
                 </div>
                 <button

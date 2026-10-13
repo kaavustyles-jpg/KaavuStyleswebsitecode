@@ -34,10 +34,10 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto leading-relaxed">
-            Kaavu Styles is dedicated to safeguarding your privacy with the highest degree of discretion, security, and integrity.
+            Kaavu Styless is dedicated to safeguarding your privacy with the highest degree of discretion, security, and integrity.
           </p>
           <p className="text-[10px] uppercase tracking-[0.2em] text-gold pt-2">
-            Last Updated: October 2026 • Kaavu Styles Control Center
+            Last Updated: October 2026 • Kaavu Styless Control Center
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
                 <strong className="text-ink">Contact & Shipping Details:</strong> Full name, delivery shipping address, billing address, contact phone number, and email address.
               </li>
               <li>
-                <strong className="text-ink">Payment & Transaction Records:</strong> Razorpay payment ID, order amount, and transaction timestamp. <em className="text-ink">Note: Kaavu Styles never stores or accesses your complete debit/credit card numbers, CVV codes, net banking passwords, or UPI PINs. All payment credential handling is performed directly by the certified payment gateway.</em>
+                <strong className="text-ink">Payment & Transaction Records:</strong> Razorpay payment ID, order amount, and transaction timestamp. <em className="text-ink">Note: Kaavu Styless never stores or accesses your complete debit/credit card numbers, CVV codes, net banking passwords, or UPI PINs. All payment credential handling is performed directly by the certified payment gateway.</em>
               </li>
               <li>
                 <strong className="text-ink">Technical & Browsing Data:</strong> Internet Protocol (IP) address, device browser type, operating system, and session tokens to preserve shopping bag items across visits.
@@ -180,7 +180,7 @@ export default function PrivacyPolicyPage() {
               </h3>
             </div>
             <p className="text-ink-muted">
-              Kaavu Styles employs robust administrative, technical, and physical safeguards:
+              Kaavu Styless employs robust administrative, technical, and physical safeguards:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-ink-muted pl-2">
               <li>All web traffic between your browser and our servers is secured via HTTPS with TLS 1.3 encryption.</li>
@@ -226,9 +226,9 @@ export default function PrivacyPolicyPage() {
               <p className="font-semibold text-ink uppercase text-[11px] tracking-wider">
                 Official Grievance Officer Contact:
               </p>
-              <p>Kaavu Styles Legal & Privacy Officer</p>
+              <p>Kaavu Styless Legal & Privacy Officer</p>
               <p>Email: <a href="mailto:kaavustyles@gmail.com" className="text-crimson font-medium hover:underline">kaavustyles@gmail.com</a></p>
-              <p>Locations: Bengaluru, Karnataka & Jubilee Hills, Hyderabad, India</p>
+              <p>Locations: Bengaluru, Karnataka, India</p>
             </div>
           </section>
 
@@ -245,7 +245,7 @@ export default function PrivacyPolicyPage() {
               </Link>
             </div>
             <span className="text-[10px] uppercase text-gold tracking-widest font-mono">
-              © {new Date().getFullYear()} Kaavu Styles Atelier
+              © {new Date().getFullYear()} Kaavu Styless Atelier
             </span>
           </div>
 

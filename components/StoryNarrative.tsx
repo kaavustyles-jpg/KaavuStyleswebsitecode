@@ -12,7 +12,7 @@ export default function StoryNarrative() {
             <div className="relative w-full h-full rounded-t-[990px] overflow-hidden">
               <Image
                 src="/foundations.JPEG"
-                alt="Kaavu Styles atelier and drapery"
+                alt="Kaavu Styless atelier and drapery"
                 fill
                 sizes="(min-width: 1024px) 288px, (min-width: 640px) 224px, 192px"
                 className="object-cover transition-transform duration-1000 group-hover:scale-[1.03]"
@@ -31,7 +31,7 @@ export default function StoryNarrative() {
             Made for every <em className="font-normal text-crimson">version of you.</em>
           </h2>
           <p className="mt-3 sm:mt-4 text-xs sm:text-sm leading-relaxed text-ink-muted max-w-lg">
-            Kaavu Styles began with a simple idea: getting dressed should feel like a quiet ritual, not a decision. Each piece is chosen for its fall, its finish, and the way it makes you feel.
+            Kaavu Styless began with a simple idea: getting dressed should feel like a quiet ritual, not a decision. Each piece is chosen for its fall, its finish, and the way it makes you feel.
           </p>
           <blockquote className="border-l border-gold/60 pl-4 mt-4 sm:mt-5 max-w-lg">
             <p className="font-serif text-lg sm:text-xl leading-relaxed text-crimson italic">

@@ -19,7 +19,7 @@ export default function Error({
     <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center bg-ivory text-ink space-y-6">
       <div className="space-y-2">
         <span className="text-xs uppercase tracking-[0.35em] text-gold font-semibold">
-          Kaavu Styles
+          Kaavu Styless
         </span>
         <h1 className="font-serif text-3xl sm:text-4xl uppercase font-light">
           Something Went Wrong

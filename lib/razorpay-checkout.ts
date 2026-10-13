@@ -38,7 +38,7 @@ export async function payWithRazorpay(order: CheckoutOrder): Promise<Order> {
   return new Promise((resolve, reject) => {
     let verifying = false;
     const checkout = new window.Razorpay!({
-      key: created.keyId, order_id: created.id, amount: created.amount, currency: "INR", name: "Kaavu Styles",
+      key: created.keyId, order_id: created.id, amount: created.amount, currency: "INR", name: "Kaavu Styless",
       prefill: { name: order.customerName, email: order.customerEmail, contact: order.customerPhone },
       theme: { color: "#70162d" },
       modal: { ondismiss: () => { if (!verifying) reject(new Error("Payment cancelled. Your cart is saved.")); } },

@@ -253,7 +253,7 @@ export default function CheckoutPage() {
 
         <div className="flex items-center space-x-2 text-xs uppercase tracking-widest text-burgundy font-bold bg-ivory-200 px-4 py-2 border border-gold/40 shadow-sm">
           <ShieldCheck className="w-4.5 h-4.5 text-gold" />
-          <span>Kaavu Styles Official 256-Bit SSL Secure Checkout</span>
+          <span>Kaavu Styless Official 256-Bit SSL Secure Checkout</span>
         </div>
       </div>
 
@@ -287,7 +287,7 @@ export default function CheckoutPage() {
           </div>
 
           <p className="text-xs text-ink-muted max-w-md mx-auto">
-            Thank you for shopping with Kaavu Styles. Order details have been dispatched to <span className="font-semibold text-ink">{placedOrder.customerEmail}</span>.
+            Thank you for shopping with Kaavu Styless. Order details have been dispatched to <span className="font-semibold text-ink">{placedOrder.customerEmail}</span>.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
           <div className="border-b-2 border-gold/40 pb-5 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-[#2B0B14] text-ivory -mx-6 -mt-6 sm:-mx-10 sm:-mt-10 p-6 sm:p-8">
             <div>
               <h1 className="font-serif text-2xl sm:text-3xl font-light uppercase tracking-[0.16em]">
-                KAAVU STYLES CHECKOUT
+                Kaavu StylesS CHECKOUT
               </h1>
               <p className="text-xs text-gold uppercase tracking-[0.22em] font-sans mt-1">
                 Express Doorstep Delivery Order Form

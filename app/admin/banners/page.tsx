@@ -281,7 +281,7 @@ export default function AdminBannersPage() {
                         required
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="e.g. KAAVU STYLES ROYAL SILKS"
+                        placeholder="e.g. Kaavu StylesS ROYAL SILKS"
                         className="w-full rounded-lg border border-ivory-300 bg-ivory-50 p-3 text-base sm:text-sm text-ink focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none"
                       />
                     </div>

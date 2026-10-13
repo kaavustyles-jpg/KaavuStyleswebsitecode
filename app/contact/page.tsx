@@ -34,7 +34,7 @@ export default function ContactPage() {
             Client Concierge
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl text-white uppercase font-light">
-            Contact Kaavu Styles
+            Contact Kaavu Styless
           </h1>
           <p className="text-xs text-ivory-300 max-w-md mx-auto">
             Reach out to our boutique stylists in Bengaluru for bridal appointments, bespoke fitting, or online orders.

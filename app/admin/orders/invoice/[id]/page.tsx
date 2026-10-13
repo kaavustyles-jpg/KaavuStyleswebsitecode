@@ -153,7 +153,7 @@ export default function AdminOrderInvoicePage() {
             <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-gold shadow-md bg-ivory flex-shrink-0 print:border-black">
               <Image
                 src="/icon.jpeg"
-                alt="Kaavu Styles Logo"
+                alt="Kaavu Styless Logo"
                 fill
                 className="object-cover"
                 priority
@@ -161,7 +161,7 @@ export default function AdminOrderInvoicePage() {
             </div>
             <div className="space-y-0.5">
               <h1 className="font-serif text-2xl sm:text-3xl font-extrabold uppercase tracking-[0.12em] text-ink print:text-black">
-                KAAVU STYLES
+                Kaavu StylesS
               </h1>
               <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold print:text-black">
                 For Every Version Of You
@@ -278,7 +278,7 @@ export default function AdminOrderInvoicePage() {
             <div className="pt-2 border-t border-gold/30 text-[10px] text-gray-700 space-y-0.5 print:border-gray-400">
               <p className="font-bold text-ink print:text-black uppercase flex items-center space-x-1">
                 <Shield className="w-3.5 h-3.5 text-gold inline mr-1 print:hidden" />
-                <span>Kaavu Styles Handcrafted Quality Assurance</span>
+                <span>Kaavu Styless Handcrafted Quality Assurance</span>
               </p>
               <p>Each luxury garment is handcrafted and undergoes a 100% quality inspection prior to shipment.</p>
             </div>
@@ -325,7 +325,7 @@ export default function AdminOrderInvoicePage() {
 
           <div className="text-right flex flex-col justify-between items-end space-y-4 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:border-gold/40 sm:pl-4 print:border-black">
             <div>
-              <p className="font-bold text-ink uppercase text-[11px] print:text-black">For KAAVU STYLES</p>
+              <p className="font-bold text-ink uppercase text-[11px] print:text-black">For Kaavu StylesS</p>
               <p className="text-[9px] text-gray-500 font-sans">Retail Atelier Unit</p>
             </div>
             <div className="pt-6 border-t-2 border-gold w-40 text-center font-sans font-bold text-[10px] uppercase text-black print:border-black">

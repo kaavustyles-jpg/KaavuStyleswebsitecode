@@ -7,7 +7,7 @@ export default function ShareProduct({ product, compact = false }: { product: Pr
   async function share() {
     const url = new URL(`/product/${encodeURIComponent(product.id)}`, window.location.origin).href;
     try {
-      if (navigator.share) await navigator.share({ title: product.name, text: `Discover ${product.name} at Kaavu Styles`, url });
+      if (navigator.share) await navigator.share({ title: product.name, text: `Discover ${product.name} at Kaavu Styless`, url });
       else { await navigator.clipboard.writeText(url); setMessage("Link copied"); }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;

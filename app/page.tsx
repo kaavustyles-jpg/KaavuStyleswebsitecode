@@ -128,7 +128,7 @@ export default function HomePage() {
               <span>Style, your Way </span>
             </span>
             <h2 className="font-serif text-2xl sm:text-4xl uppercase font-light text-ink text-center md:text-left">
-              Which Version <span className="text-crimson font-normal italic">are you today</span>
+              Which Version <span className="text-crimson font-normal italic">are you  ?</span>
             </h2>
           </div>
           <Link

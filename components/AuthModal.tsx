@@ -55,12 +55,12 @@ export default function AuthModal({ checkoutNotice = false }: { checkoutNotice?:
 
           <div className="relative z-10 w-full flex flex-col items-center justify-center text-center my-auto space-y-4">
             <div className="relative w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-gold shadow-lg bg-ivory">
-              <Image src="/icon.jpeg" alt="Kaavu Styles Mark" fill className="object-cover" />
+              <Image src="/icon.jpeg" alt="Kaavu Styless Mark" fill className="object-cover" />
             </div>
 
             <div className="space-y-1 text-center">
               <h3 className="font-serif text-2xl md:text-3xl text-white uppercase tracking-[0.2em] font-normal text-center">
-                Kaavu Styles
+                Kaavu Styless
               </h3>
               <p className="text-[10px] tracking-[0.28em] text-[#E5C378] uppercase font-sans font-bold text-center">
                 For Every Version Of You

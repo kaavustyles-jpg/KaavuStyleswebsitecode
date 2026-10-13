@@ -69,11 +69,11 @@ export default function AdminSidebar() {
         <div className="p-5 sm:p-6 border-b border-ink-light bg-ink-light/40 sticky top-0 bg-ink z-10">
           <Link href="/admin/dashboard" className="flex items-center space-x-3">
             <div className="relative w-10 h-10 rounded-full border border-gold overflow-hidden flex-shrink-0 bg-ivory">
-              <Image src="/icon.jpeg" alt="Kaavu Style" fill className="object-cover" />
+              <Image src="/icon.jpeg" alt="Kaavu Styles" fill className="object-cover" />
             </div>
             <div className="min-w-0">
               <span className="font-serif text-base sm:text-lg tracking-[0.14em] uppercase text-ivory block leading-tight truncate">
-                Kaavu Style
+                Kaavu Styles
               </span>
               <span className="text-[9px] uppercase tracking-[0.2em] text-gold font-sans block mt-0.5 font-bold">
                 Seller & Admin Portal

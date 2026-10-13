@@ -34,10 +34,10 @@ export default function TermsOfServicePage() {
             Terms of Service
           </h1>
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto leading-relaxed">
-            Terms governing purchases, bespoke tailoring, artisan ethnic drapes, designer kurtis, and boutique orders at Kaavu Styles.
+            Terms governing purchases, bespoke tailoring, artisan ethnic drapes, designer kurtis, and boutique orders at Kaavu Styless.
           </p>
           <p className="text-[10px] uppercase tracking-[0.2em] text-gold pt-2">
-            Effective Date: October 2026 • Kaavu Styles Flagship Atelier
+            Effective Date: October 2026 • Kaavu Styless Flagship Atelier
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export default function TermsOfServicePage() {
                 Strict No Return, No Replacement & No Exchange Policy
               </h2>
               <p className="text-xs text-ivory-200 leading-relaxed font-sans">
-                Every creation at <strong className="text-white">Kaavu Styles</strong> is an artisanal, luxury ethnic ensemble crafted from intricate embroideries, fine fabrics, and delicate natural weaves. Because each garment is made in limited artisan batches, tailored to individual client orders, and curated with exquisite delicacy,{" "}
+                Every creation at <strong className="text-white">Kaavu Styless</strong> is an artisanal, luxury ethnic ensemble crafted from intricate embroideries, fine fabrics, and delicate natural weaves. Because each garment is made in limited artisan batches, tailored to individual client orders, and curated with exquisite delicacy,{" "}
                 <span className="text-[#E5C378] font-bold underline underline-offset-2">
                   ALL SALES ARE STRICTLY FINAL. WE DO NOT ACCEPT RETURNS, EXCHANGES, REPLACEMENTS, OR ISSUANCE OF CASH REFUNDS UNDER ANY CIRCUMSTANCES.
                 </span>
@@ -122,7 +122,7 @@ export default function TermsOfServicePage() {
               </h3>
             </div>
             <p className="text-ink-muted">
-              Every designer kurti, luxury ethnic ensemble, bespoke co-ord set, embellished suit, and handcrafted drape at Kaavu Styles is created by skilled artisans using handlooms, hand-block prints, fine embroideries, and premium fabrics.
+              Every designer kurti, luxury ethnic ensemble, bespoke co-ord set, embellished suit, and handcrafted drape at Kaavu Styless is created by skilled artisans using handlooms, hand-block prints, fine embroideries, and premium fabrics.
             </p>
             <div className="bg-ivory-100 p-4 rounded border border-ivory-300 space-y-1.5 text-ink-muted">
               <p className="font-semibold text-ink text-[11px] uppercase tracking-wider">
@@ -174,7 +174,7 @@ export default function TermsOfServicePage() {
             <ul className="list-disc list-inside space-y-1.5 text-ink-muted pl-2">
               <li><strong className="text-ink">Professional Dry Clean Only:</strong> Do not machine wash, hand wash, soak, or use detergent bleach on any garment.</li>
               <li><strong className="text-ink">Ironing Guidelines:</strong> Low-temperature reverse steam iron or professional pressing only. Never place a hot iron directly onto metallic work or embroidery.</li>
-              <li>Kaavu Styles is not liable for fabric shrinkage, bleeding, or thread damage caused by improper laundering or home washing.</li>
+              <li>Kaavu Styless is not liable for fabric shrinkage, bleeding, or thread damage caused by improper laundering or home washing.</li>
             </ul>
           </section>
 
@@ -189,7 +189,7 @@ export default function TermsOfServicePage() {
               </h3>
             </div>
             <p className="text-ink-muted">
-              All transactions are conducted in Indian Rupees (INR) and processed securely through Razorpay payment gateway adhering to PCI-DSS Level 1 compliance. Kaavu Styles never accesses, stores, or handles credit card numbers, CVVs, or UPI credentials.
+              All transactions are conducted in Indian Rupees (INR) and processed securely through Razorpay payment gateway adhering to PCI-DSS Level 1 compliance. Kaavu Styless never accesses, stores, or handles credit card numbers, CVVs, or UPI credentials.
             </p>
           </section>
 
@@ -237,7 +237,7 @@ export default function TermsOfServicePage() {
               </Link>
             </div>
             <span className="text-[10px] uppercase text-gold tracking-widest font-mono">
-              © {new Date().getFullYear()} Kaavu Styles Atelier
+              © {new Date().getFullYear()} Kaavu Styless Atelier
             </span>
           </div>
 

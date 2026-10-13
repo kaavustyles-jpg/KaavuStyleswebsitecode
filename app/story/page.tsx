@@ -14,7 +14,7 @@ export default function OurStoryPage() {
           <div className="flex items-center justify-center space-x-2 text-[#E5C378]">
             <Sparkles className="w-4 h-4 text-[#E5C378]" />
             <span className="text-xs uppercase tracking-[0.35em] text-[#E5C378] font-bold">
-              Kaavu Styles
+              Kaavu Styless
             </span>
             <Sparkles className="w-4 h-4 text-[#E5C378]" />
           </div>
@@ -42,7 +42,7 @@ export default function OurStoryPage() {
             <div className="relative w-full h-full rounded-t-[990px] overflow-hidden">
               <Image
                 src="/foundations.JPEG"
-                alt="Kaavu Styles Journey"
+                alt="Kaavu Styless Journey"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 priority
@@ -71,12 +71,12 @@ export default function OurStoryPage() {
             </p>
 
             <p className="leading-relaxed">
-              Kaavu Styles is one such dream — something that started with a thought and slowly became something we wanted to bring to life.
+              Kaavu Styless is one such dream — something that started with a thought and slowly became something we wanted to bring to life.
             </p>
 
             <blockquote className="border-l-2 border-gold/70 pl-4 py-1.5 my-4 bg-ivory-100/60">
               <p className="font-serif text-lg sm:text-xl text-crimson italic leading-relaxed">
-                &ldquo;We all have those outfits that make us feel a little more confident, a little more comfortable, and a little more ourselves. That’s exactly what we want Kaavu Styles to be about.&rdquo;
+                &ldquo;We all have those outfits that make us feel a little more confident, a little more comfortable, and a little more ourselves. That’s exactly what we want Kaavu Styless to be about.&rdquo;
               </p>
             </blockquote>
 
@@ -91,7 +91,7 @@ export default function OurStoryPage() {
             <div className="pt-2">
               <div className="inline-block p-4 bg-ivory-200 border border-gold/40 shadow-sm">
                 <p className="font-serif text-base sm:text-lg text-crimson font-semibold tracking-wide">
-                  Welcome to Kaavu Styles. We’re glad you’re here.
+                  Welcome to Kaavu Styless. We’re glad you’re here.
                 </p>
               </div>
             </div>

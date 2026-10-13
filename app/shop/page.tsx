@@ -100,7 +100,7 @@ function ShopContent() {
           <p className="text-xs sm:text-sm text-ivory-300 max-w-xl mx-auto font-sans leading-relaxed">
             Discover versatile co-ord sets, chic western wear, elegant kurtis, and stylish salwar suits designed for every version of you.
 
-            From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styles
+            From polished office looks and comfortable daily wear to casual outings and coffee dates, Whatever the mood, wherever the moment, find your style with Kaavu Styless
           </p>
         </div>
       </div>

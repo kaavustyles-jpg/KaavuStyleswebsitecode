@@ -276,7 +276,7 @@ export default function CheckoutModal({
               </div>
 
               <p className="text-xs text-ink-muted">
-                Thank you for shopping with Kaavu Styles. Order details have been sent to <span className="font-semibold text-ink">{placedOrder.customerEmail}</span>.
+                Thank you for shopping with Kaavu Styless. Order details have been sent to <span className="font-semibold text-ink">{placedOrder.customerEmail}</span>.
               </p>
 
               <button

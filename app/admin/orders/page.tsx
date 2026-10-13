@@ -312,7 +312,7 @@ export default function AdminOrdersPage() {
             <div className="border-b-2 border-gold pb-5 print:border-black flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <span className="text-[10px] uppercase tracking-[0.3em] font-extrabold text-gold block print:text-black">
-                  KAAVU STYLES • LUXURY ETHNIC WEAR STUDIO
+                  Kaavu StylesS • LUXURY ETHNIC WEAR STUDIO
                 </span>
                 <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-ink uppercase tracking-wide print:text-black mt-0.5">
                   OFFICIAL RETAIL INVOICE
@@ -430,7 +430,7 @@ export default function AdminOrdersPage() {
               {/* Total Calculation Row */}
               <div className="bg-ivory-200 p-5 border border-ivory-300 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 print:bg-white print:border-gray-400">
                 <div className="text-[11px] text-ink-muted space-y-0.5 max-w-sm">
-                  <p className="font-bold uppercase text-ink print:text-black">Kaavu Styles Quality Assurance</p>
+                  <p className="font-bold uppercase text-ink print:text-black">Kaavu Styless Quality Assurance</p>
                   <p>Handcrafted in India. Certified 100% quality inspected before dispatch.</p>
                 </div>
                 <div className="text-right space-y-1.5 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-ivory-300">
@@ -465,7 +465,7 @@ export default function AdminOrdersPage() {
 
               <div className="text-right flex flex-col justify-between items-end space-y-4 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:border-gold/40 sm:pl-4">
                 <div>
-                  <p className="font-bold text-ink uppercase text-[11px] print:text-black">For KAAVU STYLES</p>
+                  <p className="font-bold text-ink uppercase text-[11px] print:text-black">For Kaavu StylesS</p>
                   <p className="text-[9px] text-gray-500 font-sans">Retail Atelier Unit</p>
                 </div>
                 <div className="pt-6 border-t-2 border-gold w-40 text-center font-sans font-bold text-[10px] uppercase text-black print:border-black">
@@ -477,7 +477,7 @@ export default function AdminOrdersPage() {
             {/* Print Footer Notice & Digital Stamp */}
             <div className="pt-4 border-t border-ivory-300 flex flex-col sm:flex-row gap-3 justify-between sm:items-center text-[10px] text-ink-muted print:text-black">
               <div>
-                <p className="font-bold uppercase text-ink print:text-black">Kaavu Styles Control Center</p>
+                <p className="font-bold uppercase text-ink print:text-black">Kaavu Styless Control Center</p>
                 <p>Contact: kaavustyles@gmail.com</p>
               </div>
               <div className="text-right">

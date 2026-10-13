@@ -56,7 +56,7 @@ export default function OrdersPage() {
           <div className="space-y-2">
             <h1 className="font-serif text-3xl uppercase text-ink">Sign In Required</h1>
             <p className="text-xs sm:text-sm text-ink-muted max-w-md mx-auto leading-relaxed">
-              Please sign in to your Kaavu Styles account to view your order history, track shipments, and view receipts.
+              Please sign in to your Kaavu Styless account to view your order history, track shipments, and view receipts.
             </p>
           </div>
           <div>
@@ -106,7 +106,7 @@ export default function OrdersPage() {
           My Orders & <span className="text-burgundy font-normal italic">Tracking</span>
         </h1>
         <p className="text-xs sm:text-sm text-ink-muted max-w-md mx-auto">
-          Look up order statuses, tracking details, and order receipts for your Kaavu Styles purchases.
+          Look up order statuses, tracking details, and order receipts for your Kaavu Styless purchases.
         </p>
       </div>
 

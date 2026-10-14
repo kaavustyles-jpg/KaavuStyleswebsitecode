@@ -6,7 +6,7 @@ import { X, Lock, Mail, User as UserIcon, Shield, CheckCircle2, Phone, Sparkles,
 import Image from "next/image";
 
 export default function AuthModal({ checkoutNotice = false }: { checkoutNotice?: boolean }) {
-  const { isAuthModalOpen, closeAuthModal, login } = useStore();
+  const { isAuthModalOpen, closeAuthModal, login, registerUser } = useStore();
   const [tab, setTab] = useState<"login" | "register">("login");
 
   // Form State
@@ -25,8 +25,9 @@ export default function AuthModal({ checkoutNotice = false }: { checkoutNotice?:
 
     if (tab === "register") {
       setSuccessMsg("Account created successfully! Logging you in...");
+      registerUser(name, email, phone);
       setTimeout(() => {
-        login(email, "customer", name);
+        login(email, "customer", name, phone);
         setSuccessMsg("");
       }, 1000);
     } else {

@@ -12,7 +12,7 @@ export default function AdminHeader({ title }: { title: string }) {
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const section = pathname?.split("/")[2] || "dashboard";
-  const mobileTitles: Record<string, string> = { dashboard: "Dashboard", categories: "Categories", products: "Products", inventory: "Inventory", orders: "Orders", coupons: "Coupons", banners: "Banners", attributes: "Tags, sizes & colors", instagram: "Instagram", login: "Admin login" };
+  const mobileTitles: Record<string, string> = { dashboard: "Dashboard", categories: "Categories", products: "Products", inventory: "Inventory", orders: "Orders", users: "Registered Users", coupons: "Coupons", banners: "Banners", attributes: "Tags, sizes & colors", instagram: "Instagram", login: "Admin login" };
   const mobileTitle = section === "products" && pathname?.endsWith("/new") ? "Add product" : section === "products" && pathname?.endsWith("/edit") ? "Edit product" : mobileTitles[section] || title;
 
   useEffect(() => {

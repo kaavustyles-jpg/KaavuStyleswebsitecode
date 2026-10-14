@@ -233,9 +233,6 @@ export default function AdminOrderInvoicePage() {
             </p>
             <div className="flex justify-between items-center pt-1 border-t border-black/30 text-[9px] text-gray-800">
               <span className="truncate max-w-[200px]">{order.customerEmail}</span>
-              <span className="font-bold uppercase text-black">
-                Status: <span className="underline">{order.status}</span>
-              </span>
             </div>
           </div>
 

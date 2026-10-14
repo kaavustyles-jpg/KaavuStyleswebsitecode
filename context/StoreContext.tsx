@@ -12,6 +12,7 @@ import {
   ColorOption,
   InstagramPost,
   User,
+  RegisteredUser,
   Coupon,
   INITIAL_PRODUCTS,
   INITIAL_CATEGORIES,
@@ -22,6 +23,7 @@ import {
   INITIAL_COLORS,
   INITIAL_INSTAGRAM_POSTS,
   INITIAL_COUPONS,
+  INITIAL_REGISTERED_USERS,
 } from "@/lib/mockData";
 import { cleanOrderItems } from "@/lib/order-images";
 import { stockForSize, reduceInventory } from "@/lib/inventory";
@@ -74,6 +76,7 @@ interface StoreContextType {
   cart: CartItem[];
   wishlist: string[];
   currentUser: User | null;
+  registeredUsers: RegisteredUser[];
   isAuthModalOpen: boolean;
   isCartDrawerOpen: boolean;
   ipAddress: string;
@@ -91,7 +94,7 @@ interface StoreContextType {
   closeAuthModal: () => void;
   openCartDrawer: () => void;
   closeCartDrawer: () => void;
-  login: (email: string, role?: "admin" | "customer", userName?: string) => boolean;
+  login: (email: string, role?: "admin" | "customer", userName?: string, phone?: string) => boolean;
   logout: () => void;
 
   addToCart: (product: Product, size?: string, color?: string, qty?: number) => void;
@@ -140,6 +143,9 @@ interface StoreContextType {
   addCoupon: (coupon: Omit<Coupon, "id" | "timesUsed">) => Promise<void>;
   updateCoupon: (id: string, coupon: Partial<Coupon>) => Promise<void>;
   deleteCoupon: (id: string) => Promise<void>;
+
+  registerUser: (name: string, email: string, phone: string) => Promise<void>;
+  deleteRegisteredUser: (id: string, email: string) => Promise<void>;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -149,6 +155,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [banners, setBanners] = useState<Banner[]>(INITIAL_BANNERS);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("ks_registered_users");
+        if (saved !== null) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {
+        console.warn("Could not parse ks_registered_users from localStorage:", e);
+      }
+    }
+    return INITIAL_REGISTERED_USERS;
+  });
   const [lifestyleTags, setLifestyleTags] = useState<LifestyleTag[]>(INITIAL_LIFESTYLE_TAGS);
   const [sizes, setSizes] = useState<SizeOption[]>(INITIAL_SIZES);
   const [colors, setColors] = useState<ColorOption[]>(INITIAL_COLORS);
@@ -310,6 +330,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           if (sData && sData.length > 0) setSizes(sData.map(mapDbSizeToSize));
           if (colData && colData.length > 0) setColors(colData.map(mapDbColorToColor));
           if (igData && igData.length > 0) setInstagramPosts(igData.map(mapDbIgToIg));
+
+          try {
+            const { data: uData, error: uErr } = await supabase.from("registered_users").select("*").order("created_at", { ascending: false });
+            if (!cancelled && !uErr && uData && uData.length > 0) {
+              setRegisteredUsers(uData.map((row: any) => ({
+                id: row.id,
+                name: row.name,
+                email: row.email,
+                phone: row.phone || "",
+                role: row.role || "customer",
+                createdAt: row.created_at || new Date().toISOString(),
+              })));
+            }
+          } catch {
+            // Table may not exist yet in Supabase
+          }
         } else {
           // LocalStorage fallback
           const savedProducts = localStorage.getItem("ks_products");
@@ -318,6 +354,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           const savedCategories = localStorage.getItem("ks_categories");
           if (savedCategories) setCategories(JSON.parse(savedCategories));
 
+          const savedUsers = localStorage.getItem("ks_registered_users");
+          if (savedUsers) {
+            try { setRegisteredUsers(JSON.parse(savedUsers)); } catch {}
+          }
 
           const savedCoupons = localStorage.getItem("ks_coupons");
           if (savedCoupons) setCoupons(JSON.parse(savedCoupons));
@@ -432,7 +472,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const openCartDrawer = () => setIsCartDrawerOpen(true);
   const closeCartDrawer = () => setIsCartDrawerOpen(false);
 
-  const login = (email: string, role: "admin" | "customer" = "customer", userName?: string) => {
+  const login = (email: string, role: "admin" | "customer" = "customer", userName?: string, phone?: string) => {
     const isAdmin = role === "admin";
     const displayName = userName?.trim()
       ? userName.trim()
@@ -444,6 +484,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       id: "usr-" + Date.now(),
       name: displayName,
       email,
+      phone: phone?.trim(),
       role: isAdmin ? "admin" : "customer",
     };
     if (isAdmin) setAdminUser(user);
@@ -1194,6 +1235,78 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const registerUser = async (name: string, email: string, phone: string) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedName = name.trim();
+    const trimmedPhone = phone.trim();
+    const newUser: RegisteredUser = {
+      id: "usr-" + Date.now(),
+      name: trimmedName,
+      email: trimmedEmail,
+      phone: trimmedPhone,
+      role: "customer",
+      createdAt: new Date().toISOString(),
+    };
+
+    setRegisteredUsers((prev) => {
+      const existsIndex = prev.findIndex((u) => u.email.toLowerCase() === trimmedEmail);
+      let updated: RegisteredUser[];
+      if (existsIndex >= 0) {
+        updated = [...prev];
+        updated[existsIndex] = {
+          ...updated[existsIndex],
+          name: trimmedName || updated[existsIndex].name,
+          phone: trimmedPhone || updated[existsIndex].phone,
+        };
+      } else {
+        updated = [newUser, ...prev];
+      }
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("ks_registered_users", JSON.stringify(updated));
+        } catch (e) {
+          console.warn("Could not save registered users:", e);
+        }
+      }
+      return updated;
+    });
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from("registered_users").upsert({
+          name: trimmedName,
+          email: trimmedEmail,
+          phone: trimmedPhone,
+          role: "customer",
+        }, { onConflict: "email" });
+      } catch (err) {
+        console.warn("Supabase upsert registered_users:", err);
+      }
+    }
+  };
+
+  const deleteRegisteredUser = async (id: string, email: string) => {
+    setRegisteredUsers((prev) => {
+      const updated = prev.filter((u) => u.id !== id && u.email.toLowerCase() !== email.toLowerCase());
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("ks_registered_users", JSON.stringify(updated));
+        } catch (e) {
+          console.warn("Could not delete registered user from localStorage:", e);
+        }
+      }
+      return updated;
+    });
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from("registered_users").delete().match({ email: email.toLowerCase() });
+      } catch (err) {
+        console.warn("Supabase delete registered_users:", err);
+      }
+    }
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -1203,6 +1316,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         orders,
         ordersError,
         ordersLoading,
+        registeredUsers,
         lifestyleTags,
         sizes,
         colors,
@@ -1277,6 +1391,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         addCoupon,
         updateCoupon,
         deleteCoupon,
+
+        registerUser,
+        deleteRegisteredUser,
       }}
     >
       {children}

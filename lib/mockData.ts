@@ -111,8 +111,48 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   role: "admin" | "customer";
 }
+
+export interface RegisteredUser {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role?: "admin" | "customer";
+  createdAt: string;
+  orderCount?: number;
+  totalSpent?: number;
+  lastOrderDate?: string;
+}
+
+export const INITIAL_REGISTERED_USERS: RegisteredUser[] = [
+  {
+    id: "usr-1",
+    name: "Priya Sharma",
+    email: "priya.sharma@example.com",
+    phone: "+91 98450 12345",
+    role: "customer",
+    createdAt: "2026-09-15T10:30:00.000Z",
+  },
+  {
+    id: "usr-2",
+    name: "Ananya Rao",
+    email: "ananya.rao@example.com",
+    phone: "+91 98765 43210",
+    role: "customer",
+    createdAt: "2026-09-20T14:15:00.000Z",
+  },
+  {
+    id: "usr-3",
+    name: "Deepika Patel",
+    email: "deepika.patel@example.com",
+    phone: "+91 91234 56789",
+    role: "customer",
+    createdAt: "2026-10-02T11:45:00.000Z",
+  },
+];
 
 // Clean Default Categories
 export const INITIAL_CATEGORIES: Category[] = [

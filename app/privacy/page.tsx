@@ -228,7 +228,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <p>Kaavu Styless Legal & Privacy Officer</p>
               <p>Email: <a href="mailto:kaavustyles@gmail.com" className="text-crimson font-medium hover:underline">kaavustyles@gmail.com</a></p>
-              <p>Locations: Bengaluru, Karnataka, India</p>
+              <p>Location: Bengaluru, Karnataka, India</p>
             </div>
           </section>
 

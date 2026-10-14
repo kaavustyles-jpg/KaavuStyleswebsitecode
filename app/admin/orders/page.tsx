@@ -23,6 +23,13 @@ export default function AdminOrdersPage() {
 
   React.useEffect(() => {
     setIsMounted(true);
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get("search") || params.get("email");
+        if (q) setSearchQuery(q);
+      } catch {}
+    }
   }, []);
 
   // Current Month Calculations

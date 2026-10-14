@@ -124,10 +124,10 @@ export default function ContactPage() {
           </form>
         </div>
 
-        {/* Store Info & Locations */}
+        {/* Store Info & Location */}
         <div className="space-y-8 flex flex-col justify-between">
           <div className="bg-ivory-200 border border-ivory-300 p-8 space-y-6">
-            <h2 className="font-serif text-2xl text-ink uppercase"> Locations</h2>
+            <h2 className="font-serif text-2xl text-ink uppercase"> Location</h2>
 
             <div className="space-y-5 text-xs text-ink-muted">
               {/* Location 2: Bengaluru */}

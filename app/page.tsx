@@ -163,7 +163,7 @@ export default function HomePage() {
                 key={cat.id}
                 data-reveal="up"
                 style={{ transitionDelay: `${index * 80}ms` }}
-                href={`/shop?category=${cat.slug}`}
+                                href={`/shop?category=${encodeURIComponent(cat.slug || cat.id)}`}
                 className="group relative h-72 sm:h-96 bg-ivory rounded-t-[999px] border-2 border-gold p-1.5 shadow-luxury transition-all duration-500 hover-lift flex flex-col overflow-hidden [&:nth-child(5)]:col-span-2 sm:[&:nth-child(5)]:col-span-1 [&:nth-child(5)]:w-1/2 sm:[&:nth-child(5)]:w-full [&:nth-child(5)]:mx-auto"
               >
                 <div className="relative w-full h-full rounded-t-[990px] overflow-hidden bg-ink">

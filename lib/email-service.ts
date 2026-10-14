@@ -4,7 +4,7 @@ import type { Order, OrderItem } from "./mockData";
 const GMAIL_USER = process.env.GMAIL_USER || "kaavustyles@gmail.com";
 const GMAIL_PASS = (process.env.GMAIL_APP_PASSWORD || "lzfnkdcqwjiedmdw").replace(/\s+/g, "");
 const ADMIN_NOTIFICATION_EMAIL = process.env.ORDER_NOTIFICATION_EMAIL || "kaavustyles@gmail.com";
-const SHIPPING_TEAM_EMAIL = process.env.SHIPROCKET_EMAIL || "vyshnavigowda@gmail.com";
+const SHIPPING_TEAM_EMAIL = process.env.SHIPROCKET_EMAIL || "karthikShaiva5586@gmail.com";
 
 export function getEmailTransporter() {
   return nodemailer.createTransport({
@@ -163,7 +163,7 @@ export function buildOrderEmailHtml(order: NormalizedOrderDetails, isForAdmin: b
               ${
                 isForAdmin
                   ? `<p style="margin: 0 0 16px; font-size: 14px; color: #1E1014; line-height: 1.5;">
-                      Hello <strong>Kaavu Styles Team</strong>, a new order has just been placed on your store. Please review the customer and shipment details below to prepare for dispatch.
+                      Hello <strong>Kaavu Styles Team</strong>, a new order has just been placed on your store. Please review the customer.
                     </p>`
                   : `<p style="margin: 0 0 16px; font-size: 14px; color: #1E1014; line-height: 1.5;">
                       Dear <strong>${order.customerName}</strong>, thank you for shopping with <strong>Kaavu Styles</strong>! We have received your order and our artisans are preparing it with utmost care.
@@ -386,9 +386,9 @@ const STATUS_TEMPLATES: Record<
   }
 > = {
   Processing: {
-    badge: "🧵 IN ARTISAN PROCESSING",
-    title: "Your Order is Being Handcrafted",
-    message: "Our master weavers and artisans are currently tailoring, finishing, and inspecting your royal couture garments.",
+    badge: "KAAVU STYLES ORDER",
+    title: "Your Order",
+    message: "Our team is hard at work tailoring and inspecting your new pieces to make sure they arrive looking and feeling amazing.",
     badgeBg: "#FEF3C7",
     badgeColor: "#B45309",
     badgeBorder: "#F59E0B",
@@ -683,7 +683,7 @@ export function buildStatusUpdateEmailHtml(
  * Send order status update notifications via Gmail SMTP
  * 1. Customer: order.customerEmail ("the order people")
  * 2. Store Admin: kaavustyles@gmail.com
- * 3. Shipping Team: vyshnavigowda@gmail.com / process.env.SHIPROCKET_EMAIL ("toshipping to")
+ * 3. Shipping Team: karthikShaiva5586@gmail.com / process.env.SHIPROCKET_EMAIL ("toshipping to")
  */
 export async function sendStatusUpdateEmail(
   rawOrder: any,

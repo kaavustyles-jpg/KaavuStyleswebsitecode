@@ -23,6 +23,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (!["Pending", "Processing", "Shipped", "Delivered", "Cancelled"].includes(status)) return NextResponse.json({ error: "Invalid order status." }, { status: 400 });
     const { data, error } = await paymentDb().from("orders").update({ status }).eq("id", params.id).select("*").single();
     if (error) throw error;
+
+    // Dispatch status update email to customer ("order people") and admin/shipping desk
+    try {
+      const { sendStatusUpdateEmail } = await import("@/lib/email-service");
+      void sendStatusUpdateEmail(data, status);
+    } catch (e) {
+      console.error("Could not dispatch status update email:", e);
+    }
+
     return NextResponse.json({ order: cleanOrderRow(data) });
   } catch { return NextResponse.json({ error: "Could not update this order." }, { status: 500 }); }
 }

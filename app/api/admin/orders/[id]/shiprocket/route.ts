@@ -24,8 +24,21 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const result = await shiprocket("orders/create/adhoc", payload);
     if (!result.order_id || !result.shipment_id) throw new Error("Shiprocket did not return shipment IDs. Check the order in Shiprocket.");
     const shipping = { ...parcel, status: "Created", orderId: result.order_id, shipmentId: result.shipment_id, createdAt: new Date().toISOString() };
-    const { error: saveError } = await db.from("orders").update({ shiprocket: shipping }).eq("id", params.id);
+    const { data: updatedOrder, error: saveError } = await db.from("orders").update({ shiprocket: shipping, status: "Shipped" }).eq("id", params.id).select("*").single();
     if (saveError) throw new Error(`Shiprocket order ${result.order_id} was created, but saving its details failed. Do not create it again; contact support.`);
+
+    // Dispatch shipping email to customer ("order people") and shipping desk
+    try {
+      const { sendStatusUpdateEmail } = await import("@/lib/email-service");
+      void sendStatusUpdateEmail(updatedOrder || row, "Shipped", {
+        shipmentId: result.shipment_id,
+        orderId: result.order_id,
+        pickupLocation: parcel.pickupLocation,
+      });
+    } catch (e) {
+      console.error("Could not dispatch Shiprocket shipping update email:", e);
+    }
+
     return NextResponse.json({ shipping });
   } catch (error) {
     return NextResponse.json({ error: (error instanceof Error ? error.message : "Could not create shipment.") + (claimed ? " Check Shiprocket using your order number before retrying; the request may already have succeeded." : "") }, { status: 400 });

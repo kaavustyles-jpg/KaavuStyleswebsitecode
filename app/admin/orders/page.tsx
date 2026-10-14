@@ -54,7 +54,29 @@ export default function AdminOrdersPage() {
   const deliveredCount = orders.filter((o) => o.status === "Delivered").length;
 
   const handleStatusChange = async (orderId: string, newStatus: Order["status"]) => {
-    try { await updateOrderStatus(orderId, newStatus); } catch { return; }
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      const targetOrder = orders.find((o) => o.id === orderId);
+      if (targetOrder) {
+        void fetch("/api/orders/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            order: { ...targetOrder, status: newStatus },
+            status: newStatus,
+            trackingInfo: targetOrder.shiprocket
+              ? {
+                  shipmentId: targetOrder.shiprocket.shipmentId,
+                  orderId: targetOrder.shiprocket.orderId,
+                  pickupLocation: targetOrder.shiprocket.pickupLocation,
+                }
+              : undefined,
+          }),
+        });
+      }
+    } catch {
+      return;
+    }
     if (selectedOrder && selectedOrder.id === orderId) {
       setSelectedOrder({ ...selectedOrder, status: newStatus });
     }
@@ -63,18 +85,32 @@ export default function AdminOrdersPage() {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailNotice, setEmailNotice] = useState<string | null>(null);
 
-  const handleSendEmail = async (ord: Order) => {
+  const handleSendEmail = async (ord: Order, isStatusUpdate = false) => {
     setSendingEmail(true);
     setEmailNotice(null);
     try {
+      const payload: any = { order: ord };
+      if (isStatusUpdate) {
+        payload.status = ord.status;
+        payload.trackingInfo = ord.shiprocket
+          ? {
+              shipmentId: ord.shiprocket.shipmentId,
+              orderId: ord.shiprocket.orderId,
+              pickupLocation: ord.shiprocket.pickupLocation,
+            }
+          : undefined;
+      }
       const res = await fetch("/api/orders/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ order: ord }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
-        setEmailNotice(`✓ Dispatched to ${data.recipient || "kaavustyles@gmail.com"} & customer!`);
+        const recipientsList = data.recipients
+          ? data.recipients.join(", ")
+          : data.recipient || "kaavustyles@gmail.com";
+        setEmailNotice(`✓ Dispatched to customer & shipping team (${recipientsList})`);
       } else {
         setEmailNotice(`Failed: ${data.error || "Could not send"}`);
       }
@@ -528,19 +564,30 @@ export default function AdminOrdersPage() {
             <div className="pt-2 print:hidden flex flex-wrap justify-end gap-3">
               <button
                 type="button"
-                onClick={() => handleSendEmail(selectedOrder)}
+                onClick={() => handleSendEmail(selectedOrder, true)}
                 disabled={sendingEmail}
-                className="px-5 py-3 bg-emerald-800 hover:bg-emerald-700 text-ivory text-xs uppercase tracking-[0.16em] font-bold shadow-md transition-colors flex items-center space-x-2 cursor-pointer disabled:opacity-50"
-                title="Send full order details directly to kaavustyles@gmail.com and customer"
+                className="px-4 py-2.5 bg-blue-800 hover:bg-blue-700 text-ivory text-xs uppercase tracking-[0.14em] font-bold shadow-md transition-colors flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+                title="Send status update email to customer and shipping fulfillment team"
+              >
+                <Mail className="w-4 h-4 text-blue-200" />
+                <span>{sendingEmail ? "Dispatching..." : `Email Status: ${selectedOrder.status}`}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSendEmail(selectedOrder, false)}
+                disabled={sendingEmail}
+                className="px-4 py-2.5 bg-emerald-800 hover:bg-emerald-700 text-ivory text-xs uppercase tracking-[0.14em] font-bold shadow-md transition-colors flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+                title="Send full invoice receipt to kaavustyles@gmail.com and customer"
               >
                 <Mail className="w-4 h-4 text-emerald-200" />
-                <span>{sendingEmail ? "Dispatching..." : "Send Email Notification"}</span>
+                <span>{sendingEmail ? "Dispatching..." : "Email Full Receipt"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="px-8 py-3 bg-ink hover:bg-burgundy text-ivory text-xs uppercase tracking-[0.2em] font-semibold shadow-md transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-ink hover:bg-burgundy text-ivory text-xs uppercase tracking-[0.16em] font-semibold shadow-md transition-colors cursor-pointer"
               >
                 Close Order Invoice
               </button>

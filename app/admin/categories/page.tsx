@@ -8,6 +8,7 @@ import { useStore } from "@/context/StoreContext";
 import { uploadSingleImage } from "@/lib/storageUpload";
 import Image from "next/image";
 import { Plus, Trash2, X } from "lucide-react";
+import { slugify } from "@/lib/utils";
 
 export default function AdminCategoriesPage() {
   const { categories, addCategory, updateCategory, deleteCategory } = useStore();
@@ -26,12 +27,19 @@ export default function AdminCategoriesPage() {
         ? await uploadSingleImage(categoryImages[0], "categories")
         : "";
 
-      if (editingId) await updateCategory(editingId, { name, imageUrl: finalImageUrl });
-      else await addCategory({
-        name,
-        slug: name.toLowerCase().replace(/\s+/g, "-"),
-        imageUrl: finalImageUrl || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800",
-      });
+      if (editingId) {
+        await updateCategory(editingId, {
+          name,
+          slug: slugify(name),
+          imageUrl: finalImageUrl,
+        });
+      } else {
+        await addCategory({
+          name,
+          slug: slugify(name),
+          imageUrl: finalImageUrl || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800",
+        });
+      }
       setName("");
       setCategoryImages([]);
       setIsModalOpen(false);

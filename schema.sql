@@ -112,7 +112,28 @@ CREATE TABLE IF NOT EXISTS public.coupons (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- 10. ADMIN CREDENTIALS TABLE (Single-Row Secure Admin Authentication)
+CREATE TABLE IF NOT EXISTS public.admin_credentials (
+    id TEXT PRIMARY KEY DEFAULT 'primary',
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Seed default initial admin row
+INSERT INTO public.admin_credentials (id, email, password, updated_at)
+VALUES ('primary', 'admin@kaavustyle.com', 'Kaavu@admin123', NOW())
+ON CONFLICT (id) DO NOTHING;
+
 -- Enable Row Level Security (RLS) on all tables
+ALTER TABLE public.admin_credentials ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny public access to admin credentials" ON public.admin_credentials;
+CREATE POLICY "Deny public access to admin credentials"
+    ON public.admin_credentials
+    FOR ALL
+    TO authenticated, anon
+    USING (false);
+
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.banners ENABLE ROW LEVEL SECURITY;

@@ -163,7 +163,7 @@ export default function HomePage() {
                 key={cat.id}
                 data-reveal="up"
                 style={{ transitionDelay: `${index * 80}ms` }}
-                                href={`/shop?category=${encodeURIComponent(cat.slug || cat.id)}`}
+                href={`/shop?category=${encodeURIComponent(cat.slug || cat.id)}`}
                 className="group relative h-72 sm:h-96 bg-ivory rounded-t-[999px] border-2 border-gold p-1.5 shadow-luxury transition-all duration-500 hover-lift flex flex-col overflow-hidden [&:nth-child(5)]:col-span-2 sm:[&:nth-child(5)]:col-span-1 [&:nth-child(5)]:w-1/2 sm:[&:nth-child(5)]:w-full [&:nth-child(5)]:mx-auto"
               >
                 <div className="relative w-full h-full rounded-t-[990px] overflow-hidden bg-ink">
@@ -303,8 +303,8 @@ export default function HomePage() {
               if (lifestyleSliderRef.current) lifestyleSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
             }}
             className={`px-5 py-2.5 border transition-all cursor-pointer ${activeTag === "all"
-                ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
-                : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
+              ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
+              : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
               }`}
           >
             All Lifestyles
@@ -317,8 +317,8 @@ export default function HomePage() {
                 if (lifestyleSliderRef.current) lifestyleSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
               }}
               className={`px-5 py-2.5 border transition-all whitespace-nowrap cursor-pointer ${activeTag.toLowerCase() === tag.name.toLowerCase()
-                  ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
-                  : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
+                ? "bg-crimson text-ivory border-crimson font-bold shadow-md"
+                : "bg-ivory border-ivory-300 text-ink-muted hover:text-ink hover:bg-ivory-300"
                 }`}
             >
               #{tag.name}

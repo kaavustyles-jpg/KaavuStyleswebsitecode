@@ -803,7 +803,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       cleanFields.imageUrl = await uploadSingleImage(fields.imageUrl, "categories");
     }
     if (isSupabaseConfigured) {
-      const row = { name: cleanFields.name, image_url: cleanFields.imageUrl };
+      const row: any = { name: cleanFields.name, image_url: cleanFields.imageUrl };
+      if (cleanFields.slug) row.slug = cleanFields.slug;
       const { error } = await supabase.from("categories").update(row).eq("id", id);
       if (error) throw new Error(error.message);
     }

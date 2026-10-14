@@ -21,13 +21,23 @@ function ShopContent() {
 
   // Sync category with URL searchParams (e.g. when navigating from /catory or /categories)
   useEffect(() => {
-    const cat = searchParams.get("category");
+    let cat = searchParams.get("category");
+    // Check if the URL had an unencoded '&' that split the category param
+    if (typeof window !== "undefined" && window.location.search) {
+      const raw = window.location.search;
+      for (const c of categories) {
+        if (c.slug && (raw.includes(`category=${c.slug}`) || raw.includes(`category=${encodeURIComponent(c.slug)}`))) {
+          cat = c.slug;
+          break;
+        }
+      }
+    }
     if (cat) {
       setSelectedCategory(cat);
     } else {
       setSelectedCategory("all");
     }
-  }, [searchParams]);
+  }, [searchParams, categories]);
 
   // TOGGLE: Set to true when you want to unhide the mobile filter button & drawer
   const SHOW_MOBILE_FILTER = false;
@@ -35,17 +45,46 @@ function ShopContent() {
   // Active Category resolver
   const activeCategoryObj = useMemo(() => {
     if (!selectedCategory || selectedCategory === "all") return null;
-    const sel = selectedCategory.trim().toLowerCase();
-    return (
-      categories.find(
-        (c) =>
-          (c.slug && c.slug.toLowerCase() === sel) ||
-          (c.id && c.id.toLowerCase() === sel) ||
-          (c.name && c.name.toLowerCase() === sel) ||
-          (c.slug && c.slug.toLowerCase() === sel.replace(/\s+/g, "-")) ||
-          (c.name && c.name.toLowerCase().replace(/\s+/g, "-") === sel)
-      ) || null
+    const rawSel = selectedCategory.trim().toLowerCase();
+    const sel = decodeURIComponent(rawSel);
+    const selTrimmed = sel.replace(/-+$/, "");
+
+    // 1. Direct match by slug, id, name (or hyphen-replaced)
+    const exact = categories.find(
+      (c) =>
+        (c.slug && c.slug.toLowerCase() === sel) ||
+        (c.id && c.id.toLowerCase() === sel) ||
+        (c.name && c.name.toLowerCase() === sel) ||
+        (c.slug && c.slug.toLowerCase() === sel.replace(/\s+/g, "-")) ||
+        (c.name && c.name.toLowerCase().replace(/\s+/g, "-") === sel)
     );
+    if (exact) return exact;
+
+    // 2. Cutoff match for unencoded '&' (e.g. "ethnic-fusion-" or "ethnic-fusion" matching "ethnic-fusion-&-indo-western-kurtis")
+    const cutoffMatch = categories.find((c) => {
+      const slugBase = (c.slug || "").split("&")[0].replace(/-+$/, "").toLowerCase();
+      const nameBase = (c.name || "").split("&")[0].replace(/-+$/, "").trim().toLowerCase();
+      return (
+        (slugBase && (slugBase === selTrimmed || slugBase === sel)) ||
+        (nameBase && (nameBase === selTrimmed.replace(/-/g, " ") || nameBase === sel)) ||
+        (c.slug && c.slug.toLowerCase().startsWith(selTrimmed)) ||
+        (c.name && c.name.toLowerCase().startsWith(selTrimmed.replace(/-/g, " ")))
+      );
+    });
+    if (cutoffMatch) return cutoffMatch;
+
+    // 3. Normalized alphanumeric match (strip all punctuation and spaces)
+    const normSel = sel.replace(/[^a-z0-9]/g, "");
+    if (normSel) {
+      const normMatch = categories.find((c) => {
+        const normSlug = (c.slug || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const normName = (c.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        return normSlug === normSel || normName === normSel;
+      });
+      if (normMatch) return normMatch;
+    }
+
+    return null;
   }, [categories, selectedCategory]);
 
   const activeCategoryName =
@@ -92,22 +131,17 @@ function ShopContent() {
         // Category filter
         if (selectedCategory && selectedCategory !== "all") {
           const sel = selectedCategory.trim().toLowerCase();
-          const catObj = categories.find(
-            (c) =>
-              (c.slug && c.slug.toLowerCase() === sel) ||
-              (c.id && c.id.toLowerCase() === sel) ||
-              (c.name && c.name.toLowerCase() === sel) ||
-              (c.slug && c.slug.toLowerCase() === sel.replace(/\s+/g, "-")) ||
-              (c.name && c.name.toLowerCase().replace(/\s+/g, "-") === sel)
-          );
-
           const matchesCategory =
             // Match via resolved category object
-            (catObj && (
-              (product.categoryId && (product.categoryId === catObj.id || product.categoryId.toLowerCase() === catObj.id.toLowerCase() || product.categoryId.toLowerCase() === (catObj.slug || "").toLowerCase())) ||
+            (activeCategoryObj && (
+              (product.categoryId && (
+                product.categoryId === activeCategoryObj.id ||
+                product.categoryId.toLowerCase() === activeCategoryObj.id.toLowerCase() ||
+                product.categoryId.toLowerCase() === (activeCategoryObj.slug || "").toLowerCase()
+              )) ||
               (product.category && (
-                product.category.toLowerCase() === catObj.name.toLowerCase() ||
-                product.category.toLowerCase() === (catObj.slug || "").toLowerCase()
+                product.category.toLowerCase() === activeCategoryObj.name.toLowerCase() ||
+                product.category.toLowerCase() === (activeCategoryObj.slug || "").toLowerCase()
               ))
             )) ||
             // Or direct match with selectedCategory param
@@ -268,7 +302,8 @@ function ShopContent() {
               selectedCategory === cat.slug ||
               selectedCategory === cat.id ||
               (cat.slug && selectedCategory.toLowerCase() === cat.slug.toLowerCase()) ||
-              selectedCategory.toLowerCase() === cat.name.toLowerCase();
+              selectedCategory.toLowerCase() === cat.name.toLowerCase() ||
+              (activeCategoryObj && activeCategoryObj.id === cat.id);
             return (
               <button
                 key={cat.id}

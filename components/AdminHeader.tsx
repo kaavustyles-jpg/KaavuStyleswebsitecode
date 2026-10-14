@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
-import { ExternalLink, Shield, LogOut } from "lucide-react";
+import { ExternalLink, Shield, LogOut, KeyRound } from "lucide-react";
 
 export default function AdminHeader({ title }: { title: string }) {
   const { currentUser, logout } = useStore();
@@ -12,7 +12,20 @@ export default function AdminHeader({ title }: { title: string }) {
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const section = pathname?.split("/")[2] || "dashboard";
-  const mobileTitles: Record<string, string> = { dashboard: "Dashboard", categories: "Categories", products: "Products", inventory: "Inventory", orders: "Orders", users: "Registered Users", coupons: "Coupons", banners: "Banners", attributes: "Tags, sizes & colors", instagram: "Instagram", login: "Admin login" };
+  const mobileTitles: Record<string, string> = {
+    dashboard: "Dashboard",
+    categories: "Categories",
+    products: "Products",
+    inventory: "Inventory",
+    orders: "Orders",
+    users: "Registered Users",
+    coupons: "Coupons",
+    banners: "Banners",
+    attributes: "Tags, sizes & colors",
+    instagram: "Instagram",
+    settings: "Admin Security",
+    login: "Admin login",
+  };
   const mobileTitle = section === "products" && pathname?.endsWith("/new") ? "Add product" : section === "products" && pathname?.endsWith("/edit") ? "Edit product" : mobileTitles[section] || title;
 
   useEffect(() => {
@@ -57,12 +70,16 @@ export default function AdminHeader({ title }: { title: string }) {
           <ExternalLink className="w-3.5 h-3.5 text-gold" />
         </Link>
 
-        <div className="hidden lg:flex items-center space-x-2 bg-ivory border border-ivory-300 px-3 py-1.5 rounded">
-          <Shield className="w-4 h-4 text-crimson" />
-          <span suppressHydrationWarning className="text-xs text-ink font-medium">
-            {isMounted ? currentUser?.name || "Admin User" : "Admin User"}
+        <Link
+          href="/admin/settings"
+          title="Admin Security & Password Settings"
+          className="hidden sm:flex items-center space-x-2 bg-ivory hover:bg-ivory-200 border border-ivory-300 hover:border-gold px-3 py-1.5 rounded transition-all group"
+        >
+          <KeyRound className="w-3.5 h-3.5 text-gold group-hover:scale-110 transition-transform" />
+          <span suppressHydrationWarning className="text-xs text-ink font-medium group-hover:text-crimson">
+            Security &amp; Login
           </span>
-        </div>
+        </Link>
 
         <button
           type="button"

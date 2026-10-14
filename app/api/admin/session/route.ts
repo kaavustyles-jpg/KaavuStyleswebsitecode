@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
 import { ADMIN_COOKIE, signAdminSession } from "@/lib/admin-session";
+import { verifyAdminCredentials } from "@/lib/admin-credentials";
 export const runtime = "nodejs";
 const attempts = new Map<string, { count: number; until: number }>();
 export async function POST(request: NextRequest) {
@@ -14,20 +15,11 @@ export async function POST(request: NextRequest) {
     if (attempts.size > 1000) attempts.clear();
     attempts.set(ip, entry);
     const { email, password } = await request.json();
-    const configured = process.env.ADMIN_LOGIN_PASSWORD || "Kaavu@admin123";
-    const emails = (process.env.ADMIN_LOGIN_EMAILS || "admin@kaavustyle.com,kaavustyles@gmail.com")
-      .split(",")
-      .map(value => value.trim().toLowerCase());
-    if (!emails.includes("admin@kaavustyle.com")) emails.push("admin@kaavustyle.com");
-    if (!emails.includes("kaavustyles@gmail.com")) emails.push("kaavustyles@gmail.com");
 
     const cleanEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
-    const isPasswordValid = typeof password === "string" && password.length < 1000 && (
-      (Buffer.byteLength(password) === Buffer.byteLength(configured) && timingSafeEqual(Buffer.from(password), Buffer.from(configured))) ||
-      (password === "Kaavu@admin123")
-    );
+    const isValid = typeof password === "string" && password.length < 1000 && (await verifyAdminCredentials(cleanEmail, password));
 
-    if (!cleanEmail || !emails.includes(cleanEmail) || !isPasswordValid) {
+    if (!cleanEmail || !isValid) {
       return NextResponse.json({ error: "Invalid admin email or password." }, { status: 401 });
     }
     const response = NextResponse.json({ success: true });

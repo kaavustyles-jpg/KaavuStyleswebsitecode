@@ -114,5 +114,13 @@ export async function finalizePayment(orderId: string, paymentId: string) {
     }
   }
 
+  // Dispatch direct email notifications to kaavustyles@gmail.com and customer
+  try {
+    const { sendOrderNotificationEmail } = await import("./email-service");
+    void sendOrderNotificationEmail(order);
+  } catch (emailErr) {
+    console.error("Could not send order confirmation email in finalizePayment:", emailErr);
+  }
+
   return order;
 }

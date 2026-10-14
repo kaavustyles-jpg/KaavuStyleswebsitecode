@@ -228,6 +228,17 @@ export default function CheckoutPage() {
 
     acceptPaidOrder(newOrder);
     setPlacedOrder(newOrder);
+
+    // Dispatch direct email notification to kaavustyles@gmail.com and customer
+    try {
+      void fetch("/api/orders/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: newOrder }),
+      });
+    } catch (notifyErr) {
+      console.warn("Could not dispatch order notification email:", notifyErr);
+    }
     } catch (error) { setOrderError(error instanceof Error ? error.message : "Payment could not be completed."); } finally { setPlacing(false); }
   };
 

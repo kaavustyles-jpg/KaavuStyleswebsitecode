@@ -60,6 +60,32 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailNotice, setEmailNotice] = useState<string | null>(null);
+
+  const handleSendEmail = async (ord: Order) => {
+    setSendingEmail(true);
+    setEmailNotice(null);
+    try {
+      const res = await fetch("/api/orders/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: ord }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEmailNotice(`✓ Dispatched to ${data.recipient || "kaavustyles@gmail.com"} & customer!`);
+      } else {
+        setEmailNotice(`Failed: ${data.error || "Could not send"}`);
+      }
+    } catch (e: any) {
+      setEmailNotice(`Error: ${e.message}`);
+    } finally {
+      setSendingEmail(false);
+      setTimeout(() => setEmailNotice(null), 6000);
+    }
+  };
+
   const handlePrintInvoice = () => {
     if (typeof window !== "undefined") {
       window.print();
@@ -493,7 +519,24 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
-            <div className="pt-2 print:hidden flex justify-end space-x-3">
+            {emailNotice && (
+              <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-semibold rounded text-center print:hidden">
+                {emailNotice}
+              </div>
+            )}
+
+            <div className="pt-2 print:hidden flex flex-wrap justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => handleSendEmail(selectedOrder)}
+                disabled={sendingEmail}
+                className="px-5 py-3 bg-emerald-800 hover:bg-emerald-700 text-ivory text-xs uppercase tracking-[0.16em] font-bold shadow-md transition-colors flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+                title="Send full order details directly to kaavustyles@gmail.com and customer"
+              >
+                <Mail className="w-4 h-4 text-emerald-200" />
+                <span>{sendingEmail ? "Dispatching..." : "Send Email Notification"}</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}

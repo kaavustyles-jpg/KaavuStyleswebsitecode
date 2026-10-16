@@ -264,6 +264,7 @@ function ShopContent() {
       </div>
 
       {/* 2. CATEGORY PILL CAROUSEL WITH PRODUCT COUNTS (VISIBLE ON MOBILE & DESKTOP) */}
+      {/* 2. CATEGORY SELECTOR */}
       <div className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <span className="text-[11px] uppercase tracking-[0.25em] text-gold font-semibold flex items-center space-x-1.5">
@@ -275,29 +276,37 @@ function ShopContent() {
           </span>
         </div>
 
-        <div className="flex items-center space-x-2.5 sm:space-x-3 overflow-x-auto scrollbar-none pb-2 pt-1 text-xs">
+        {/* MOBILE: DROPDOWN */}
+        <div className="relative lg:hidden">
+          <select
+            value={activeCategoryObj?.slug || "all"}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            aria-label="Select Category"
+            className="w-full appearance-none bg-ivory border border-ivory-300 focus:border-gold outline-none pl-4 pr-10 py-3 text-xs uppercase tracking-wider font-semibold text-ink shadow-sm cursor-pointer font-sans"
+          >
+            <option value="all">All Categories</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.slug}>
+                {cat.name} 
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="w-4 h-4 text-gold absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        </div>
+
+        {/* DESKTOP: PILLS */}
+        <div className="hidden lg:flex items-center space-x-3 overflow-x-auto scrollbar-none pb-2 pt-1 text-xs">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`px-4 sm:px-5 py-2 sm:py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 cursor-pointer ${
-              !selectedCategory || selectedCategory === "all"
+            className={`px-5 py-2.5 border transition-all whitespace-nowrap cursor-pointer ${!selectedCategory || selectedCategory === "all"
                 ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
                 : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-            }`}
-          >
-            <span>All Categories</span>
-            <span
-              className={`text-[10px] px-2 py-0.5 rounded-full ${
-                !selectedCategory || selectedCategory === "all"
-                  ? "bg-ivory/20 text-ivory"
-                  : "bg-ivory-300 text-ink-muted"
               }`}
-            >
-              {products.length}
-            </span>
+          >
+            All Categories
           </button>
 
           {categories.map((cat) => {
-            const count = getCategoryCount(cat.slug);
             const isSelected =
               selectedCategory === cat.slug ||
               selectedCategory === cat.id ||
@@ -308,20 +317,12 @@ function ShopContent() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-4 sm:px-5 py-2 sm:py-2.5 border transition-all whitespace-nowrap flex items-center space-x-2 cursor-pointer ${
-                  isSelected
+                className={`px-5 py-2.5 border transition-all whitespace-nowrap cursor-pointer ${isSelected
                     ? "bg-crimson text-ivory border-crimson font-semibold shadow-md"
                     : "bg-ivory border-ivory-300 text-ink hover:border-gold hover:bg-ivory-200"
-                }`}
-              >
-                <span>{cat.name}</span>
-                <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full ${
-                    isSelected ? "bg-ivory/20 text-ivory" : "bg-ivory-300 text-ink-muted"
                   }`}
-                >
-                  {count}
-                </span>
+              >
+                {cat.name}
               </button>
             );
           })}

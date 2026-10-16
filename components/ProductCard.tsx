@@ -24,7 +24,11 @@ export default function ProductCard({ product }: { product: Product }) {
       >
         {/* Product Image */}
         <div className="relative aspect-[4/5] w-full bg-ivory-200 overflow-hidden">
-          {soldOut && <span className="absolute top-3 left-3 z-10 bg-ink/85 text-ivory px-3 py-1.5 text-[10px] uppercase tracking-wider">Out of stock</span>}
+{soldOut && (
+  <span className="absolute top-3 left-3 z-10 bg-ink/85 text-ivory px-2 py-1 text-[9px] uppercase tracking-wide">
+    Out of stock
+  </span>
+)}
           <Image
             src={product.images[0] || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600"}
             alt={product.name}

@@ -412,7 +412,7 @@ function ShopContent() {
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ivory-300 pb-3 text-xs uppercase tracking-wider text-ink-muted px-1">
         <div className="flex flex-wrap items-center gap-2">
           <span>
-            Displaying <strong className="text-crimson font-semibold">{filteredProducts.length}</strong> {filteredProducts.length === 1 ? "Creation" : "Creations"}
+            Displaying  {filteredProducts.length === 1 ? "Creation" : "Creations"}
           </span>
           {activeCategoryName && (
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 bg-crimson text-ivory text-[11px] font-semibold tracking-wide rounded-full shadow-sm">

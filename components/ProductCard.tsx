@@ -25,7 +25,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Product Image */}
         <div className="relative aspect-[4/5] w-full bg-ivory-200 overflow-hidden">
 {soldOut && (
-  <span className="absolute top-3 left-3 z-10 bg-ink/85 text-ivory px-2 py-1 text-[9px] uppercase tracking-wide">
+  <span className="absolute top-2 left-2 z-10 bg-ink/85 text-ivory px-1.5 py-0.5 text-[8px] uppercase tracking-wide">
     Out of stock
   </span>
 )}

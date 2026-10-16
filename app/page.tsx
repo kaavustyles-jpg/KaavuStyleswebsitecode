@@ -226,7 +226,7 @@ export default function HomePage() {
               href="/shop"
               className="text-xs uppercase tracking-[0.2em] text-crimson font-bold hover:text-gold transition-colors pl-2"
             >
-              View All ({products.length})
+              View All 
             </Link>
           </div>
         </div>

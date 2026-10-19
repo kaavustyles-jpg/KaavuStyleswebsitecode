@@ -16,6 +16,7 @@ export interface Product {
   categoryId: string;
   stock: number;
   sizeStock?: Record<string, number>;
+  variantStock?: Record<string, Record<string, number>>;
   colorImages?: Record<string, string[]>;
   sizes: string[];
   colors: string[];

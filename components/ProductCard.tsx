@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Product } from "@/lib/mockData";
 import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/lib/utils";
-import { stockForSize } from "@/lib/inventory";
+import { availableVariant } from "@/lib/inventory";
 import { Heart, ShoppingBag } from "lucide-react";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
@@ -13,8 +13,8 @@ export default function ProductCard({ product }: { product: Product }) {
   const { toggleWishlist, isInWishlist, addToCart } = useStore();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const isWishlisted = isInWishlist(product.id);
-  const availableSize = (product.sizes.length ? product.sizes : ["Standard"]).find(size => stockForSize(product, size) > 0);
-  const soldOut = availableSize === undefined;
+  const variant = availableVariant(product);
+  const soldOut = variant === undefined;
 
   return (
     <>
@@ -67,7 +67,7 @@ export default function ProductCard({ product }: { product: Product }) {
               disabled={soldOut}
               onClick={(e) => {
                 e.stopPropagation();
-                if (!soldOut) addToCart(product, availableSize);
+                if (!soldOut) addToCart(product, variant?.size, variant?.color);
               }}
               className="p-2 min-w-9 min-h-9 inline-flex items-center justify-center rounded-full bg-ivory/80 text-ink enabled:hover:text-crimson enabled:hover:bg-ivory backdrop-blur-md transition-all shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
               title={soldOut ? "Out of stock" : "Add to Shopping Bag"}

@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import ImageUploader from "@/components/ImageUploader";
+import { ChevronDown } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { uploadMultipleImages } from "@/lib/storageUpload";
+import VariantStockFields from "@/components/VariantStockFields";
+import { variantInventory } from "@/lib/inventory";
 import type { Product } from "@/lib/mockData";
 export default function ProductEditor({ productId }: { productId?: string }) {
  const { products, categories, addProduct, updateProduct, lifestyleTags, sizes, colors, isLoading } = useStore();
@@ -22,11 +25,13 @@ export default function ProductEditor({ productId }: { productId?: string }) {
   const [category, setCategory] = useState(categories[0]?.name || "Royal Sarees");
   
   const [generalStock, setGeneralStock] = useState(0);
+  const [variantStock, setVariantStock] = useState<Product["variantStock"]>({});
   const [sizeStock, setSizeStock] = useState<Record<string, number>>({});
   const [colorImages, setColorImages] = useState<Record<string, string[]>>({});
   const [saveError, setSaveError] = useState("");
   const [selectedSizes, setSelectedSizes] = useState<string[]>(["S", "M", "L"]);
-  const [selectedColors, setSelectedColors] = useState<string[]>(["Crimson Maroon", "Antique Gold"]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const colorChoices = Array.from(new Set([...colors.map(color => color.name), ...selectedColors]));
   const [selectedTags, setSelectedTags] = useState<string[]>(["Festive", "Ethnic"]);
   const [productImages, setProductImages] = useState<string[]>([]);
   const [isLatest, setIsLatest] = useState(true);
@@ -42,6 +47,7 @@ export default function ProductEditor({ productId }: { productId?: string }) {
     setCategory(p.category);
     setGeneralStock(p.stock);
 
+    setVariantStock(p.variantStock);
     setSizeStock(p.sizeStock || {}); setColorImages(p.colorImages || {}); setSaveError("");
     setSelectedSizes(p.sizes);
     setSelectedColors(p.colors);
@@ -61,7 +67,8 @@ export default function ProductEditor({ productId }: { productId?: string }) {
     if (saving) return;
 
     setSaving(true);
-
+    setSaveError("");
+    try {
     const catObj = categories.find((c) => c.name === category);
     if (!catObj) { setSaveError("Please select a category."); setSaving(false); return; }
 
@@ -78,8 +85,9 @@ export default function ProductEditor({ productId }: { productId?: string }) {
       originalPrice: originalPrice ? parseFloat(originalPrice) : undefined,
       category,
       categoryId: catObj.id,
-      stock: selectedSizes.length ? selectedSizes.reduce((sum, size) => sum + (sizeStock[size] ?? 0), 0) : generalStock,
-      sizeStock: selectedSizes.length ? Object.fromEntries(selectedSizes.map(size => [size, sizeStock[size] ?? 0])) : {},
+      stock: generalStock,
+      sizeStock,
+      ...(variantStock ? variantInventory(selectedSizes, selectedColors, variantStock) : {}),
       colorImages: finalColorImages,
       sizes: selectedSizes,
       colors: selectedColors,
@@ -89,8 +97,6 @@ export default function ProductEditor({ productId }: { productId?: string }) {
       isFeatured,
     };
 
-    setSaveError("");
-    try {
     if (editingId) {
       await updateProduct(editingId, productPayload);
     } else {
@@ -227,9 +233,9 @@ export default function ProductEditor({ productId }: { productId?: string }) {
                 </div>
               </div>
 
-              {selectedSizes.length === 0 && <label className="block rounded-lg border border-gold/30 bg-ivory-50 p-4 text-sm"><span className="font-medium">Stock quantity</span><p className="text-xs text-ink-muted mt-1 mb-3">No size selected. Enter the total units available.</p><input aria-label="General stock quantity" type="number" min="0" step="1" required value={generalStock} onChange={event => setGeneralStock(Math.max(0, Number(event.target.value)))} className="w-full rounded-md border border-ivory-300 bg-white p-3" /></label>}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">{selectedSizes.map(size => <label key={size} className="text-xs">Stock for {size}<input type="number" min="0" step="1" required value={sizeStock[size] ?? 0} onChange={event => setSizeStock(prev => ({...prev, [size]: Math.max(0, Number(event.target.value))}))} className="mt-1 w-full border border-ivory-300 p-2" /></label>)}</div>
-              <p className="text-xs text-ink-muted">Select sizes to manage individual quantities, or leave all sizes unselected to use general stock.</p>
+              {!variantStock && <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-900">This product has {generalStock} units in shared stock. Enter the quantity for each color to switch to separate stock. Existing stock is kept until you make a quantity change.</p>}
+              <VariantStockFields sizes={selectedSizes} colors={selectedColors} values={variantStock || {}} onChange={setVariantStock} disabled={saving} />
+              <p className="text-xs text-ink-muted">Each size and color has its own stock. Select colors in Colors & photography below. Total product stock is calculated automatically.</p>
               {editingId && <p className="text-xs break-all">Product ID: {editingId}</p>}
               {/* Lifestyle Tags Selection */}
               <div>
@@ -261,32 +267,43 @@ export default function ProductEditor({ productId }: { productId?: string }) {
                   Available Colors
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {colors.map((col) => (
+                  {colorChoices.map((color) => (
                     <button
-                      key={col.id}
+                      key={color}
                       type="button"
-                      onClick={() => toggleColor(col.name)}
+                      aria-pressed={selectedColors.includes(color)}
+                      onClick={() => toggleColor(color)}
                       className={`px-3 py-1 text-xs border rounded ${
-                        selectedColors.includes(col.name)
+                        selectedColors.includes(color)
                           ? "bg-ink text-ivory border-ink font-semibold"
                           : "bg-ivory border-ivory-300 text-ink"
                       }`}
                     >
-                      {col.name}
+                      {color}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {selectedColors.map(color => <ImageUploader key={color} images={colorImages[color] || []} onChange={images => setColorImages(prev => ({...prev, [color]: images}))} label={`Photos for ${color}`} folder="products" />)}
+              {!selectedColors.length && <p className="text-xs text-ink-muted">Select a color above to add its photos.</p>}
+              {selectedColors.map(color => <details key={color} className="group/photos rounded-xl border border-ivory-300 overflow-hidden">
+                <summary className="flex items-center gap-3 p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden bg-ivory-50">
+                  <span className="flex-1 font-medium text-ink">Photos for {color}</span>
+                  <span className="text-xs text-ink-muted">{(colorImages[color] || []).length} photos</span>
+                  <ChevronDown className="w-4 h-4 shrink-0 text-gold transition-transform group-open/photos:rotate-180" />
+                </summary>
+                <div className="p-3 sm:p-4"><ImageUploader images={colorImages[color] || []} onChange={images => setColorImages(prev => ({...prev, [color]: images}))} label={`Upload photos for ${color}`} folder="products" /></div>
+              </details>)} 
               {saveError && <p role="alert" className="text-crimson">{saveError}</p>}
               {/* IMAGE FILE UPLOADER (Uploads directly to Supabase Storage images bucket) */}
-              <ImageUploader
+              <details className="group/photos rounded-xl border border-ivory-300 overflow-hidden">
+                <summary className="flex items-center gap-3 p-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden bg-ivory-50"><span className="flex-1 font-medium text-ink">Main product photos</span><span className="text-xs text-ink-muted">{productImages.length} photos</span><ChevronDown className="w-4 h-4 shrink-0 text-gold transition-transform group-open/photos:rotate-180" /></summary>
+                <div className="p-3 sm:p-4"><ImageUploader
                 images={productImages}
                 onChange={setProductImages}
-                label="Product Images (Select Image Files from Device)"
+                label="Product images"
                 folder="products"
-              />
+              /></div></details>
 
               <div className="flex items-center space-x-6 pt-2">
                 <label className="flex items-center space-x-2 cursor-pointer">

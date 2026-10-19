@@ -5,7 +5,7 @@ import Image from "next/image";
 import ShareProduct from "@/components/ShareProduct";
 import { Product } from "@/lib/mockData";
 import { useStore } from "@/context/StoreContext";
-import { stockForSize } from "@/lib/inventory";
+import { stockForSize, stockForVariant, availableVariant } from "@/lib/inventory";
 import { formatPrice } from "@/lib/utils";
 import {
   X,
@@ -36,7 +36,7 @@ export default function ProductDetailModal({
     product.images[0] || "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800"
   );
   const [selectedSize, setSelectedSize] = useState((product.sizes.length ? product.sizes : ["Standard"]).find(size => stockForSize(product, size) > 0) || product.sizes[0] || "Standard");
-  const [selectedColor, setSelectedColor] = useState(product.colors[0] || "Standard");
+  const [selectedColor, setSelectedColor] = useState(availableVariant(product)?.color || product.colors[0] || "Standard");
 
   const colorSpecificPhotos = product.colorImages?.[selectedColor]?.length
     ? product.colorImages[selectedColor]
@@ -85,7 +85,7 @@ export default function ProductDetailModal({
   };
 
   const handleAddToCart = () => {
-    if (stockForSize(product, selectedSize) <= 0) return;
+    if (stockForVariant(product, selectedSize, selectedColor) <= 0) return;
     addToCart(product, selectedSize, selectedColor, 1);
     onClose();
   };
@@ -269,9 +269,9 @@ export default function ProductDetailModal({
                       {product.sizes.map((sz) => (
                         <button
                           key={sz}
-                          disabled={stockForSize(product, sz) <= 0}
-                          style={stockForSize(product, sz) <= 0 ? { opacity: 0.4, cursor: "not-allowed", textDecoration: "line-through" } : undefined}
-                          title={`${stockForSize(product, sz)} available`}
+                          disabled={stockForVariant(product, sz, selectedColor) <= 0}
+                          style={stockForVariant(product, sz, selectedColor) <= 0 ? { opacity: 0.4, cursor: "not-allowed", textDecoration: "line-through" } : undefined}
+                          title={`${stockForVariant(product, sz, selectedColor)} available`}
                           onClick={() => setSelectedSize(sz)}
                           className={`min-w-[44px] px-3.5 py-2 text-xs uppercase tracking-wider transition-all border cursor-pointer ${
                             selectedSize === sz
@@ -285,8 +285,6 @@ export default function ProductDetailModal({
                     </div>
                   </div>
 
-                  <p className="text-xs text-ink-muted">Size {selectedSize}: {stockForSize(product, selectedSize)} in stock</p>
-                  <p className="text-[10px] text-ink-muted break-all">Product ID: {product.id}</p>
                   <ShareProduct product={product} />
                   {/* Color Selector */}
                   <div>
@@ -304,6 +302,8 @@ export default function ProductDetailModal({
                           key={col}
                           onClick={() => {
                             setSelectedColor(col);
+                            const nextSize = (product.sizes.length ? product.sizes : ["Standard"]).find(size => stockForVariant(product, size, col) > 0);
+                            if (nextSize) setSelectedSize(nextSize);
                             const colIdx = product.colors.indexOf(col);
                             const photos = product.colorImages?.[col]?.length
                               ? product.colorImages[col]
@@ -333,12 +333,12 @@ export default function ProductDetailModal({
                 {/* Desktop Action Buttons */}
                 <div className="hidden sm:block pt-4 space-y-3">
                   <button
-                    disabled={stockForSize(product, selectedSize) <= 0}
+                    disabled={stockForVariant(product, selectedSize, selectedColor) <= 0}
               onClick={handleAddToCart}
                     className="w-full py-4 bg-crimson hover:bg-crimson-800 text-ivory text-xs uppercase tracking-[0.24em] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-luxury flex items-center justify-center space-x-2 border border-gold/40 cursor-pointer"
                   >
                     <ShoppingBag className="w-4 h-4" />
-                    <span>{stockForSize(product, selectedSize) > 0 ? "Add to Shopping Bag" : "Out of stock"}</span>
+                    <span>{stockForVariant(product, selectedSize, selectedColor) > 0 ? "Add to Shopping Bag" : "Out of stock"}</span>
                   </button>
 
                   <div className="grid grid-cols-2 gap-2 pt-2 text-[10px] text-ink-muted border-t border-ivory-200">
@@ -360,12 +360,12 @@ export default function ProductDetailModal({
           {/* STICKY BOTTOM ACTION BAR ON MOBILE */}
           <div className="sm:hidden p-3 bg-ivory border-t border-gold/30 shadow-lg flex-shrink-0 space-y-2">
             <button
-              disabled={stockForSize(product, selectedSize) <= 0}
+              disabled={stockForVariant(product, selectedSize, selectedColor) <= 0}
               onClick={handleAddToCart}
               className="w-full py-3.5 bg-crimson active:bg-crimson-800 text-ivory text-xs uppercase tracking-[0.22em] font-bold shadow-md flex items-center justify-center space-x-2 border border-gold/40 cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>{stockForSize(product, selectedSize) > 0 ? `Add to Bag • ${formatPrice(product.price)}` : "Out of stock"}</span>
+              <span>{stockForVariant(product, selectedSize, selectedColor) > 0 ? `Add to Bag • ${formatPrice(product.price)}` : "Out of stock"}</span>
             </button>
             <div className="flex justify-between items-center text-[9px] text-ink-muted px-1 font-semibold">
               <span className="flex items-center space-x-1">

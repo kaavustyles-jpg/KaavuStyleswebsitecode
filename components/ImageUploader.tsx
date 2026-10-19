@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useId } from "react";
 import Image from "next/image";
 import { Upload, X, Link as LinkIcon, Plus, Loader2 } from "lucide-react";
 import { compressAndOptimizeImage } from "@/lib/utils";
@@ -19,12 +19,6 @@ interface ImageUploaderProps {
   folder?: string;
 }
 
-interface ImageDimension {
-  url: string;
-  width: number;
-  height: number;
-}
-
 export default function ImageUploader({
   images,
   onChange,
@@ -36,6 +30,8 @@ export default function ImageUploader({
   alwaysOptimize = false,
   folder = "products",
 }: ImageUploaderProps) {
+  const labelId = useId();
+  const [uploadError, setUploadError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [urlInput, setUrlInput] = useState("");
   const [isUrlMode, setIsUrlMode] = useState(false);
@@ -60,7 +56,8 @@ export default function ImageUploader({
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0 || isCompressing) return;
+    setUploadError("");
 
     setIsCompressing(true);
     const fileList = Array.from(files);
@@ -94,7 +91,7 @@ export default function ImageUploader({
       }
     } catch (err: any) {
       console.error("Image upload error:", err);
-      alert("Failed to upload image to Supabase Storage bucket: " + (err?.message || "Upload error. Please try again."));
+      setUploadError(err?.message || "Could not upload your photo. Please try again.");
     } finally {
       setIsCompressing(false);
       if (fileInputRef.current) {
@@ -105,7 +102,8 @@ export default function ImageUploader({
 
   const handleAddUrl = async () => {
     const trimmed = urlInput.trim();
-    if (!trimmed) return;
+    if (!trimmed || isCompressing) return;
+    setUploadError("");
 
     try {
       let finalUrl = trimmed;
@@ -121,7 +119,7 @@ export default function ImageUploader({
       }
       setUrlInput("");
     } catch (err: any) {
-      alert("Failed to upload image to Storage bucket: " + (err?.message || "Upload error"));
+      setUploadError(err?.message || "Could not add your photo. Please try again.");
     } finally {
       setIsCompressing(false);
     }
@@ -132,145 +130,36 @@ export default function ImageUploader({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex justify-between items-center">
-        <label className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
-          {label}
-        </label>
-        <button
-          type="button"
-          onClick={() => setIsUrlMode(!isUrlMode)}
-          className="text-[10px] uppercase tracking-wider text-crimson hover:underline flex items-center space-x-1"
-        >
-          {isUrlMode ? (
-            <>
-              <Upload className="w-3 h-3" />
-              <span>Switch to Local File Upload</span>
-            </>
-          ) : (
-            <>
-              <LinkIcon className="w-3 h-3" />
-              <span>Paste Image URL</span>
-            </>
-          )}
+    <div className="space-y-3 min-w-0" role="group" aria-labelledby={labelId} aria-busy={isCompressing}>
+      <div className="flex flex-wrap justify-between items-center gap-2">
+        <p id={labelId} className="text-xs font-semibold text-ink">{label}</p>
+        <button type="button" disabled={isCompressing} onClick={() => setIsUrlMode(!isUrlMode)} className="inline-flex items-center gap-1.5 text-xs text-crimson hover:underline disabled:opacity-50">
+          {isUrlMode ? <Upload className="w-3.5 h-3.5" /> : <LinkIcon className="w-3.5 h-3.5" />}
+          {isUrlMode ? "Upload from device" : "Paste image URL"}
         </button>
       </div>
-
-      {/* Main Upload Drop Area */}
-      {!isUrlMode ? (
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-ivory-300 hover:border-gold bg-ivory-50 hover:bg-ivory-100/70 p-6 text-center rounded cursor-pointer transition-colors group space-y-2"
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple={!single}
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-          {isCompressing ? (
-            <div className="py-2 space-y-2">
-              <Loader2 className="w-8 h-8 text-gold animate-spin mx-auto" />
-              <p className="text-xs font-bold text-gold uppercase tracking-wider">
-                ✨ Uploading to Supabase Storage Bucket...
-              </p>
-              <p className="text-[10px] text-ink-muted">
-                Optimizing photo & saving to public cloud storage bucket ({folder}/).
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="w-10 h-10 rounded-full bg-gold/15 text-gold flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                <Upload className="w-5 h-5" />
-              </div>
-              <p className="text-xs font-semibold text-ink uppercase tracking-wider">
-                Click to Select Image File(s) from Device
-              </p>
-              <p className="text-[10px] text-ink-muted">
-                High-resolution DSLR & 4K photos will automatically be optimized on-the-fly.
-              </p>
-            </>
-          )}
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Paste image web link (https://...)"
-            value={urlInput}
-            onChange={(e) => setUrlInput(e.target.value)}
-            className="flex-1 border border-ivory-300 rounded p-2.5 text-xs text-ink outline-none"
-          />
-          <button
-            type="button"
-            onClick={handleAddUrl}
-            className="px-4 py-2.5 bg-gold text-ivory text-xs uppercase tracking-wider font-semibold flex items-center space-x-1"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add URL</span>
+      <input ref={fileInputRef} type="file" accept="image/*" multiple={!single} onChange={handleFileSelect} disabled={isCompressing} className="hidden" aria-label={label} />
+      {isUrlMode && <div className="flex flex-col sm:flex-row gap-2">
+        <input type="url" aria-label={`Image URL for ${label}`} placeholder="https://example.com/photo.jpg" value={urlInput} disabled={isCompressing} onChange={event => setUrlInput(event.target.value)} className="min-w-0 flex-1 rounded-lg border border-ivory-300 bg-white p-3 text-base sm:text-sm text-ink outline-none focus:border-gold" />
+        <button type="button" disabled={isCompressing || !urlInput.trim()} onClick={handleAddUrl} className="rounded-lg px-4 py-3 bg-crimson text-ivory text-xs font-semibold disabled:opacity-50">{single && images.length ? "Replace photo" : "Add photo"}</button>
+      </div>}
+      <div className="rounded-xl border border-ivory-300 bg-ivory-50 p-3 sm:p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {images.map((src, index) => <div key={`${src}-${index}`} className="relative aspect-square min-w-0 rounded-lg overflow-hidden border border-ivory-300 bg-white group">
+            <Image src={src} alt={`${label}, photo ${index + 1}`} fill sizes="(max-width: 639px) 40vw, (max-width: 1023px) 180px, 120px" className="object-cover" />
+            <button type="button" disabled={isCompressing} aria-label={`Remove photo ${index + 1} from ${label}`} onClick={() => handleRemove(index)} className="absolute top-2 right-2 z-10 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/95 text-crimson shadow-sm hover:bg-crimson hover:text-white disabled:opacity-50"><X className="w-4 h-4" /></button>
+            {index === 0 && <span className="absolute left-2 top-2 bg-ink/80 px-2 py-1 rounded text-[9px] uppercase tracking-wider text-ivory">Cover</span>}
+            {dimensions[src] && <span className="absolute bottom-0 inset-x-0 bg-ink/70 text-white text-[9px] text-center py-1">{dimensions[src].width} × {dimensions[src].height} px</span>}
+          </div>)}
+          <button type="button" disabled={isCompressing} onClick={() => fileInputRef.current?.click()} className={`rounded-lg border-2 border-dashed border-gold/40 bg-white/60 hover:bg-gold/5 hover:border-gold transition-colors flex flex-col items-center justify-center gap-2 text-center p-4 disabled:cursor-wait ${images.length ? "aspect-square" : "col-span-2 sm:col-span-3 lg:col-span-5 min-h-[180px]"}`}>
+            {isCompressing ? <Loader2 className="w-7 h-7 text-gold animate-spin" /> : images.length ? <Plus className="w-8 h-8 text-gold" /> : <Upload className="w-7 h-7 text-gold" />}
+            <span className="text-xs font-semibold text-ink">{isCompressing ? "Uploading photos…" : images.length ? single ? "Replace photo" : "Add photo" : "Choose photos from device"}</span>
+            {!images.length && !isCompressing && <span className="max-w-xs text-xs text-ink-muted">{noOptimize ? "Choose a photo to preview it here." : single ? "Your photo is optimized automatically." : "Photos are optimized automatically. You can select several at once."}</span>}
           </button>
         </div>
-      )}
-
-      {/* Uploaded Images Gallery Preview with Image Dimensions Display */}
-      {images.length > 0 && (
-        <div className="space-y-2 pt-2">
-          <p className="text-[10px] uppercase tracking-wider text-gold font-semibold">
-            Uploaded Preview ({images.length} image{images.length > 1 ? "s" : ""})
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {images.map((imgSrc, idx) => {
-              const dim = dimensions[imgSrc];
-              return (
-                <div
-                  key={idx}
-                  className="relative bg-ivory-200 border border-gold rounded overflow-hidden group shadow-sm flex flex-col"
-                >
-                  <div className="relative aspect-square w-full">
-                    <Image
-                      src={imgSrc}
-                      alt={`Preview ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(idx)}
-                      className="absolute top-1 right-1 p-1 bg-crimson text-ivory rounded-full shadow hover:scale-110 transition-transform z-10"
-                      title="Remove image"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                    {idx === 0 && (
-                      <span className="absolute top-1 left-1 bg-crimson/90 text-ivory text-[8px] uppercase font-bold px-1.5 py-0.5 rounded tracking-wider z-10">
-                        Cover
-                      </span>
-                    )}
-                    {imgSrc.includes("/storage/v1/object/public/") && (
-                      <span className="absolute bottom-1 right-1 bg-emerald-800/90 text-ivory text-[7px] uppercase font-bold px-1.5 py-0.5 rounded tracking-wider z-10">
-                        Storage Bucket
-                      </span>
-                    )}
-                  </div>
-
-                  {/* DIMENSION BADGE DISPLAY */}
-                  <div className="p-1.5 bg-ink text-ivory text-[9px] font-mono text-center border-t border-gold/30">
-                    {dim ? (
-                      <span className="text-gold font-semibold">
-                        {dim.width} × {dim.height} px
-                      </span>
-                    ) : (
-                      <span className="text-ivory-300">Reading size...</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        {images.length > 0 && <p className="mt-3 text-[11px] text-ink-muted">{images.length} photo{images.length === 1 ? "" : "s"}{single ? " · Use Replace photo to choose another." : " · Use + to upload more photos."}</p>}
+      </div>
+      {uploadError && <p role="alert" className="text-sm text-crimson">{uploadError}</p>}
     </div>
   );
 }

@@ -26,7 +26,7 @@ import {
   INITIAL_REGISTERED_USERS,
 } from "@/lib/mockData";
 import { cleanOrderItems } from "@/lib/order-images";
-import { stockForSize, reduceInventory } from "@/lib/inventory";
+import { stockForSize, stockForVariant, availableVariant, sameStockPool, reduceInventory } from "@/lib/inventory";
 import { getClientIp } from "@/lib/utils";
 import {
   supabase,
@@ -518,13 +518,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Cart Actions
   const addToCart = (product: Product, size?: string, color?: string, qty: number = 1) => {
-    const selectedSize = size || product.sizes[0] || "Standard";
-    const selectedColor = color || product.colors[0] || "Standard";
+    const preferred = availableVariant(product);
+    const selectedSize = size || preferred?.size || product.sizes[0] || "Standard";
+    const selectedColor = color || preferred?.color || product.colors[0] || "Standard";
 
     const latest = products.find(p => p.id === product.id) || product;
-    const alreadyInBag = cart.filter(item => item.product.id === product.id && (latest.sizeStock ? item.selectedSize === selectedSize : true)).reduce((sum, item) => sum + item.quantity, 0);
-    if (!Number.isInteger(qty) || qty <= 0 || alreadyInBag + qty > stockForSize(latest, selectedSize)) {
-      showToast({ type: "info", title: "Stock unavailable", message: `Only ${stockForSize(latest, selectedSize)} available for this size.` });
+    const alreadyInBag = cart.filter(item => item.product.id === product.id && sameStockPool(latest, selectedSize, selectedColor, item.selectedSize, item.selectedColor)).reduce((sum, item) => sum + item.quantity, 0);
+    if (!Number.isInteger(qty) || qty <= 0 || alreadyInBag + qty > stockForVariant(latest, selectedSize, selectedColor)) {
+      showToast({ type: "info", title: "Stock unavailable", message: `Only ${stockForVariant(latest, selectedSize, selectedColor)} available for this size and color.` });
       return;
     }
     setCart((prev) => {
@@ -581,8 +582,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     const product = products.find(value => value.id === productId);
-    const otherQuantity = cart.filter(item => item.product.id === productId && (product?.sizeStock ? item.selectedSize === size : true) && !(item.selectedSize === size && item.selectedColor === color)).reduce((sum, item) => sum + item.quantity, 0);
-    if (!product || !Number.isInteger(qty) || qty + otherQuantity > stockForSize(product, size)) {
+    const otherQuantity = cart.filter(item => item.product.id === productId && (product ? sameStockPool(product, size, color, item.selectedSize, item.selectedColor) : true) && !(item.selectedSize === size && item.selectedColor === color)).reduce((sum, item) => sum + item.quantity, 0);
+    if (!product || !Number.isInteger(qty) || qty + otherQuantity > stockForVariant(product, size, color)) {
       showToast({ type: "info", title: "Stock unavailable", message: "This quantity is not available for the selected size." });
       return;
     }
@@ -731,6 +732,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         if (fieldsToSave.category) updateRow.category_name = fieldsToSave.category;
         if (fieldsToSave.stock !== undefined) updateRow.stock = fieldsToSave.stock;
         if (fieldsToSave.sizeStock) updateRow.size_stock = fieldsToSave.sizeStock;
+        if (fieldsToSave.variantStock) updateRow.variant_stock = fieldsToSave.variantStock;
         if (fieldsToSave.colorImages) updateRow.color_images = fieldsToSave.colorImages;
         if (fieldsToSave.sizes) updateRow.sizes = fieldsToSave.sizes;
         if (fieldsToSave.colors) updateRow.colors = fieldsToSave.colors;

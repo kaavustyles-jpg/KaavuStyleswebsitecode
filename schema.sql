@@ -311,3 +311,65 @@ CREATE TRIGGER orders_permanent_image_urls BEFORE INSERT OR UPDATE OF items ON p
 FOR EACH ROW EXECUTE FUNCTION public.reject_inline_order_images();
 COMMIT;
 NOTIFY pgrst, 'reload schema';
+
+
+-- Size and color inventory
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS variant_stock JSONB NOT NULL DEFAULT '{}';
+
+
+-- Existing products retain shared stock until an admin enters size/color allocations.
+CREATE OR REPLACE FUNCTION public.place_order_with_stock(order_data JSONB)
+RETURNS JSONB LANGUAGE plpgsql SECURITY INVOKER SET search_path = public AS $$
+DECLARE
+  item JSONB;
+  product_row public.products%ROWTYPE;
+  order_row public.orders%ROWTYPE;
+  qty INTEGER;
+  chosen_size TEXT;
+  chosen_color TEXT;
+  available INTEGER;
+BEGIN
+  IF jsonb_typeof(order_data->'items') IS DISTINCT FROM 'array' OR jsonb_array_length(order_data->'items') = 0 THEN
+    RAISE EXCEPTION 'An order must contain products';
+  END IF;
+  -- Lock products in a consistent order; all reductions and insertion roll back on failure.
+  PERFORM id FROM public.products WHERE id IN (
+    SELECT (value->>'productId')::UUID FROM jsonb_array_elements(order_data->'items')
+  ) ORDER BY id FOR UPDATE;
+  FOR item IN SELECT value FROM jsonb_array_elements(order_data->'items') LOOP
+    SELECT * INTO product_row FROM public.products WHERE id = (item->>'productId')::UUID;
+    IF NOT FOUND THEN RAISE EXCEPTION 'Product no longer exists'; END IF;
+    qty := (item->>'quantity')::INTEGER;
+    chosen_size := item->>'size';
+    chosen_color := item->>'color';
+    IF qty IS NULL OR qty <= 0 OR (item->>'quantity')::NUMERIC <> qty THEN RAISE EXCEPTION 'Invalid quantity'; END IF;
+    IF chosen_size IS NULL OR NOT (chosen_size = ANY(CASE WHEN cardinality(product_row.sizes) > 0 THEN product_row.sizes ELSE ARRAY['Standard'] END)) THEN RAISE EXCEPTION 'Invalid size'; END IF;
+    IF item->>'color' IS NULL OR NOT ((item->>'color') = ANY(CASE WHEN cardinality(product_row.colors) > 0 THEN product_row.colors ELSE ARRAY['Standard'] END)) THEN RAISE EXCEPTION 'Invalid color'; END IF;
+    available := CASE WHEN product_row.variant_stock <> '{}'::JSONB THEN COALESCE((product_row.variant_stock->chosen_size->>chosen_color)::INTEGER, 0) WHEN product_row.size_stock <> '{}'::JSONB THEN COALESCE((product_row.size_stock->>chosen_size)::INTEGER, 0) ELSE product_row.stock END;
+    IF available < qty OR product_row.stock < qty THEN RAISE EXCEPTION 'Insufficient stock for % (size %, color %)', product_row.name, chosen_size, chosen_color; END IF;
+    UPDATE public.products SET stock = stock - qty,
+      variant_stock = CASE WHEN variant_stock <> '{}'::JSONB THEN jsonb_set(variant_stock, ARRAY[chosen_size, chosen_color], to_jsonb(available - qty)) ELSE variant_stock END,
+      size_stock = CASE WHEN size_stock <> '{}'::JSONB THEN jsonb_set(size_stock, ARRAY[chosen_size], to_jsonb((size_stock->>chosen_size)::INTEGER - qty)) ELSE size_stock END
+      WHERE id = product_row.id;
+  END LOOP;
+  INSERT INTO public.orders (order_number, customer_name, customer_email, customer_phone, shipping_address, city, postal_code, total_amount, status, items, ip_address)
+  VALUES (
+    COALESCE(
+      NULLIF(order_data->>'orderNumber', ''),
+      NULLIF(order_data->>'order_number', ''),
+      (
+        SELECT 'KAAVU' || LPAD((COALESCE(MAX(SUBSTRING(order_number FROM '[0-9]+')::BIGINT), 0) + 1)::TEXT, 5, '0')
+        FROM public.orders
+        WHERE order_number ~ '^KAAVU[0-9]+$'
+      )
+    ),
+    order_data->>'customerName', order_data->>'customerEmail', order_data->>'customerPhone', order_data->>'shippingAddress', order_data->>'city', order_data->>'postalCode', (order_data->>'totalAmount')::NUMERIC, 'Pending', order_data->'items', order_data->>'ipAddress'
+  )
+  RETURNING * INTO order_row;
+  RETURN to_jsonb(order_row);
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.place_order_with_stock(JSONB) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.place_order_with_stock(JSONB) TO service_role;
+NOTIFY pgrst, 'reload schema';

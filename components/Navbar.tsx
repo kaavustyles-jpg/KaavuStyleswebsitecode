@@ -83,7 +83,7 @@ export default function Navbar() {
   return (
     <header onFocusCapture={() => setHeaderHidden(false)} className={`sticky top-0 z-50 shrink-0 bg-ivory shadow-luxury border-b border-gold/30 transition-transform duration-300 motion-reduce:transition-none lg:translate-y-0 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
       {/* 1. TOP ANNOUNCEMENT BAR (DYNAMIC SCROLLING MARQUEE) */}
-      {isMounted && (
+      {/* {isMounted && (
         <div className="bg-[#2B0B14] text-ivory py-1.5 overflow-hidden text-[11px] font-sans tracking-wide border-b border-gold/30">
           <div className="animate-marquee whitespace-nowrap flex items-center space-x-6 sm:space-x-8 font-medium" style={{ animationDuration: "50s" }}>
             {[1, 2, 3, 4, 5, 6].map((group) => (
@@ -133,7 +133,7 @@ export default function Navbar() {
             ))}
           </div>
         </div>
-      )}
+      )}   */}
 
       {/* 2. MAIN NAVIGATION ROW */}
       <div className="w-full px-4 sm:px-6 lg:px-12">

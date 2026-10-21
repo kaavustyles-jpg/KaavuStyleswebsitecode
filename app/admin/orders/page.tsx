@@ -5,6 +5,7 @@ import AdminSidebar from "@/components/AdminSidebar";
 import AdminHeader from "@/components/AdminHeader";
 import AdminListCard from "@/components/AdminListCard";
 import ShiprocketOrderDialog from "@/components/ShiprocketOrderDialog";
+import ReconcilePaymentsButton from "@/components/ReconcilePaymentsButton";
 import { useStore } from "@/context/StoreContext";
 import { Order } from "@/lib/mockData";
 import { formatPrice } from "@/lib/utils";
@@ -155,6 +156,7 @@ export default function AdminOrdersPage() {
         </div>
 
         <main className="p-6 sm:p-8 space-y-6 print:p-0 print:m-0">
+          <ReconcilePaymentsButton onRecovered={() => window.location.reload()} />
           {ordersError && <div role="alert" className="rounded-lg border border-crimson/20 bg-crimson/5 p-4 text-sm text-crimson print:hidden">{ordersError} <Link href="/admin/login" className="underline">Sign in again</Link></div>}
           {ordersLoading && <p role="status" className="text-sm text-ink-muted print:hidden">Loading orders…</p>}
           {/* Top Key Order & Revenue Metrics */}

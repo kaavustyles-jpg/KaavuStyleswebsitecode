@@ -17,7 +17,7 @@ export async function razorpay(path: string, body?: unknown) {
   const secret = process.env.RAZORPAY_KEY_SECRET;
   if (!key || !secret) throw new Error("Razorpay keys are not configured.");
   const response = await fetch(`https://api.razorpay.com/v1/${path}`, {
-    method: body ? "POST" : "GET", cache: "no-store",
+    method: body ? "POST" : "GET", cache: "no-store", signal: AbortSignal.timeout(10000),
     headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString("base64")}`, "Content-Type": "application/json" },
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
@@ -57,26 +57,7 @@ export async function prepareOrder(input: any) {
   const totalAmount = Math.round(Math.max(0, subtotal - discount) * 100) / 100;
   if (!Number.isFinite(totalAmount) || totalAmount <= 0) throw new Error("Online payments require a positive order total.");
 
-  // Calculate next sequential KAAVU order number
-  let nextOrderNumber = "KAAVU00001";
-  try {
-    const { data: kaavuOrders } = await db.from("orders").select("order_number");
-    let maxNum = 0;
-    for (const o of (kaavuOrders || [])) {
-      if (o.order_number) {
-        const m = o.order_number.match(/^KAAVU(\d+)$/i);
-        if (m) {
-          const n = parseInt(m[1], 10);
-          if (!isNaN(n) && n > maxNum) maxNum = n;
-        }
-      }
-    }
-    nextOrderNumber = `KAAVU${String(maxNum + 1).padStart(5, "0")}`;
-  } catch (e) {
-    console.error("Could not determine next KAAVU order number:", e);
-  }
-
-  return { customerName: input.customerName.trim(), customerEmail: input.customerEmail.trim(), customerPhone: input.customerPhone.trim(), shippingAddress: input.shippingAddress.trim(), city: input.city.trim(), postalCode: input.postalCode.trim(), items, totalAmount, status: "Pending", ipAddress: "", orderNumber: nextOrderNumber, order_number: nextOrderNumber };
+  return { customerName: input.customerName.trim(), customerEmail: input.customerEmail.trim(), customerPhone: input.customerPhone.trim(), shippingAddress: input.shippingAddress.trim(), city: input.city.trim(), postalCode: input.postalCode.trim(), items, totalAmount, status: "Pending", ipAddress: "" };
 }
 export async function finalizePayment(orderId: string, paymentId: string) {
   const db = paymentDb();
@@ -84,6 +65,7 @@ export async function finalizePayment(orderId: string, paymentId: string) {
   if (error || !attempt) throw new Error("Payment order was not found.");
   const payment = await razorpay(`payments/${encodeURIComponent(paymentId)}`);
   if (payment.order_id !== orderId || payment.currency !== "INR" || payment.amount !== attempt.amount) throw new Error("Payment details do not match this order.");
+  if (payment.amount_refunded > 0) throw new Error("This payment has been refunded; it needs manual review.");
   if (payment.status === "authorized") await razorpay(`payments/${encodeURIComponent(paymentId)}/capture`, { amount: attempt.amount, currency: "INR" });
   else if (payment.status !== "captured") throw new Error("Payment has not been captured yet.");
   const { data: order, error: saveError } = await db.rpc("finalize_razorpay_order", { gateway_order_id: orderId, gateway_payment_id: paymentId });
@@ -92,30 +74,12 @@ export async function finalizePayment(orderId: string, paymentId: string) {
     throw new Error(`Payment received (${paymentId}), but order confirmation is pending. Please contact support with this payment ID.`);
   }
 
-  // Ensure order_number conforms to KAAVU00001 sequence
-  if (order && (!order.order_number || !order.order_number.startsWith("KAAVU"))) {
-    try {
-      const { data: existingOrders } = await db.from("orders").select("order_number");
-      let maxNum = 0;
-      for (const o of (existingOrders || [])) {
-        if (o.order_number) {
-          const m = o.order_number.match(/^KAAVU(\d+)$/i);
-          if (m) {
-            const n = parseInt(m[1], 10);
-            if (!isNaN(n) && n > maxNum) maxNum = n;
-          }
-        }
-      }
-      const newOrderNum = `KAAVU${String(maxNum + 1).padStart(5, "0")}`;
-      await db.from("orders").update({ order_number: newOrderNum }).eq("id", order.id);
-      order.order_number = newOrderNum;
-    } catch (err) {
-      console.error("Error setting KAAVU order number in finalizePayment:", err);
-    }
-  }
+  const created = order._created === true;
+  delete order._created;
 
   // Dispatch direct email notifications to kaavustyles@gmail.com and customer
   try {
+    if (!created) return order;
     const { sendOrderNotificationEmail } = await import("./email-service");
     void sendOrderNotificationEmail(order);
   } catch (emailErr) {

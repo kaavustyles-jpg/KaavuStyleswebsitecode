@@ -8,7 +8,7 @@ const { createHmac } = require('node:crypto');
 function load(file, dependencies, extra = {}) {
   const source = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
   const exports = {};
-  vm.runInNewContext(source, { exports, require: name => dependencies[name] || require(name), Buffer, process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'server-key', RAZORPAY_KEY_ID: 'test-key', RAZORPAY_KEY_SECRET: 'test-secret' } }, ...extra }, { filename: file });
+  vm.runInNewContext(source, { exports, require: name => dependencies[name] || require(name), Buffer, AbortSignal, process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'server-key', RAZORPAY_KEY_ID: 'test-key', RAZORPAY_KEY_SECRET: 'test-secret' } }, ...extra }, { filename: file });
   return exports;
 }
 const inventory = load('lib/inventory.ts', {});
@@ -39,6 +39,15 @@ test('server ignores client price and total; checks aggregate stock', async () =
   await assert.rejects(() => api.prepareOrder(input(3)), /insufficient stock/);
   const repeated = input(); repeated.items.push(...repeated.items, ...repeated.items);
   await assert.rejects(() => api.prepareOrder(repeated), /insufficient stock/);
+});
+test('checkout preparation does not reserve an order number or scan previous orders', async () => {
+  const api = server({ from: table => {
+    assert.equal(table, 'products');
+    return { select: () => ({ in: async () => ({ data: [product] }) }) };
+  } });
+  const prepared = await api.prepareOrder(input());
+  assert.equal(prepared.orderNumber, undefined);
+  assert.equal(prepared.order_number, undefined);
 });
 test('captured payment must match order, currency and amount before saving', async () => {
   let saves = 0;

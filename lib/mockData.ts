@@ -68,7 +68,7 @@ export interface Order {
   paymentId?: string;
   paymentStatus?: "Paid" | "Pending" | "Failed";
   shiprocket?: {
-    status: "Creating" | "Created";
+    status: "Creating" | "Created" | "Cancelled" | "Mismatch" | "NeedsReview" | "Failed";
     orderId?: number;
     shipmentId?: number;
     weight: number;
@@ -78,6 +78,13 @@ export interface Order {
     pickupLocation: string;
     deliveryState: string;
     createdAt?: string;
+    reference?: string;
+    attemptNumber?: number;
+    checkedAt?: string;
+    remoteStatus?: string;
+    awb?: string;
+    error?: string;
+    history?: unknown[];
   };
   createdAt: string;
 }

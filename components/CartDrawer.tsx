@@ -196,7 +196,7 @@ export default function CartDrawer() {
         {cart.length > 0 && (
           <div className="p-6 border-t border-ivory-300 bg-ivory-100 space-y-4">
             {/* APPLY COUPON SECTION */}
-            <div className="bg-white p-3 border border-gold/40 space-y-2">
+            {/*  <div className="bg-white p-3 border border-gold/40 space-y-2">
               <div className="flex items-center space-x-1.5 text-ink font-bold text-[11px] uppercase tracking-wider">
                 <Ticket className="w-3.5 h-3.5 text-crimson" />
                 <span>Apply Promo Coupon</span>
@@ -239,7 +239,7 @@ export default function CartDrawer() {
                   {couponMsg.text}
                 </p>
               )}
-            </div>
+            </div>  */}
 
             <div className="flex items-center justify-between uppercase tracking-wider">
               <span className="text-xs font-bold text-ink">Total</span>

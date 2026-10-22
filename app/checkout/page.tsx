@@ -373,7 +373,7 @@ export default function CheckoutPage() {
                       className="text-[10px] uppercase font-bold text-crimson hover:underline flex items-center space-x-1"
                     >
                       <Plus className="w-3 h-3" />
-                      <span>+ Enter New Address</span>
+                      <span>Enter New Address</span>
                     </button>
                   </div>
 
@@ -593,7 +593,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* COUPON SECTION */}
-                <div className="bg-white p-3.5 border border-gold/40 space-y-2">
+               {/*  <div className="bg-white p-3.5 border border-gold/40 space-y-2">
                   <div className="flex items-center space-x-1.5 text-ink font-bold text-[11px] uppercase tracking-wider">
                     <Ticket className="w-3.5 h-3.5 text-crimson" />
                     <span>Apply Promo Coupon Code</span>
@@ -638,7 +638,7 @@ export default function CheckoutPage() {
                       {couponMsg.text}
                     </p>
                   )}
-                </div>
+                </div>  */}
 
                 {/* PRICE BREAKDOWN RECTANGLE */}
                 <div className="bg-white p-4 border border-gold/40 space-y-2 text-xs">

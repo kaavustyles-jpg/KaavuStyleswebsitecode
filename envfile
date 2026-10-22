@@ -12,7 +12,7 @@ SHIPROCKET_EMAIL=karthikShaiva5586@gmail.com
 
 ADMIN_LOGIN_EMAILS="admin@kaavustyle.com,kaavustyles@gmail.com"
 
-ADMIN_LOGIN_PASSWORD="Kaavu@admin123"
+ADMIN_LOGIN_PASSWORD="Kaavu@admin1234"
 
 ADMIN_SESSION_SECRET="93f20f860913e3ee298d905a437ed4011a308116910a9afd785b5b81ae0b43c6"
 
@@ -20,3 +20,6 @@ ADMIN_SESSION_SECRET="93f20f860913e3ee298d905a437ed4011a308116910a9afd785b5b81ae
 GMAIL_USER="kaavustyles@gmail.com"
 GMAIL_APP_PASSWORD="ygiq rzmx nrdy yuau"
 ORDER_NOTIFICATION_EMAIL="kaavustyles@gmail.com"
+
+# Server scheduler authentication
+CRON_SECRET="5e268ac6a26b980614310d110a7f3b078195f8d0d4fb122e04b7ee68a94b8f9a"

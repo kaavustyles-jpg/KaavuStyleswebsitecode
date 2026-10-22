@@ -16,6 +16,7 @@ import { ClipboardList, Eye, X, MapPin, Phone, Mail, Globe, Printer } from "luci
 export default function AdminOrdersPage() {
   const { orders, ordersError, ordersLoading, updateOrderStatus } = useStore();
   const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
+  const [shippingStatuses, setShippingStatuses] = useState<Record<string, Order["status"]>>({});
   const [shippingUpdates, setShippingUpdates] = useState<Record<string, Order["shiprocket"]>>({});
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("All");
@@ -129,7 +130,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const filteredOrders = orders.map(order => shippingUpdates[order.id] ? { ...order, shiprocket: shippingUpdates[order.id] } : order).filter((o) => {
+  const filteredOrders = orders.map(order => shippingUpdates[order.id] ? { ...order, shiprocket: shippingUpdates[order.id], status: shippingStatuses[order.id] || order.status } : order).filter((o) => {
     const matchesStatus = statusFilter === "All" || o.status.toLowerCase() === statusFilter.toLowerCase();
     const query = searchQuery.toLowerCase();
     const matchesQuery =
@@ -373,7 +374,7 @@ export default function AdminOrdersPage() {
         </main>
       </div>
 
-      {shippingOrder && <ShiprocketOrderDialog key={shippingOrder.id} order={shippingOrder} onClose={() => setShippingOrder(null)} onSaved={shipping => setShippingUpdates(previous => ({ ...previous, [shippingOrder.id]: shipping }))} />}
+      {shippingOrder && <ShiprocketOrderDialog key={shippingOrder.id} order={shippingOrder} onClose={() => setShippingOrder(null)} onSaved={(shipping, status) => { setShippingUpdates(previous => ({ ...previous, [shippingOrder.id]: shipping })); if (status) setShippingStatuses(previous => ({ ...previous, [shippingOrder.id]: status })); }} />}
 
       {/* Order Details & Printable Invoice Modal */}
       {selectedOrder && (

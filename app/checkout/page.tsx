@@ -373,7 +373,7 @@ export default function CheckoutPage() {
                       className="text-[10px] uppercase font-bold text-crimson hover:underline flex items-center space-x-1"
                     >
                       <Plus className="w-3 h-3" />
-                      <span>Enter New Address</span>
+                      <span>Enter New Address.</span>
                     </button>
                   </div>
 

@@ -8,6 +8,7 @@ const nextConfig = {
     return config;
   },
   images: {
+    unoptimized: true,
     minimumCacheTTL: 86400,
     remotePatterns: [
       {
